@@ -25,8 +25,22 @@ The user interface is oriented on programs like "Tableau" or "Glue" because we t
 \item Information view
 \item Plot view
 \end{itemize}
+
+\begin{figure}[!h]
+\centering
+    \includegraphics[width=0.75\textwidth]{Prototype1.jpg}
+	\caption{User interface}
+	\label{fig1}
+\end{figure}
+
 \subsubsection{Information view}
 At the moment the information view, figure 2, is divided in two parts, "Data" and "Options". Data provides some information about the dataset itself like name of the table, number of columns, rows and entries or column names. Options should give the possibility to add plots, interactions and other things to the plot view.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.3\textwidth]{InformationView.jpg}
+	\caption{Information view}
+	\label{fig2}
+\end{figure}
 \subsubsection{Plot view}
 The plot view is the area where, like the name tells us, all the plots appear and the interaction happens.
 \subsubsection{Graph proposals}
@@ -36,21 +50,60 @@ Since we did not get a real specification of the customer what he would like to 
 \\
 Advantage is to get a good overview of how the stars are distributed in the area around the sun.
 An disadvantage will be the confusion if there are to many stars and therefore no chance to find any patterns or other interesting things.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.5\textwidth]{NumbStarsDistSun.jpg}
+	\caption{Scatterplot}
+	\label{fig3}
+\end{figure}
 \item 3D representation of star clusters around the sun. (figure 4)\\
 \\
 Since the universe is a three dimensional space it is easier to see where specific star clusters are located but we are not sure if it is possible to create such a visualization with D3.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.5\textwidth]{ClustersSun3d.jpg}
+	\caption{3D visualization}
+	\label{fig4}
+\end{figure}
 \item The ratio of hot and cold stars. (figure 5)\\
 \\
-It is very easy to understand but it can give a wrong picture of the data.
-\item Bar chart showing the size of specific star clusters. (figure 6)\\
+It is very easy to understand but it can give a wrong picture of the data since not all stars has the state of their temperature.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.5\textwidth]{HotColdRatio.jpg}
+	\caption{Pie chart}
+	\label{fig5}
+\end{figure}
+\newpage\item Bar chart showing the size of specific star clusters. (figure 6)\\
 \\
 Like the pie it is very self explaining but if for example the scale of the y-axis is chosen wrong at can lead to false interpretation.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.5\textwidth]{SizeClusters.jpg}
+	\caption{Bar diagram}
+	\label{fig6}
+\end{figure}
 \item Line graph showing how the velocity behaves to the distance to the sun. (figure 7)\\
 \\
 An advantage of this view is that it shows in a good way of how the velocity changes with the distance to the sun but like with the bar chart choosing a good scale for the axis is important.
-\item Shows the movement of a star in a certain time. (figure 8)\\
-\\
 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.5\textwidth]{VelocityDist.jpg}
+	\caption{Line graph}
+	\label{fig7}
+\end{figure}
+\newpage\item Shows the movement of a star in a certain time. (figure 8)\\
+\\
+Good could be to see if a star is moving and how much it is moving in terms of time.
+Disadvantage is that it is hard to compare many stars and how they are moving, because it just will show the motion of one star.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.5\textwidth]{DistanceTime.jpg}
+	\caption{Dot plot}
+	\label{fig8}
+\end{figure}
 \end{itemize}
 \subsubsection{Interactions}
 One dashboard could be to combine figure 4, 5 and 6. While figure 4 shows the star clusters around the sun in three dimensional context, figure 5 can give us an overview how the ratio of hot and cold stars in the data are. To see how many stars are inside of a cluster, figure 5 can provide the information with a bar chart. The interactions could be to click on a specific cluster in the three dimensional representation and figure 5 and 6 updates their values corresponding to the selected cluster. An other interaction is when you just want to see all the hot stars you can select them in figure 5 and all other plots updates their view to show only the hot ones.\\
@@ -58,46 +111,4 @@ One dashboard could be to combine figure 4, 5 and 6. While figure 4 shows the st
 The second idea is to combine figure 4 and 7. If a cluster is selected figure 7 shows the distance of the nearest star of the cluster to the sun to the farthest and how the velocity of the selected stars behaves concerning the distance to the sun.\\
 \\
 The third interaction can happen between figure 3, 7 and 8. If selecting a single star from figure 3, we can see how it moves over period of time and how the velocity changed with the distance to the sun.
-
-\begin{figure}[!h]
-\centering
-    \includegraphics[width=\textwidth]{Prototype1.jpg}
-	\caption{User interface}
-	\label{fig1}
-\end{figure}
-\begin{figure}
-\includegraphics[width=\textwidth]{InformationView.jpg}
-	\caption{Information view}
-	\label{fig2}
-\end{figure}
-\begin{figure}
-\includegraphics[width=\textwidth]{NumbStarsDistSun.jpg}
-	\caption{Scatterplot}
-	\label{fig3}
-\end{figure}
-\begin{figure}
-\includegraphics[width=\textwidth]{ClustersSun3d.jpg}
-	\caption{3D visualization}
-	\label{fig4}
-\end{figure}
-\begin{figure}
-\includegraphics[width=\textwidth]{HotColdRatio.jpg}
-	\caption{Pie chart}
-	\label{fig5}
-\end{figure}
-\begin{figure}
-\includegraphics[width=\textwidth]{SizeClusters.jpg}
-	\caption{Bar diagram}
-	\label{fig6}
-\end{figure}
-\begin{figure}
-\includegraphics[width=\textwidth]{VelocityDist.jpg}
-	\caption{Line graph}
-	\label{fig7}
-\end{figure}
-\begin{figure}
-\includegraphics[width=\textwidth]{DistanceTime.jpg}
-	\caption{Dot plot}
-	\label{fig8}
-\end{figure}
 \end{document}
