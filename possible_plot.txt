@@ -1,0 +1,33 @@
+parallax_pmra_corr - Parralax
+parallax_pmra_corr: Correlation between parallax and proper motion in right ascension
+--> Scatterplot?
+x Achse Parralax
+y Achse Correlation
+Vielleicht gibt es hier nur eine sinnvolle Correlation bei gewisser Entfernung (unwahrscheinlich weiß ich aber ja..) oder eben immer...
+
+
+
+astrometric_delta_q - Parralax
+astrometric_delta_q: In the TGAS solution astrometric_delta_q (Δ⁢Q) indicates the difference between the Hipparcos proper motion and the TGAS proper motion. A large value of Δ⁢Q could indicate non-linear motion (e.g. in a binary).
+--> Bar Plot?
+x Achse Parralax in bins zusammenfassen
+y Achse Delta_q
+
+
+
+astrometric_excess_noise - astrometric_excess_noise_sig
+astrometric_excess_noise: This is the excess noise ϵiϵi of the source. It measures the disagreement, expressed as an angle, between the observations of a source and the best-fitting standard astrometric model (using five astrometric parameters). The assumed observational noise in each observation is quadratically increased by ϵiϵi in order to statistically match the residuals in the astrometric solution. A value of 0 signifies that the source is astrometrically well-behaved, i.e. that the residuals of the fit statistically agree with the assumed observational noise. A positive value signifies that the residuals are statistically larger than expected.
+
+astrometric_excess_noise_sig: Significance of excess noise (double)
+A dimensionless measure (D) of the significance of the calculated astrometric_excess_noise (ϵiϵi). A value D>2 indicates that the given ϵiϵi is probably significant.
+--> Plot-mäßig bin ich hier noch planlos
+
+
+
+pmra - pmra error
+pmra: Proper motion in right ascension direction (double, Angular Velocity[mas/year] )
+
+pmra_error: Standard error of proper motion in right ascension direction (double, Angular Velocity[mas/year])
+--> Scatterplot?
+x Achse pmra
+y Achse pmra error
