@@ -31,3 +31,25 @@ pmra_error: Standard error of proper motion in right ascension direction (double
 --> Scatterplot?
 x Achse pmra
 y Achse pmra error
+
+
+Potential TODO:
+~Piechart: Compare Red/Blue Stars with AL and AC weight
+
+
+
+5 VIS Techniques:
+ZOOM
+Because of the big amount of data, the zoom technique is very important for the stars around the sun and clusters around the sun 3D scatterplot. With the billions of stars in a dataset the plot has so many dots (stars) in it, that the user wouldn't be able to extract relevant information of the plot. The user should be able to zoom in and out of the Scatterplot and turn the plot around to get another sights of the distribution and information of stars and clusters.
+
+TOOLTIP
+Combined with the zoom function, the tooltip technique shows special information of a dot (e.g. name of the star, weight, distance to sun,...) if a star/cluster is clicked. This can be very useful if a dot attracts the attention of the user because of a strange behaviour (e.g. bunch of stars in a close area).
+
+BRUSHING & LINKING
+The brushing and linking will be very helpful for the user to set limits to the min and max value of a scatterplot. For the 2D scatterplots there we have the same problem as with the 3D scatterplot. Because of the amount of data the user will be overwhelmed of the information and won't be able to extract useful information of the plot. With the brushing and linking technique the user can decide on his own what minimum and maximum is interesting to see for him and so can also just have a look on small parts of the data.
+
+FILTER
+For all of the plots we will need filters to filter useless data which will have no values, null values or other values we could not process.
+
+DIMENSION STACKING
+The dimension stacking is used for the mean astronomic weight of the source in AL and AC direction compared to each cluster. The user has a fast overview of both weight variables for each cluster, which is triggers an interaction with other plots if clicked. This can help to determine eyecatching information of special clusters very fast.

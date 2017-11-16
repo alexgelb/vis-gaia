@@ -28,7 +28,7 @@ The user interface is oriented on programs like "Tableau" or "Glue" because we t
 
 \begin{figure}[!h]
 \centering
-    \includegraphics[width=0.75\textwidth]{Prototype1.jpg}
+    \includegraphics[width=0.75\textwidth]{images/Prototype1.jpg}
 	\caption{User interface}
 	\label{fig1}
 \end{figure}
@@ -37,7 +37,7 @@ The user interface is oriented on programs like "Tableau" or "Glue" because we t
 At the moment the information view, figure 2, is divided in two parts, "Data" and "Options". Data provides some information about the dataset itself like name of the table, number of columns, rows and entries or column names. Options should give the possibility to add plots, interactions and other things to the plot view.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.3\textwidth]{InformationView.jpg}
+\includegraphics[width=0.3\textwidth]{images/InformationView.jpg}
 	\caption{Information view}
 	\label{fig2}
 \end{figure}
@@ -52,7 +52,7 @@ Advantage is to get a good overview of how the stars are distributed in the area
 An disadvantage will be the confusion if there are to many stars and therefore no chance to find any patterns or other interesting things.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{NumbStarsDistSun.jpg}
+\includegraphics[width=0.5\textwidth]{images/NumbStarsDistSun.jpg}
 	\caption{Scatterplot}
 	\label{fig3}
 \end{figure}
@@ -61,7 +61,7 @@ An disadvantage will be the confusion if there are to many stars and therefore n
 Since the universe is a three dimensional space it is easier to see where specific star clusters are located but we are not sure if it is possible to create such a visualization with D3.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{ClustersSun3d.jpg}
+\includegraphics[width=0.5\textwidth]{images/ClustersSun3d.jpg}
 	\caption{3D visualization}
 	\label{fig4}
 \end{figure}
@@ -70,7 +70,7 @@ Since the universe is a three dimensional space it is easier to see where specif
 It is very easy to understand but it can give a wrong picture of the data since not all stars has the state of their temperature.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{HotColdRatio.jpg}
+\includegraphics[width=0.5\textwidth]{images/HotColdRatio.jpg}
 	\caption{Pie chart}
 	\label{fig5}
 \end{figure}
@@ -79,7 +79,7 @@ It is very easy to understand but it can give a wrong picture of the data since 
 Like the pie it is very self explaining but if for example the scale of the y-axis is chosen wrong at can lead to false interpretation.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{SizeClusters.jpg}
+\includegraphics[width=0.5\textwidth]{images/SizeClusters.jpg}
 	\caption{Bar diagram}
 	\label{fig6}
 \end{figure}
@@ -89,7 +89,7 @@ An advantage of this view is that it shows in a good way of how the velocity cha
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{VelocityDist.jpg}
+\includegraphics[width=0.5\textwidth]{images/VelocityDist.jpg}
 	\caption{Line graph}
 	\label{fig7}
 \end{figure}
@@ -100,7 +100,7 @@ Disadvantage is that it is hard to compare many stars and how they are moving, b
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{DistanceTime.jpg}
+\includegraphics[width=0.5\textwidth]{images/DistanceTime.jpg}
 	\caption{Dot plot}
 	\label{fig8}
 \end{figure}
@@ -109,7 +109,7 @@ Disadvantage is that it is hard to compare many stars and how they are moving, b
 The scatter plot could show the correlation if there is one but it is also possible that the amount of data makes it impossible to find out if a correlation exists. 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{CorrelationParallax.jpg}
+\includegraphics[width=0.5\textwidth]{images/CorrelationParallax.jpg}
 	\caption{Scatter plot }
 	\label{fig9}
 \end{figure}
@@ -118,7 +118,7 @@ The scatter plot could show the correlation if there is one but it is also possi
 It can give a good overview of how the errors of measurement are distributed inside the star cluster. A disadvantage is that the data are potentially not meaningful because maybe some stars has no error measures and so the plot is corrupted.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{Boxplot.jpg}
+\includegraphics[width=0.5\textwidth]{images/Boxplot.jpg}
 	\caption{Boxplot }
 	\label{fig10}
 \end{figure}
@@ -127,7 +127,7 @@ It can give a good overview of how the errors of measurement are distributed ins
 Advantage is it shows if the velocity has an influence on the error of the stars. Possible disadvantage is that the plot is not meaningful.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{VelocityError.jpg}
+\includegraphics[width=0.5\textwidth]{images/VelocityError.jpg}
 	\caption{Linegraph  }
 	\label{fig11}
 \end{figure}
@@ -136,7 +136,7 @@ Advantage is it shows if the velocity has an influence on the error of the stars
 Can give a good comparison of the two different weight types, but since we don't know what it exactly is yet we can not really say if it is a good and useful representation.
 \begin{figure}[!h]
 \centering
-\includegraphics[width=0.5\textwidth]{ClustersWeight.jpg}
+\includegraphics[width=0.5\textwidth]{images/ClustersWeight.jpg}
 	\caption{Bargraph  }
 	\label{fig12}
 \end{figure}
@@ -147,4 +147,23 @@ One dashboard could be to combine figure 4, 5 and 6. While figure 4 shows the st
 The second idea is to combine figure 4 and 7. If a cluster is selected figure 7 shows the distance of the nearest star of the cluster to the sun to the farthest and how the velocity of the selected stars behaves concerning the distance to the sun.\\
 \\
 The third interaction can happen between figure 3, 7 and 8. If selecting a single star from figure 3, we can see how it moves over period of time and how the velocity changed with the distance to the sun.
+
+\subsubsection{VIS Techniques}
+\begin{itemize}
+\item \textbf{Zoom} \\
+Because of the big amount of data, the zoom technique is very important for the stars around the sun and clusters around the sun 3D scatterplot. With the billions of stars in a dataset the plot has so many dots (stars) in it, that the user wouldn't be able to extract relevant information of the plot. The user should be able to zoom in and out of the Scatterplot and turn the plot around to get another sights of the distribution and information of stars and clusters.
+
+\item \textbf{Tooltip} \\
+Combined with the zoom function, the tooltip technique shows special information of a dot (e.g. name of the star, weight, distance to sun,...) if a star/cluster is clicked. This can be very useful if a dot attracts the attention of the user because of a strange behaviour (e.g. bunch of stars in a close area).
+
+\item \textbf{Brushing and Linking} \\
+The brushing and linking will be very helpful for the user to set limits to the min and max value of a scatterplot. For the 2D scatterplots there we have the same problem as with the 3D scatterplot. Because of the amount of data the user will be overwhelmed of the information and won't be able to extract useful information of the plot. With the brushing and linking technique the user can decide on his own what minimum and maximum is interesting to see for him and so can also just have a look on small parts of the data.
+
+\item \textbf{Filter} \\
+For all of the plots we will need filters to filter useless data which will have no values, null values or other values we could not process.
+
+\item \textbf{Dimension Stacking} \\
+The dimension stacking is used for the mean astronomic weight of the source in AL and AC direction compared to each cluster. The user has a fast overview of both weight variables for each cluster, which is triggers an interaction with other plots if clicked. This can help to determine eyecatching information of special clusters very fast.
+\end{itemize}
+
 \end{document}
