@@ -4,6 +4,8 @@
 % Author:
 % Benjamin Neckam
 % Alexander Gelb
+% Nicole Cherches
+% Axinya Tokareva
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -16,7 +18,7 @@
 
 \begin{document}
 \title{Visualization and Visual Data Analysis}
-\author{Gelb, Alexander; Neckam, Benjamin}
+\author{Nicole Cherches, Alexander Gelb, Benjamin Neckam, Axinya Tokareva}
 \maketitle
 \section{M2 - Lo-Fi Prototyping}
 \subsection{Proposed visualization solution}
@@ -141,12 +143,40 @@ Can give a good comparison of the two different weight types, but since we don't
 	\label{fig12}
 \end{figure}
 \end{itemize}
-\newpage\subsubsection{Interactions}
-One dashboard could be to combine figure 4, 5 and 6. While figure 4 shows the star clusters around the sun in three dimensional context, figure 5 can give us an overview how the ratio of hot and cold stars in the data are. To see how many stars are inside of a cluster, figure 5 can provide the information with a bar chart. The interactions could be to click on a specific cluster in the three dimensional representation and figure 5 and 6 updates their values corresponding to the selected cluster. An other interaction is when you just want to see all the hot stars you can select them in figure 5 and all other plots updates their view to show only the hot ones.\\
-\\
-The second idea is to combine figure 4 and 7. If a cluster is selected figure 7 shows the distance of the nearest star of the cluster to the sun to the farthest and how the velocity of the selected stars behaves concerning the distance to the sun.\\
-\\
-The third interaction can happen between figure 3, 7 and 8. If selecting a single star from figure 3, we can see how it moves over period of time and how the velocity changed with the distance to the sun.
+
+\newpage
+
+\subsubsection{Interactions}
+\begin{enumerate}
+\item \textbf{Dashboard 1} \\
+One dashboard could be to combine figure 4, 5, 6 and 12. While figure 4 shows the star clusters around the sun in a three dimensional context, figure 5 can give us an overview of the ratio of hot and cold stars in the data. To see how many stars are inside of a cluster, figure 5 can provide the information with a bar chart. Figure 12 contains the two types of weight of each cluster and compares the cumulated weights. The interactions could be to click on a specific cluster in the three dimensional representation and figure 5 and 6 updates their values corresponding to the selected cluster, while figure 12 highlights the bars of the selected cluster. Another interaction will be when you just want to see all the hot stars, you can select them in figure 5 and all other plots updates their view to show only the hot ones. \\
+
+\textbf{Advantage} \\
+With this dashboard it is very easy for the user to recognize patterns (e.g. amount of cold/warm stars in cluster, size of cluster, overall weight of stars in cluster) inside of to the clusters. The user can interact with this dashboard to gain more knowledge for each cluster in an easy and intuitive way. \\
+
+\textbf{Disadvantage} \\
+A big disadvantage of this dashboard is the generalization of the stars into clusters. The generalization leads to just see an overall information of the amount of stars and will not provide any information of a specific star. \\
+
+\item \textbf{Dashboard 2} \\
+The second idea is to combine figure 4, 7 and 10. As mentioned before, figure 4 shows the clusters around the sun in a 3D scatterplot. Figure 7 plots a line graph sorted by the distance to sun for every star and compares it to the velocity of a star. The last figure (figure 10) plots a box plot of the astronomic excess noise significance of all stars. If a cluster of figure 4 is selected, figure 7 and 10 will plot the line graph and the box plot just according to the stars contained in the chosen cluster. \\
+
+\textbf{Advantage} \\
+text follows here \\
+
+\textbf{Disadvantage} \\
+text follows here \\
+
+\item \textbf{Dashboard 3 - Name} \\
+2 (sterne), 6, 7, 9
+The last dashboard shows figure 4, 8, 9, and 11. Figure 4 plots all stars in a 3D scatterplot in which the user can zoom in and out to get a better sight of the stars. Figure 8 plots the movement of a star in a certain time compared to the distance of this star. For this plot there will be used a 2D scatterplot with brushing and linking to have a clearer view of the data. Figure 9 shows also a 2D scatterplot with brushing and linking with the distance to the sun of each star compared to the correlation of the distance to the sun and movement of a star. The last figure plots the error of velocity compared to velocity of each star as a simple line graph. One interaction will be the tooltip technique in figure 4. If a star is clicked in the 3D scatterplot, there will popup a tooltip with useful informations about this star. Furthermore the movement of the star will be plotted in figure 8. Another way to select a star for figure 8 will be to click a star in figure 7, which will also lead to zoom in to the chosen star in figure 4. \\
+
+\textbf{Advantage} \\
+The big advantage of this dashboard is, that the user is able to gain information and interesting patterns about specific stars and not only a whole cluster. \\
+
+\textbf{Disadvantage} \\
+The disadvantage can be that the user will be overwhelmed of the amount of data and is not able to extract useful information of for example figure 9.  \\
+
+\end{enumerate}
 
 \subsubsection{VIS Techniques}
 \begin{itemize}
