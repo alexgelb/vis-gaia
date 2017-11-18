@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Visualization and Visual Data Analysis
 %
-% Author:
+% Authors:
 % Benjamin Neckam
 % Alexander Gelb
 % Nicole Cherches
@@ -18,7 +18,7 @@
 
 \begin{document}
 \title{Visualization and Visual Data Analysis}
-\author{Nicole Cherches, Alexander Gelb, Benjamin Neckam, Axinya Tokareva}
+\author{Nicole Cherches (01506832), Alexander Gelb (01268620), \\Benjamin Neckam (01301917), Axinya Tokareva (01368965)}
 \maketitle
 \section{M2 - Lo-Fi Prototyping}
 \subsection{Proposed visualization solution}
@@ -142,7 +142,18 @@ Can give a good comparison of the two different weight types, but since we don't
 	\caption{Bargraph  }
 	\label{fig12}
 \end{figure}
+
+
+\item Line graph showing the velocity of stars in a specific cluster. (figure 13)\\
+This view gives us the opportunity to compare the velocities of the stars in a specific cluster to make an assumption about the General movement of objects. It is important to choose a good scale for the axis, as in the previous illustration. 
 \end{itemize}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.5\textwidth]{images/Velocity(star).jpg}
+	\caption{Linegraph }
+	\label{fig13}
+\end{figure}
 
 \newpage
 
@@ -166,8 +177,8 @@ See if and how the distance to sun changes the velocity of the stars or star clu
 \textbf{Disadvantage} \\
 It will be very time consuming to process and sort the data every time if an interaction happens. Furthermore many information can be lost in the single views because not all single stars has all needed data and therefore the box plot is not completely true for example.
 
-\item \textbf{Dashboard 3 - Name} \\
-2 (sterne), 6, 7, 9
+\item \textbf{Dashboard 3} \\
+2, 6, 7, 9
 The last dashboard shows figure 4, 8, 9, and 11. Figure 4 plots all stars in a 3D scatterplot in which the user can zoom in and out to get a better sight of the stars. Figure 8 plots the movement of a star in a certain time compared to the distance of this star. For this plot there will be used a 2D scatterplot with brushing and linking to have a clearer view of the data. Figure 9 shows also a 2D scatterplot with brushing and linking with the distance to the sun of each star compared to the correlation of the distance to the sun and movement of a star. The last figure plots the error of velocity compared to velocity of each star as a simple line graph. One interaction will be the tooltip technique in figure 4. If a star is clicked in the 3D scatterplot, there will popup a tooltip with useful informations about this star. Furthermore the movement of the star will be plotted in figure 8. Another way to select a star for figure 8 will be to click a star in figure 7, which will also lead to zoom in to the chosen star in figure 4. \\
 
 \textbf{Advantage} \\
@@ -175,6 +186,9 @@ The big advantage of this dashboard is, that the user is able to gain informatio
 
 \textbf{Disadvantage} \\
 The disadvantage can be that the user will be overwhelmed of the amount of data and is not able to extract useful information of for example figure 9.  \\
+
+\item \textbf{Dashboard 4} \\
+This dashboard is similar to the first panel (the same disadvantages and advantages), except that it does not contain information about hot and cold stars. It also contains error information of a specific cluster (figure 10), and a linear graph representing the stars velocities in the selected cluster (figure 13). A more detailed description can be found in the scenario below.
 
 \end{enumerate}
 
@@ -196,4 +210,156 @@ For all of the plots we will need filters to filter useless data which will have
 The dimension stacking is used for the mean astronomic weight of the source in AL and AC direction compared to each cluster. The user has a fast overview of both weight variables for each cluster, which is triggers an interaction with other plots if clicked. This can help to determine eyecatching information of special clusters very fast.
 \end{itemize}
 
+\subsection{The scenario of use}
+\subsubsection {Fictitious user}
+
+Joao Alves is a professor for astrophysics at the university of Vienna. He is performing research in different topics of astronomy.
+\\ These are his research areas:
+\begin{itemize}
+\item The structure of the Interstellar Medium
+\item The origins of stars and planets
+\item Near-infrared instrumentation
+\item Life in the universe
+\end{itemize}
+
+\subsubsection {Possibly Tasks}
+First thing we did, was meeting with Professor Alves. We explained our project to him and asked him to give us some ideas and information about tools for completing our task. He stated that astronomy researchers only engage in looking at parts of the universe most of the time, but what is interesting for Alves is the "big picture", so he said. He gave us the task to get to know the data and to present parts of it in a visualization that makes it easier to see coherences. The task was not so specific, but it is important that we look through the Gaia catalog and find interesting patterns and then visualize it in different plots. For him it is probably very helpful, as one of his research areas is "The structure of the Interstellar Medium". So, he can reference our graphics while working with the Catalogs from Gaia and quickly sees how a particular area he is looking at reacts with in a bigger range.
+\\ \\
+Based on the available data and information retrieval, we can assume that the following problems can be solved, or at least can be a little improved to their solution:
+\begin{itemize}
+\item The most important conceivably scientific task is to clarify the appearance and development of our Galaxy with the help of a survey of stars. Collected Gaia data allow astronomers to better understand how the stars arise and how they saturate the space around them when they die. Previously unattainable accuracy of parallax measurements, as well as its own and radial velocity for one billion stars will give astronomers a clearer picture of the development and structure of the Milky Way.
+\item The second task can be solved of the telescope is the discovery of exoplanets, asteroids and meteorites (for example with clustering). 
+\item Why in the observable universe there is much more matter than antimatter?
+\item The possibility of the existence of supermassive black holes in the centers of galaxies can be checked by studying the motion of stars and interstellar matter around them. 
+\item To make a detailed map of the distribution of stars in our Galaxy.
+\end{itemize}
+
+\subsubsection {Specific problem and scenario}
+For the scenario were chosen the latest model (dashboard) and the problem of detecting black holes. As already described above: by observing the stars, it is possible to make assumptions about their existence. Of course, only these data are not enough for approval (we also need data from radiation and observations in the optical range, for example), but it is sufficient for the initial assumption and for further, more detailed study.
+In this problem, cluster analysis of stars can help us, which can tell us about quasars, globular or open clusters of stars or even new objects. It may also be useful to study the general motion of stars of a certain cluster. A potentially existing black hole in the center of the cluster acts as a cosmic "spoon" that mixes the stars, resulting in these stars moving at higher speeds and longer distances. Observing the behavior of stars gives a hint of the existence or absence of a black hole in the center of the cluster. So, the main method of searching for black holes at the present time is to study clusters (their density, for example), brightness distribution and velocity of stars. \\
+\begin{itemize}
+  
+
+  \item  Step-by-step:
+\begin{enumerate}
+\item User creates a new file.
+\item Selects data for analysis.
+\item Specifies the name and required configurations
+\item He studies the first and third illustrations to identify a huge cluster of stars or new objects in the first plot as a secondary task.
+\item The user is a bit confused, because he uses the program for the first time, and does not know how to get a more detailed view of a particular cluster. He clicks on the help button and gets the information he needs.
+\item Clicks on the largest cluster for a more detailed study. (By clicking, the cluster is highlighted in the first illustration, the bars of the diagrams on the third and fifth graphs in accordance with the cluster, the remaining diagrams are updated).
+\item Explores the second graph to see if the data is significant.
+\item If not, then goes to a smaller cluster, or downloads / rechecks the data, changes the configurations.
+\item Explores the fourth and fifth graph.
+\item Identifies the general movement of the cluster, high velocities and masses, and hence high luminosities (It was found that the more weight, the higher the luminosity of the star).
+\item Makes an assumption about the existence of a black hole.
+\item Data is saved by clicking "Save" or "Save as" button.
+\item Clicks on the button "About us" to read about us.
+\item The user proceeds to other methods of research to confirm or refute the hypothesis.
+\end{enumerate}
+\item Sketches
+
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.8\textwidth]{images/Scenario1.jpg}
+\label{fig14}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.8\textwidth]{images/Scenario2.jpg}
+\label{fig15}
+\end{figure}
+\newpage
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/Scenario3.jpg}
+\label{fig16}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/Scenario4.jpg}
+\label{fig17}
+\end{figure}
+\newpage
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/Scenario42.jpg}
+\label{fig18}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/Scenario5.jpg}
+\label{fig19}
+\end{figure}
+\newpage
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/Scenario6.jpg}
+\label{fig20}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/Scenario7.jpg}
+\label{fig21}
+\end{figure}
+\end{itemize}
+\newpage
+
+\subsubsection {Implementation details}
+For protyping we will use Tableau, because we think it is a great tool for creating some quick views and planning how the end project should look like. We also tried softwares recommended by Joao Alves and his PhD-Student. Topcat for example helps us to go through the data and filter out the important parts. Glue is another program that helps us to gain insight for the data we are dealing with. \\
+For the end project, we are will use d3.
+
+\subsubsection {Milestones}
+\begin{itemize}
+
+\item 19th-26th of November: Evaluation study, ask a few colleagues and 		friends, show them the Lo-Fi prototypes, every group member should 	talk to at least two people. Collect results and discuss pros and 		cons together in the group, doing a first implementation prototype 	in Tableau.
+\item 	27th of November-10th of December (M3 due): Implementing 	the prototype in d3.
+\item 	11th-14th of December: Preparing M3 presentation, meeting and going 		through slides together, discussing who sais what.
+\item 	14th-22nd of December: Discussing, how the project went and pros and 	cons of implementation, meeting with Joao Alves, getting feedback.
+\item 	22th of December-7th of January: Apply changes in 		implementation according to Alves' feedback
+\item 	8th-21st (M4 due): Meeting Joao Alves again and proposing our end 	solution, writing report.
+\end{itemize}
+\\ \\
+At this point, we cannot tell, who will do what for the project because there are many big tasks which we want to distribute fairly among us four. There are not really tasks that can be completed by one person only, so we will try to communicate and work together on all of them as good as possible.
+
+\subsubsection {The work distribution}
+
+ Expand on your proposed visualization solution. \textbf{Benjamin + Alexander}
+\begin{itemize}
+\item Provide detailed illustrations of what the interface will look like and how the user will interact with it (e.g. a storyboard). You may either draw these by hand or use a mockup tool of your choice.
+\item To help with coming up with novel designs, in order to get full marks, you need to provide at least 10 different possible single graphs that show different aspects of the data. In addition, you need to provide at least three different ways of combining different views into an interactive application (dashboard) and demonstrate what type of interactions are possible.
+\item In order to ensure you are exploring the visualization design space, we require you to, reason and design for at least 5 different vis techniques. These methods can be in terms of vis encodings: aggregation over all variables except for one, aggregation in general, tree-maps, heat-maps, hierarchical exploration, correlation of two variables, correlation over multiple var, filter, scented widgets, etc.; for interactions: tooltip, zoom, table lens, focus-and-context (fisheye or similar), small multiples, brushing & linking, etc.
+You should reason about the advantages and disadvantages of each of the different views, dashboards, and interactions. 
+\end{itemize}
+Present a scenario of use, using sketches and text to demonstrate how the user accomplishes a specific task with your tool. 
+\begin{itemize}
+\item The first step here is to make your tasks much more detailed and specific. Create a fictitious user and describe a specific problem they have. \\ \textbf{Axinya + Nicole}
+\item A scenario then spells out what a user would have to do and what he or she would see step-by-step in performing a task using a given system. The key distinction between a scenario and a task is that a scenario is design-specific, in that it shows how a task would be performed if you adopt a particular design, while the task itself is design-independent: it's something the user wants to do regardless of what design is chosen. \textbf{Axinya}
+\end{itemize}
+  Implementation details. \textbf{Nicole} \\
+  Milestones that break down the work into smaller parts. \textbf{Nicole}\\
+  A list of references (books, papers, software tools), that you draw upon. \textbf{Axinya}\\
+ Website. \textbf{Axinya}
+
+
+
+\subsubsection {References}
+\begin{enumerate}
+    \item Our website: http://wwwlab.cs.univie.ac.at/$\sim$a1368965/vis17/
+
+\item https://medienportal.univie.ac.at/uniview/professuren/cv/artikel/univ-prof-dr-joao-alves/
+\item vis lectures
+\item http://gaia.ari.uni-heidelberg.de/tap/tables
+\item http://sci.esa.int/gaia/
+\item http://sci.esa.int/gaia/58275-data-release-1/
+\item https://en.wikipedia.org/wiki/
+\item http://www.mattboldt.com/demos/typed-js/
+
+
+\end{enumerate}
 \end{document}
