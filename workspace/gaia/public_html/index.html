@@ -61,6 +61,7 @@
                             <select class="col-12" id="yAxisValue"></select>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <div class="col-4">
                             <label class="head-text">Plottype:</label>
@@ -74,8 +75,14 @@
                             </div>
                             <div class="col-12">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" id="plotType" type="radio" name="plotType" id="barplotType" value="scatterplot">
+                                    <input class="form-check-input" id="plotType" type="radio" name="plotType" id="barplotType" value="barplot">
                                     Barplot
+                                </label>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" id="plotType" type="radio" name="plotType" id="scattermatrixType" value="scattermatrix">
+                                    Scatterplot Matrix
                                 </label>
                             </div>
                         </div>
@@ -85,6 +92,15 @@
                     </div>
                 </div>
             </form>
+            
+                 <div class="options-menu border rounded">
+                <h6>Dataset</h6>
+                <hr>
+                <div id="headerValues">
+                </div>
+                         
+            </div>
+              
         </div>
         <div class="content">
             <div class="plots border rounded">

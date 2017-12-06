@@ -15,14 +15,25 @@ d3.csv("./data/GaiaSource_1.csv", function (csv_data) {
 
     var xAxis = document.getElementById("xAxisValue");
     var yAxis = document.getElementById("yAxisValue");
+    var headerValue = document.getElementById("headerValues");
+   
     for (var i = 0; i < headerNames.length; i++) {
         var xAxisOption = document.createElement("option");
         var yAxisOption = document.createElement("option");
+        var headerValueElement = document.createElement("div");
+        var headerValueBox = document.createElement("input");
         xAxisOption.text = headerNames[i];
         yAxisOption.text = headerNames[i];
+        headerValueElement.appendChild(document.createTextNode(headerNames[i]));
+        //headerValueBox.appendChild(document.createAttribute("type").value = "checkbox");
+        
+        //document.getElementById("headerValues").appendChild(headerValueBox);
+        headerValue.appendChild(headerValueElement);
         xAxis.add(xAxisOption);
-        yAxis.add(yAxisOption);
+        yAxis.add(yAxisOption); 
+       
     }
+    
 
     var datasetname = document.getElementById("datasetname");
     var rows = document.getElementById("rowCount");
@@ -38,6 +49,9 @@ function submitForm() {
     var xAxisValue = xAxis.options[xAxis.selectedIndex].text;
     var yAxis = document.getElementById("yAxisValue");
     var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
+    
+    var Axis = document.getElementById("AxisValue");
+    var AxisValue = Axis.options[Axis.selectedIndex].text;
     
     if (plotType.indexOf('scatterplot') > -1) {
         drawScatterplot(xAxisValue, yAxisValue);
