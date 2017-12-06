@@ -29,7 +29,7 @@ d3.csv("./data/GaiaSource_1.csv", function (csv_data) {
         headerValue.appendChild(headerValueBox);
         headerValueElement.appendChild(document.createTextNode(headerNames[i]));
         headerValue.appendChild(headerValueElement);
-        
+
         xAxis.add(xAxisOption);
         yAxis.add(yAxisOption); 
        
@@ -51,11 +51,9 @@ function submitForm() {
     var yAxis = document.getElementById("yAxisValue");
     var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
     
-    var Axis = document.getElementById("AxisValue");
-    var AxisValue = Axis.options[Axis.selectedIndex].text;
-    
     if (plotType.indexOf('scatterplot') > -1) {
         drawScatterplot(xAxisValue, yAxisValue);
+        getCheckedBoxes();
     }
 }
 
@@ -180,4 +178,9 @@ function drawScatterplot(xAxisValue, yAxisValue) {
                 });
         focusView.select(".x-axis").call(xAxis1);
     }
+}
+
+function getCheckedBoxes() {
+    var checkedBoxes = headerNames.filter(function(d) { if (document.getElementById(d).checked) return d});
+    console.log(checkedBoxes);
 }
