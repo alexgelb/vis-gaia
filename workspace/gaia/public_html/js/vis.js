@@ -1,6 +1,7 @@
 /* global d3 */
 var value = 0;
 var headerNames = [];
+var checkedBoxes = [];
 var csv_data;
 
 d3.csv("./data/GaiaSource_1.csv", function (csv_data) {
@@ -45,13 +46,19 @@ d3.csv("./data/GaiaSource_1.csv", function (csv_data) {
 });
 
 function submitForm() {
-    var plotType = document.getElementById("plotType").value;
+    //var plotType = document.getElementById("plotType").value;
     var xAxis = document.getElementById("xAxisValue");
     var xAxisValue = xAxis.options[xAxis.selectedIndex].text;
     var yAxis = document.getElementById("yAxisValue");
     var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
     
-    if (plotType.indexOf('scatterplot') > -1) {
+    if (document.getElementById("scatterplotType").checked) {
+        drawScatterplot(xAxisValue, yAxisValue);
+    }
+    else if (document.getElementById("barplotType").checked) {
+        drawScatterplot(xAxisValue, yAxisValue);
+    }
+    else if (document.getElementById("scattermatrixType").checked) {
         drawScatterplot(xAxisValue, yAxisValue);
         getCheckedBoxes();
     }
@@ -181,6 +188,9 @@ function drawScatterplot(xAxisValue, yAxisValue) {
 }
 
 function getCheckedBoxes() {
-    var checkedBoxes = headerNames.filter(function(d) { if (document.getElementById(d).checked) return d});
-    console.log(checkedBoxes);
+    checkedBoxes = headerNames.filter(function(d) { if (document.getElementById(d).checked) return d});
+}
+
+function correlation(checkedBoxes) {
+    
 }
