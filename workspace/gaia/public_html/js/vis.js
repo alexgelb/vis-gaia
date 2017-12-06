@@ -20,15 +20,16 @@ d3.csv("./data/GaiaSource_1.csv", function (csv_data) {
     for (var i = 0; i < headerNames.length; i++) {
         var xAxisOption = document.createElement("option");
         var yAxisOption = document.createElement("option");
-        var headerValueElement = document.createElement("div");
         var headerValueBox = document.createElement("input");
+        var headerValueElement = document.createElement("div");
         xAxisOption.text = headerNames[i];
         yAxisOption.text = headerNames[i];
+        headerValueBox.type = "checkbox";
+        headerValueBox.id= headerNames[i];
+        headerValue.appendChild(headerValueBox);
         headerValueElement.appendChild(document.createTextNode(headerNames[i]));
-        //headerValueBox.appendChild(document.createAttribute("type").value = "checkbox");
-        
-        //document.getElementById("headerValues").appendChild(headerValueBox);
         headerValue.appendChild(headerValueElement);
+        
         xAxis.add(xAxisOption);
         yAxis.add(yAxisOption); 
        
