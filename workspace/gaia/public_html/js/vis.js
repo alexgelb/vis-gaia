@@ -26,6 +26,8 @@ d3.csv("./data/GaiaSource_1.csv", function (csv_data) {
         xAxisOption.text = headerNames[i];
         yAxisOption.text = headerNames[i];
         headerValueBox.type = "checkbox";
+        headerValueBox.name = "boxes";
+        headerValueBox.onclick = checkboxLimit();
         headerValueBox.id= headerNames[i];
         headerValue.appendChild(headerValueBox);
         headerValueElement.appendChild(document.createTextNode(headerNames[i]));
@@ -189,6 +191,23 @@ function drawScatterplot(xAxisValue, yAxisValue) {
 
 function getCheckedBoxes() {
     checkedBoxes = headerNames.filter(function(d) { if (document.getElementById(d).checked) return d});
+}
+
+
+function checkboxLimit(){
+    
+	for (var j=0; j < document.getElementsByName("boxes").length; j++){
+		document.getElementsByName("boxes")[j].onclick=function(){
+        var count = 0;
+		for (var i=0; i< document.getElementsByName("boxes").length; i++) {
+			count +=(document.getElementsByName("boxes")[i].checked)? 1 : 0
+        }
+		if (count > 5){
+			alert("You can select only 5 values!");
+			this.checked = false;
+			}
+		}
+	}
 }
 
 function correlation(checkedBoxes) {
