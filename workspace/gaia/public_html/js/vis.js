@@ -35,7 +35,6 @@ d3.csv("./data/GaiaSource_1.csv", function (csv_data) {
         yAxis.add(yAxisOption); 
        
     }
-    
 
     var datasetname = document.getElementById("datasetname");
     var rows = document.getElementById("rowCount");
@@ -61,6 +60,7 @@ function submitForm() {
     else if (document.getElementById("scattermatrixType").checked) {
         drawScatterplot(xAxisValue, yAxisValue);
         getCheckedBoxes();
+        correlation(checkedBoxes);
     }
 }
 
@@ -111,9 +111,9 @@ function drawScatterplot(xAxisValue, yAxisValue) {
     dots.selectAll("dot")
             .data(csv_data)
             .enter()
-//            .filter(function (d) {
-//                return (d.distance !== undefined) && !isNaN(y1(d.distance));
-//            })
+            .filter(function (d) {
+                return (d.distance !== undefined) && !isNaN(y1(d.distance));
+           })
             .append("circle")
             .attr('class', 'dot')
             .attr("r", 2)
@@ -192,5 +192,39 @@ function getCheckedBoxes() {
 }
 
 function correlation(checkedBoxes) {
-    
+    var column1, column2;
+    var correlations = [];
+    //TODO Nicole dynamisch machen
+    for(var i = 0; i < 4; i++) {
+        for(var j = i+1; j < 5; j++) {
+            column1 = csv_data.map(function(d) {return +d[checkedBoxes[i]]});
+            column2 = csv_data.map(function(d) {return +d[checkedBoxes[j]]});
+
+            var avg1 = d3.sum(column1, function(d){
+                return +d[checkedBoxes[i]]
+            })/column1.length;
+
+            var avg2 = d3.sum(column2, function(d){
+               return +d[checkedBoxes[j]]
+            })/column2.length;
+
+            correlations.push(d3.sum(column1, function(d) {
+                return column1.forEach(function(d,i) {
+                    return (d-avg1)*(column2[i]-avg2)
+                })
+            })/Math.sqrt(d3.sum(column1, function(d,i) {
+                return column1.forEach( function(d) {
+                    return Math.pow((d-avg1),2)
+                })
+            })
+            * d3.sum(csv_data, function(d,i) {
+                return Math.pow((column2[i]-avg2),2)
+                })));
+        }
+    }
+    console.log(correlations);
 }
+
+
+
+
