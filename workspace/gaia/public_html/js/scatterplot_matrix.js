@@ -20,21 +20,33 @@ var yAxis = d3.axisLeft()
 
 var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-d3.csv("data/GaiaSource_1.csv", function (error, data) {
+d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
     if (error)
         throw error;
 
     var domainByTrait = {},
-            traits = d3.keys(data[0]).filter(
-            function (d) {
-                return d === "pmra" || d === "pmra_error" || d === "pmdec" || d === "pmdec_error" || d === "ra_dec_corr" || d === "ra_parallax_corr";
-//                return d !== "astrometric_primary_flag" && d !== "duplicated_source" && d !== "phot_variable_flag";
-            }),
+//            traits = data,
+            traits = d3.keys(data[0]).filter(function (d) {
+        return d === "pmra" || d === "pmra_error";
+    }),
+//            .filter(number => number > -900)
+//            traits = d3.keys(data)
+//            .filter(function (d) {
+//                return (d !== undefined) && !isNaN(d) && d > -900;
+//                return (d.key d.value > 500);
+//            }),
+//                    .filter(
+//            function (d) {
+//                return d === "pmra" || d === "pmra_error" || d === "pmdec" || d === "pmdec_error" || d === "ra_dec_corr" || d === "ra_parallax_corr";
+////                return d !== "astrometric_primary_flag" && d !== "duplicated_source" && d !== "phot_variable_flag";
+//            }),
             n = traits.length;
 
     traits.forEach(function (trait) {
         domainByTrait[trait] = d3.extent(data, function (d) {
-            return d[trait];
+            if (d[trait] !== undefined && d[trait].length > 0 && d[trait] > -900) {
+                return d[trait];
+            }
         });
     });
 
@@ -55,7 +67,11 @@ d3.csv("data/GaiaSource_1.csv", function (error, data) {
 
     svg.selectAll(".x.axis")
             .data(traits)
-            .enter().append("g")
+            .enter()
+//            .filter(function (d) {
+//                return (d !== undefined) && !isNaN(d) && d > -900;
+//            })
+            .append("g")
             .attr("class", "x axis")
             .attr("transform", function (d, i) {
                 return "translate(" + (n - i - 1) * size + ",0)";
@@ -67,7 +83,11 @@ d3.csv("data/GaiaSource_1.csv", function (error, data) {
 
     svg.selectAll(".y.axis")
             .data(traits)
-            .enter().append("g")
+            .enter()
+//            .filter(function (d) {
+//                return (d !== undefined) && !isNaN(d) && d > -900;
+//            })
+            .append("g")
             .attr("class", "y axis")
             .attr("transform", function (d, i) {
                 return "translate(0," + i * size + ")";
@@ -79,6 +99,9 @@ d3.csv("data/GaiaSource_1.csv", function (error, data) {
 
     var cell = svg.selectAll(".cell")
             .data(cross(traits, traits))
+//            .filter(function (d) {
+//                return (d !== undefined) && !isNaN(d) && d > -900;
+//            })
             .enter().append("g")
             .attr("class", "cell")
             .attr("transform", function (d) {
@@ -114,6 +137,9 @@ d3.csv("data/GaiaSource_1.csv", function (error, data) {
 
         cell.selectAll("circle")
                 .data(data)
+//                .filter(function (d) {
+//                    return (d !== undefined) && !isNaN(d) && d > -900;
+//                })
                 .enter().append("circle")
                 .attr("cx", function (d) {
                     return x(d[p.x]);
@@ -143,12 +169,9 @@ d3.csv("data/GaiaSource_1.csv", function (error, data) {
     function brushmove(p) {
         var e = d3.brushSelection(this);
         svg.selectAll("circle").classed("hidden", function (d) {
-            return !e
-                    ? false
-                    : (
-                            e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
-                            || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
-                            );
+            return !e ? false : (e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                    || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                    );
         });
     }
 
@@ -161,6 +184,15 @@ d3.csv("data/GaiaSource_1.csv", function (error, data) {
 });
 
 function cross(a, b) {
+    if (a === undefined || b === undefined) {
+        return;
+    }
+    if (!isNaN(a) || !isNaN(b)) {
+        return;
+    }
+    if (a < -900 || b < -900) {
+        return;
+    }
     var c = [], n = a.length, m = b.length, i, j;
     for (i = - 1; ++i < n; )
         for (j = - 1; ++j < m; )
