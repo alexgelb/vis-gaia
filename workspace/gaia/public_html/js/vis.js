@@ -41,15 +41,21 @@ d3.csv("./data/GaiaSource_1.csv",
 			var xAxis = document.getElementById("xAxisValue");
 			var yAxis = document.getElementById("yAxisValue");
 			var headerValue = document.getElementById("headerValues");
+            var dataValue = document.getElementById("DataValue");
+            
+    
 
 			for (var i = 0; i < headerNames.length; i++) {
 				var xAxisOption = document.createElement("option");
 				var yAxisOption = document.createElement("option");
+                var dataValueOption = document.createElement("option");
 				var headerValueBox = document.createElement("input");
 				var headerValueElement = document.createElement("div");
 				xAxisOption.text = headerNames[i];
 				yAxisOption.text = headerNames[i];
+                dataValueOption.text = headerNames[i];
 				headerValueBox.type = "checkbox";
+                headerValueBox.disabled= true;
 				headerValueBox.name = "boxes";
 				headerValueBox.onclick = checkboxLimit();
 				headerValueBox.id = headerNames[i];
@@ -59,10 +65,12 @@ d3.csv("./data/GaiaSource_1.csv",
 				headerValue.appendChild(headerValueElement);
 
 				xAxis.add(xAxisOption);
+                dataValue.add(dataValueOption);
 				yAxis.add(yAxisOption);
 
 			}
-
+ 
+/*         
 			for (var i = 0; i < headerNames.length; i++) {
 				var xAxisOption = document.createElement("option");
 				var yAxisOption = document.createElement("option");
@@ -80,7 +88,7 @@ d3.csv("./data/GaiaSource_1.csv",
 				xAxis.add(xAxisOption);
 				yAxis.add(yAxisOption);
 
-			}
+			}*/
 
 			var datasetname = document.getElementById("datasetname");
 			var rows = document.getElementById("rowCount");
@@ -96,7 +104,12 @@ function submitForm() {
 	var xAxisValue = xAxis.options[xAxis.selectedIndex].text;
 	var yAxis = document.getElementById("yAxisValue");
 	var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
-
+    var dataElement = document.getElementById("DataValue");
+	var dataValue = xAxis.options[dataElement.selectedIndex].text;
+    
+    var binSize = document.getElementById("BinSize").value;
+	
+    
 	if (document.getElementById("scatterplotType").checked) {
 		drawScatterplot(xAxisValue, yAxisValue);
 	} else if (document.getElementById("barplotType").checked) {
@@ -106,6 +119,11 @@ function submitForm() {
 		getCheckedBoxes();
 		correlation(checkedBoxes);
 	}
+    
+    else if (document.getElementById("histogramType").checked) {
+		// drawHistogram(dataValue, binSize);
+	}
+	
 }
 
 function drawScatterplot(xAxisValue, yAxisValue) {
@@ -260,4 +278,26 @@ function correlation(checkedBoxes) {
 		}
 	}
 	console.log(correlations);
+}
+
+function histogramActive()
+{
+   if(document.getElementById("histogramType").checked)
+   {
+      document.getElementById("DataValue").disabled=false;
+       document.getElementById("BinSize").disabled=false;
+   }
+   else
+   {
+      document.getElementById("DataValue").disabled=true;
+       document.getElementById("BinSize").disabled=true;
+   }
+    if (document.getElementById("scattermatrixType").checked)
+   {
+        document.getElementsByName("boxes").disabled=false;
+    }
+    else
+   {
+      document.getElementsByName("boxes").disabled=true;
+   }
 }

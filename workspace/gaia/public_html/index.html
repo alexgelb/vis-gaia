@@ -62,33 +62,58 @@
                         </div>
                     </div>
                     
-                    <div class="row">
+                 <div class="row">
                         <div class="col-4">
                             <label class="head-text">Plottype:</label>
                         </div>
                         <div class="col-8">
                             <div class="col-12">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="plotType" id="scatterplotType" value="scatterplot" checked>
+                                    <input class="form-check-input" type="radio" name="plotType" id="scatterplotType" value="scatterplot" onclick='histogramActive()'>
                                     Scatterplot
                                 </label>
                             </div>
                             <div class="col-12">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="plotType" id="barplotType" value="barplot">
-                                    Barplot
+                                    <input class="form-check-input" type="radio" name="plotType" id="scattermatrixType" value="scattermatrix" onclick='histogramActive()'>
+                                    Scatter Matrix
+                                </label>
+                            </div>
+                             <div class="col-12">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="plotType" id="histogramType" value="histogram" onclick='histogramActive()' >
+                                    Histogram
                                 </label>
                             </div>
                             <div class="col-12">
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="plotType" id="scattermatrixType" value="scattermatrix">
-                                    Scatterplot Matrix
+                                    <input class="form-check-input" type="radio" name="plotType" id="barplotType" value="barplot" onclick='histogramActive()'>
+                                    Barplot
                                 </label>
                             </div>
+                           </div>
+                    </div> <br>
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="head-text">Data</label>
+                        </div>
+                        <div class="col-8">
+                            <select class="col-12" id="DataValue" disabled=true></select>
                         </div>
                     </div>
-                    <div class="button-align">
-                        <button type="button" class="btn btn-primary btn-sm" onclick="submitForm()">Plot</button>
+                    
+                    <div class="row">
+                        <div class="col-4">
+                           <label class="head-text">Bin Size</label>
+                            
+                        </div>
+                       <div class="col-8">
+                            <input class="col-12" type ="number" id="BinSize" placeholder="20" disabled=true>
+                        </div>
+                    </div>
+                    
+                    <div class="button-align"> <br>
+                        <button type="button" class="Buttons" onclick="submitForm()">Plot</button>
                     </div>
                 </div>
             </form>
