@@ -1,142 +1,142 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Visualization and Visual Data - GAIA</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="css/styles.css">
-        <script src="js/d3.js"></script>
-    </head>
-    <body>
-        <div class="navbar-left">
-            <div class="data-menu border rounded">
-                <h6>Data</h6>
-                <hr>
-                <div class="row">
-                    <div class="col-6">
-                        <label class="head-text">Datasetname:</label>
-                    </div>
-                    <div class="col-6">
-                        <label class="text-size" id="datasetname"></label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="head-text">Rows:</label>
-                    </div>
-                    <div class="col">
-                        <label class="text-size" id="rowCount"></label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="head-text">Columns:</label>
-                    </div>
-                    <div class="col">
-                        <label class="text-size" id="columnCount"></label>
-                    </div>
-                </div>
+   <head>
+      <title>Visualization and Visual Data - GAIA</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+      <link rel="stylesheet" type="text/css" href="css/styles.css">
+      <script src="js/d3.js"></script>
+   </head>
+   <body>
+      <div class="navbar-left">
+         <div class="data-menu border rounded">
+            <h6>Data</h6>
+            <hr>
+            <div class="row">
+               <div class="col-6">
+                  <label class="head-text">Datasetname:</label>
+               </div>
+               <div class="col-6">
+                  <label class="text-size" id="datasetname"></label>
+               </div>
             </div>
-            <form>
-                <div class="options-menu border rounded">
-                    <h6>Options</h6>
-                    <hr>
+            <div class="row">
+               <div class="col">
+                  <label class="head-text">Rows:</label>
+               </div>
+               <div class="col">
+                  <label class="text-size" id="rowCount"></label>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col">
+                  <label class="head-text">Columns:</label>
+               </div>
+               <div class="col">
+                  <label class="text-size" id="columnCount"></label>
+               </div>
+            </div>
+         </div>
+         <form>
+            <div class="options-menu border rounded">
+               <h6>Options</h6>
+               <hr>
+               <div class="row">
+                  <div class="col-4">
+                     <label class="head-text">Plottype:</label>
+                  </div>
+                  <div class="col-8">
+                     <div class="col-12">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="plotType" id="scatterplotType" value="scatterplot" onclick='histogramActive()'>
+                        Scatterplot
+                        </label>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="plotType" id="scattermatrixType" value="scattermatrix" onclick='histogramActive()'>
+                        Scattermatrix
+                        </label>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="plotType" id="histogramType" value="histogram" onclick='histogramActive()' >
+                        Histogram
+                        </label>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="plotType" id="barplotType" value="barplot" onclick='histogramActive()'>
+                        Barplot
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <br>
+               <div class="row">
+                  <div class="col-4">
+                     <label class="head-text">X-Axis</label>
+                  </div>
+                  <div class="col-8">
+                     <select class="col-12" id="xAxisValue" disabled=true></select>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-4">
+                     <label class="head-text">Y-Axis</label>
+                  </div>
+                  <div class="col-8">
+                     <select class="col-12" id="yAxisValue" disabled=true></select>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-4">
+                     <label class="head-text">Bin Size</label>
+                  </div>
+                  <div class="col-8">
+                     <input class="col-12" type ="number" id="BinSize" placeholder="20" disabled=true>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-4">
+                     <label class="head-text">Multiple Data</label>
+                  </div>
+                  <div class="col-8">
+                     <select class="col-12" id="MultipleData" disabled=true size =5 multiple></select>
+                  </div>
+               </div>
+               <div class="button-align"> <br>
+                  <button type="button" class="Buttons" onclick="submitForm()" onselect>Plot</button>
+               </div>
+               <div class="button-align">
+                  <p> </p>
+                  <button type="button" class="Buttons1" onclick="deleteAll()" onselect>Remove</button>
+               </div>
+            </div>
+         </form>
+         <!--
+            <div class="options-menu border rounded">
+            <h6>Dataset</h6>
+            <hr>
+            <form id = "form1" name="form1">
+            <div id="headerValues">
+            </div>
+              </form>
                     
-                 <div class="row">
-                        <div class="col-4">
-                            <label class="head-text">Plottype:</label>
-                        </div>
-                        <div class="col-8">
-                            <div class="col-12">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="plotType" id="scatterplotType" value="scatterplot" onclick='histogramActive()'>
-                                    Scatterplot
-                                </label>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="plotType" id="scattermatrixType" value="scattermatrix" onclick='histogramActive()'>
-                                    Scattermatrix
-                                </label>
-                            </div>
-                             <div class="col-12">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="plotType" id="histogramType" value="histogram" onclick='histogramActive()' >
-                                    Histogram
-                                </label>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="plotType" id="barplotType" value="barplot" onclick='histogramActive()'>
-                                    Barplot
-                                </label>
-                            </div>
-                           </div>
-                    </div> <br>
-                    <div class="row">
-                        <div class="col-4">
-                            <label class="head-text">X-Axis</label>
-                        </div>
-                        <div class="col-8">
-                            <select class="col-12" id="xAxisValue" disabled=true></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <label class="head-text">Y-Axis</label>
-                        </div>
-                        <div class="col-8">
-                            <select class="col-12" id="yAxisValue" disabled=true></select>
-                        </div>
-                    </div>
-                    
-                    
-                  
-                    <div class="row">
-                        <div class="col-4">
-                           <label class="head-text">Bin Size</label>
-                            
-                        </div>
-                       <div class="col-8">
-                            <input class="col-12" type ="number" id="BinSize" placeholder="20" disabled=true>
-                        </div>
-                    </div>
-                     <div class="row">
-                        <div class="col-4">
-                            <label class="head-text">Multiple Data</label>
-                        </div>
-                        <div class="col-8">
-                            <select class="col-12" id="MultipleData" disabled=true size =5 multiple></select>
-                        </div>
-                    </div>
-                    <div class="button-align"> <br>
-                        <button type="button" class="Buttons" onclick="submitForm()" onselect>Plot</button>
-                    </div>
-                </div>
-            </form>
-            <!--
-                 <div class="options-menu border rounded">
-                <h6>Dataset</h6>
-                <hr>
-                <form id = "form1" name="form1">
-                <div id="headerValues">
-                </div>
-                   </form>
-                         
             </div> -->
-              
-        </div>
-        <div class="content">
-            <div class="plots border rounded">
-                <h6>Data-Plots</h6>
-                <div id="plot"></div>
-            </div>
-        </div>
-
-        <script type="text/javascript" src="js/vis.js"></script>
-    </body>
+      </div>
+      <div class="content">
+         <div class="plots border rounded">
+            <h6>Data-Plots</h6>
+            <div id="plot"></div>
+         </div>
+      </div>
+      <script src="https://d3js.org/d3.v3.min.js"></script>
+      <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+      <script type="text/javascript" src="js/vis.js"></script>
+   </body>
 </html>
