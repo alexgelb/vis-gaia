@@ -45,22 +45,6 @@
                 <div class="options-menu border rounded">
                     <h6>Options</h6>
                     <hr>
-                    <div class="row">
-                        <div class="col-4">
-                            <label class="head-text">X-Axis</label>
-                        </div>
-                        <div class="col-8">
-                            <select class="col-12" id="xAxisValue"></select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <label class="head-text">Y-Axis</label>
-                        </div>
-                        <div class="col-8">
-                            <select class="col-12" id="yAxisValue"></select>
-                        </div>
-                    </div>
                     
                  <div class="row">
                         <div class="col-4">
@@ -76,7 +60,7 @@
                             <div class="col-12">
                                 <label class="form-check-label">
                                     <input class="form-check-input" type="radio" name="plotType" id="scattermatrixType" value="scattermatrix" onclick='histogramActive()'>
-                                    Scatter Matrix
+                                    Scattermatrix
                                 </label>
                             </div>
                              <div class="col-12">
@@ -95,13 +79,23 @@
                     </div> <br>
                     <div class="row">
                         <div class="col-4">
-                            <label class="head-text">Data</label>
+                            <label class="head-text">X-Axis</label>
                         </div>
                         <div class="col-8">
-                            <select class="col-12" id="DataValue" disabled=true></select>
+                            <select class="col-12" id="xAxisValue" disabled=true></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label class="head-text">Y-Axis</label>
+                        </div>
+                        <div class="col-8">
+                            <select class="col-12" id="yAxisValue" disabled=true></select>
                         </div>
                     </div>
                     
+                    
+                  
                     <div class="row">
                         <div class="col-4">
                            <label class="head-text">Bin Size</label>
@@ -111,13 +105,20 @@
                             <input class="col-12" type ="number" id="BinSize" placeholder="20" disabled=true>
                         </div>
                     </div>
-                    
+                     <div class="row">
+                        <div class="col-4">
+                            <label class="head-text">Multiple Data</label>
+                        </div>
+                        <div class="col-8">
+                            <select class="col-12" id="MultipleData" disabled=true size =5 multiple></select>
+                        </div>
+                    </div>
                     <div class="button-align"> <br>
-                        <button type="button" class="Buttons" onclick="submitForm()">Plot</button>
+                        <button type="button" class="Buttons" onclick="submitForm()" onselect>Plot</button>
                     </div>
                 </div>
             </form>
-            
+            <!--
                  <div class="options-menu border rounded">
                 <h6>Dataset</h6>
                 <hr>
@@ -126,7 +127,7 @@
                 </div>
                    </form>
                          
-            </div>
+            </div> -->
               
         </div>
         <div class="content">

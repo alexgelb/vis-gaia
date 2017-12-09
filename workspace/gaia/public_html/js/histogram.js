@@ -108,5 +108,6 @@ svg.append("g")
       .style("text-anchor", "end")
       .text("Count: ");
         
+
       
 }); 

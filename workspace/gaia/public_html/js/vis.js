@@ -1,7 +1,7 @@
 /* global d3 */
 var value = 0;
 var headerNames = [];
-var checkedBoxes = [];
+var MultipleData = [];
 var csv_data;
 
 d3.csv("./data/GaiaSource_1.csv",
@@ -18,6 +18,7 @@ d3.csv("./data/GaiaSource_1.csv",
 			// delete csv_data[i]["duplicated_source"];
 			// delete csv_data[i]["phot_variable_flag"];
 			// }
+          var fileData = csv_data;
 			for (var i = 0; i < fileData.length; i++) {
 				delete fileData[i]["astrometric_primary_flag"];
 				delete fileData[i]["duplicated_source"];
@@ -40,21 +41,21 @@ d3.csv("./data/GaiaSource_1.csv",
 
 			var xAxis = document.getElementById("xAxisValue");
 			var yAxis = document.getElementById("yAxisValue");
-			var headerValue = document.getElementById("headerValues");
-            var dataValue = document.getElementById("DataValue");
-            
-    
+			//var headerValue = document.getElementById("headerValues");
+            var multipleValue = document.getElementById("MultipleData");
+        
 
 			for (var i = 0; i < headerNames.length; i++) {
 				var xAxisOption = document.createElement("option");
 				var yAxisOption = document.createElement("option");
-                var dataValueOption = document.createElement("option");
-				var headerValueBox = document.createElement("input");
-				var headerValueElement = document.createElement("div");
+				//var headerValueBox = document.createElement("input");
+                var multipleOption = document.createElement("option");
+				//var headerValueElement = document.createElement("div");
 				xAxisOption.text = headerNames[i];
 				yAxisOption.text = headerNames[i];
-                dataValueOption.text = headerNames[i];
-				headerValueBox.type = "checkbox";
+                multipleOption.text = headerNames[i];
+                multipleOption.id = headerNames[i];
+				/*headerValueBox.type = "checkbox";
                 headerValueBox.disabled= true;
 				headerValueBox.name = "boxes";
 				headerValueBox.onclick = checkboxLimit();
@@ -62,33 +63,13 @@ d3.csv("./data/GaiaSource_1.csv",
 				headerValue.appendChild(headerValueBox);
 				headerValueElement.appendChild(document
 						.createTextNode(headerNames[i]));
-				headerValue.appendChild(headerValueElement);
+				headerValue.appendChild(headerValueElement);*/
 
 				xAxis.add(xAxisOption);
-                dataValue.add(dataValueOption);
 				yAxis.add(yAxisOption);
+                multipleValue.add(multipleOption);
 
 			}
- 
-/*         
-			for (var i = 0; i < headerNames.length; i++) {
-				var xAxisOption = document.createElement("option");
-				var yAxisOption = document.createElement("option");
-				var headerValueBox = document.createElement("input");
-				var headerValueElement = document.createElement("div");
-				xAxisOption.text = headerNames[i];
-				yAxisOption.text = headerNames[i];
-				headerValueBox.type = "checkbox";
-				headerValueBox.id = headerNames[i];
-				headerValue.appendChild(headerValueBox);
-				headerValueElement.appendChild(document
-						.createTextNode(headerNames[i]));
-				headerValue.appendChild(headerValueElement);
-
-				xAxis.add(xAxisOption);
-				yAxis.add(yAxisOption);
-
-			}*/
 
 			var datasetname = document.getElementById("datasetname");
 			var rows = document.getElementById("rowCount");
@@ -104,8 +85,8 @@ function submitForm() {
 	var xAxisValue = xAxis.options[xAxis.selectedIndex].text;
 	var yAxis = document.getElementById("yAxisValue");
 	var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
-    var dataElement = document.getElementById("DataValue");
-	var dataValue = xAxis.options[dataElement.selectedIndex].text;
+    var dataMultiple = document.getElementById("MultipleData");
+	var MultipleDataValue = xAxis.options[dataMultiple.selectedIndex].text;
     
     var binSize = document.getElementById("BinSize").value;
 	
@@ -115,13 +96,13 @@ function submitForm() {
 	} else if (document.getElementById("barplotType").checked) {
 		drawScatterplot(xAxisValue, yAxisValue);
 	} else if (document.getElementById("scattermatrixType").checked) {
-		drawScatterplot(xAxisValue, yAxisValue);
-		getCheckedBoxes();
-		correlation(checkedBoxes);
+		//drawScattermatrix(getMultipleData());
+		getMultipleData();
+		//correlation(MultipleDataValue);
 	}
     
     else if (document.getElementById("histogramType").checked) {
-		// drawHistogram(dataValue, binSize);
+		// drawHistogram(xAxisValue, binSize);
 	}
 	
 }
@@ -219,6 +200,21 @@ function drawScatterplot(xAxisValue, yAxisValue) {
 	}
 }
 
+
+function getMultipleData() {
+	MultipleData = headerNames.filter(function(d) {
+		if (document.getElementById(d).selected)
+			return d;
+        
+	});
+    if (MultipleData.length>5) {
+        alert("You can select only 5 values!");
+        MultipleData=0;
+    }
+  //  console.log(MultipleData);
+}
+
+/*
 function getCheckedBoxes() {
 	checkedBoxes = headerNames.filter(function(d) {
 		if (document.getElementById(d).checked)
@@ -242,26 +238,27 @@ function checkboxLimit() {
 		}
 	}
 }
+*/
 
-function correlation(checkedBoxes) {
+function correlation(MultipleData) {
 	var column1, column2;
 	var correlations = [];
 	// TODO Nicole dynamisch machen
 	for (var i = 0; i < 4; i++) {
 		for (var j = i + 1; j < 5; j++) {
 			column1 = csv_data.map(function(d) {
-				return +d[checkedBoxes[i]]
+				return +d[MultipleData[i]]
 			});
 			column2 = csv_data.map(function(d) {
-				return +d[checkedBoxes[j]]
+				return +d[MultipleData[j]]
 			});
 
 			var avg1 = d3.sum(column1, function(d) {
-				return +d[checkedBoxes[i]]
+				return +d[MultipleData[i]]
 			}) / column1.length;
 
 			var avg2 = d3.sum(column2, function(d) {
-				return +d[checkedBoxes[j]]
+				return +d[MultipleData[j]]
 			}) / column2.length;
 
 			correlations.push(d3.sum(column1, function(d) {
@@ -284,20 +281,50 @@ function histogramActive()
 {
    if(document.getElementById("histogramType").checked)
    {
-      document.getElementById("DataValue").disabled=false;
+      document.getElementById("xAxisValue").disabled=false;
        document.getElementById("BinSize").disabled=false;
    }
    else
    {
-      document.getElementById("DataValue").disabled=true;
+      document.getElementById("xAxisValue").disabled=true;
        document.getElementById("BinSize").disabled=true;
    }
-    if (document.getElementById("scattermatrixType").checked)
-   {
-        document.getElementsByName("boxes").disabled=false;
+  /*  if (document.getElementById("scattermatrixType").checked)
+   {    
+       for (var i = 0; i < document.getElementsByName("boxes").length; i++) {
+				document.getElementsByName("boxes")[i].disabled = false;
+			}
+       
     }
     else
    {
-      document.getElementsByName("boxes").disabled=true;
+      for (var i = 0; i < document.getElementsByName("boxes").length; i++) {
+				document.getElementsByName("boxes")[i].disabled = true;
+			}
+   }*/
+    
+    if (document.getElementById("scatterplotType").checked) {
+		document.getElementById("xAxisValue").disabled=false;
+       document.getElementById("yAxisValue").disabled=false;
+	}
+    else if (document.getElementById("histogramType").checked){ 
+        document.getElementById("xAxisValue").disabled=false;
+    }
+    else  {
+        document.getElementById("xAxisValue").disabled=true;
+       document.getElementById("yAxisValue").disabled=true;
+    }
+    
+    if(document.getElementById("scattermatrixType").checked)
+   {
+      document.getElementById("MultipleData").disabled=false;
+       
+   }
+   else
+   {
+      document.getElementById("MultipleData").disabled=true;
+
    }
 }
+
+
