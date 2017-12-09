@@ -39,7 +39,6 @@ d3.csv("./data/GaiaSource_1.csv",
 
         headerNames = traits;
         value = csv_data.length;
-
         var xAxis = document.getElementById("xAxisValue");
         var yAxis = document.getElementById("yAxisValue");
         //var headerValue = document.getElementById("headerValues");
