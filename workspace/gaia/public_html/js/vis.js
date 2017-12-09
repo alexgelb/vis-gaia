@@ -309,6 +309,7 @@ function histogramActive()
 	}
     else if (document.getElementById("histogramType").checked){ 
         document.getElementById("xAxisValue").disabled=false;
+         document.getElementById("yAxisValue").disabled=true;
     }
     else  {
         document.getElementById("xAxisValue").disabled=true;
