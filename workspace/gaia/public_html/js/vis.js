@@ -670,8 +670,8 @@ function getMultipleData() {
 }
 
 /*
-function getCheckedBoxes() {
-	checkedBoxes = headerNames.filter(function(d) {
+function getMultipleData() {
+	MultipleData = headerNames.filter(function(d) {
 		if (document.getElementById(d).checked)
 			return d
 	});
@@ -696,40 +696,54 @@ function checkboxLimit() {
 */
 
 function correlation(MultipleData) {
-    var column1, column2;
-    var correlations = [];
-    // TODO Nicole dynamisch machen
-    for (var i = 0; i < 4; i++) {
-        for (var j = i + 1; j < 5; j++) {
-            column1 = csv_data.map(function(d) {
-                return +d[MultipleData[i]]
-            });
-            column2 = csv_data.map(function(d) {
-                return +d[MultipleData[j]]
-            });
+    function correlation(MultipleData) {
+        var correlations = [];
 
-            var avg1 = d3.sum(column1, function(d) {
-                return +d[MultipleData[i]]
-            }) / column1.length;
+        var filtered_data = csv_data.filter(function (d) {
+            return MultipleData.reduce(function (acc, column) {
+                return acc && +d[column] && +d[column] != -999 && !isNaN(+d[column]);
+            }, true);
+        });
 
-            var avg2 = d3.sum(column2, function(d) {
-                return +d[MultipleData[j]]
-            }) / column2.length;
+        for (var i = 0; i < MultipleData.length - 1; i++) {
+            for (var j = i + 1; j < MultipleData.length; j++) {
+                var col1 = filtered_data.map(function (d) {
+                    return +d[MultipleData[i]]
+                });
 
-            correlations.push(d3.sum(column1, function(d) {
-                return column1.forEach(function(d, i) {
-                    return (d - avg1) * (column2[i] - avg2)
-                })
-            }) / Math.sqrt(d3.sum(column1, function(d, i) {
-                return column1.forEach(function(d) {
-                    return Math.pow((d - avg1), 2)
-                })
-            }) * d3.sum(csv_data, function(d, i) {
-                return Math.pow((column2[i] - avg2), 2)
-            })));
+                var col2 = filtered_data.map(function (d) {
+                    return +d[MultipleData[j]]
+                });
+
+                var avg_col1 = d3.sum(col1, function (d) {
+                    return d
+                }) / col1.length;
+
+                var avg_col2 = d3.sum(col2, function (d) {
+                    return d
+                }) / col2.length;
+
+                var coeff = d3.sum(col1.map(function (d, i) {
+                    return (d - avg_col1) * (col2[i] - avg_col2)
+                }), function (d) {
+                    return d
+                }) / Math.sqrt(
+                    d3.sum(col1.map(function (d) {
+                        return Math.pow((d - avg_col1), 2)
+                    }), function (d) {
+                        return d
+                    }) * d3.sum(col2.map(function (d) {
+                        return Math.pow((d - avg_col2), 2)
+                    }), function (d) {
+                        return d
+                    })
+                );
+                console.log(MultipleData[i] + " | " + MultipleData[j] + ": Koeffizient = " + coeff + "\n")
+                correlations.push(coeff);
+            }
         }
+        console.log(correlations);
     }
-    console.log(correlations);
 }
 
 function histogramActive() {
