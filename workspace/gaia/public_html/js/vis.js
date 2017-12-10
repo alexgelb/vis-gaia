@@ -1,3 +1,8 @@
+//import * as d3 from 'd3'
+//import {Renderer, PCA} from '/src'
+//const pcaClass = require('./pca')
+	
+
 /* global d3 */
 var value = 0;
 var headerNames = [];
@@ -115,6 +120,10 @@ function submitForm() {
         
         // TODO Nicole: drawCorrelogram(correlation(getMultipleData()));  
         drawCorrelogram(getMultipleData());
+    } else if (document.getElementById("pcaType").checked) {
+    	drawPCA();
+    } else {
+    	consolge.log("NONE")
     }
 }
 
@@ -590,6 +599,62 @@ function drawScatterplot(xAxisValue, yAxisValue) {
     }
 }
 
+
+function drawPCA() {
+	d3.csv('GaiaSource_1.csv')
+	// d3.csv('data.csv')
+	.row((d) => {
+	   const obj = {
+	      name: d.source_id,
+	// name: d.name,
+			   values: {}
+	    }
+	    for (const key in d) {
+	      if (key !== 'solution_id' && key !== 'source_id' && key !== 'random_index' && key !== 'random_index' && key !== 'ref_epoch' && key !== 'astrometric_primary_flag' && key !== 'duplicated_source' && key !== 'phot_variable_flag') {
+	// if(key !== 'name' ) {
+	// obj.values[key] = +d[key]
+	    	var tmp = parseFloat(d[key]);
+	    	if (isNaN(tmp)) {
+	    		obj.values[key] = 0;
+	    	} else {
+	    		obj.values[key] = tmp;
+	    	}
+	    	
+	      }
+	    }
+	//   console.log(obj);
+	    return obj
+	  })
+	  .get((errors, data) => {
+	    const p = 0.999999999999
+	    const pca = new PCA(data)
+	    const lambda = pca.lambda()
+	    const sumLambda = lambda.reduce((a, x) => a + x)
+	    const renderer = new Renderer().size([400, 400])
+
+	    let i
+	    let acc = 0
+	    for (i = 0; i < lambda.length; ++i) {
+	      acc += lambda[i]
+	      if (acc > (sumLambda * p)) {
+	        break
+	      }
+	      
+	    }
+	    const n = i + 1;
+	    console.log("n: " + n)
+	    for (let i = 0; i < n; ++i) {
+	      for (let j = i + 1; j < n; ++j) {
+	        d3.select('body')
+	          .append('svg')
+	          .datum(pca.get(i, j))
+	          .call(renderer.render())
+//	    	  console.log(pca.get(i,j))
+	      }
+	    }
+	  })
+
+}
 
 function getMultipleData() {
     MultipleData = headerNames.filter(function(d) {

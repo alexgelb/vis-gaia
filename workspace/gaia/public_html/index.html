@@ -11,8 +11,7 @@
       <link rel="stylesheet" type="text/css" href="css/styles.css">
       <script src="js/d3.js"></script>
          <script data-require="d3@3.5.3" data-semver="3.5.3" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
-     
-
+     	
    </head>
    <body>
       <div class="navbar-left">
@@ -75,6 +74,12 @@
                         <label class="form-check-label">
                         <input class="form-check-input" type="radio" name="plotType" id="histogramType" value="histogram" onclick='histogramActive()' >
                         Histogram
+                        </label>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="plotType" id="pcaType" value="pca" onclick='histogramActive()' >
+                        PCA
                         </label>
                      </div>
                   </div>
@@ -143,6 +148,9 @@
       </div>
       <script src="https://d3js.org/d3.v3.min.js"></script>
       <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+       <script> src="js/src/emlapack-custom.js"</script>
+     	<script> src="js/src/pca.js"</script>
+     	<script> src="js/src/renderer.js"</script>
       <script type="text/javascript" src="js/vis.js"></script>
    </body>
 </html>
