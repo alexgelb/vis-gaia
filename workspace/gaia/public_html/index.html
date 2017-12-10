@@ -77,12 +77,6 @@
                         Histogram
                         </label>
                      </div>
-                     <div class="col-12">
-                        <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="plotType" id="barplotType" value="barplot" onclick='histogramActive()'>
-                        Barplot
-                        </label>
-                     </div>
                   </div>
                </div>
                <br>
@@ -103,10 +97,13 @@
                   </div>
                </div>
                <div class="row">
+                 
                   <div class="col-4">
-                     <label class="head-text">Bin Size</label>
+                     <label class="head-text">#Bin<span style='padding-left:14px;'></span></label><input id="binCheck" type="checkbox" disabled=true onclick='binCheckFunction()'> 
                   </div>
+                  
                   <div class="col-8">
+                    
                      <input class="col-12" type ="number" id="BinSize" placeholder="20" disabled=true>
                   </div>
                </div>

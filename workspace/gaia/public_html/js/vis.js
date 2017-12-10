@@ -85,13 +85,12 @@ function submitForm() {
     var xAxisValue = xAxis.options[xAxis.selectedIndex].text;
     var yAxis = document.getElementById("yAxisValue");
     var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
+    var binSize;
 
 
 
 
     if (document.getElementById("scatterplotType").checked) {
-        drawScatterplot(xAxisValue, yAxisValue);
-    } else if (document.getElementById("barplotType").checked) {
         drawScatterplot(xAxisValue, yAxisValue);
     } else if (document.getElementById("scattermatrixType").checked) {
         //var dataMultiple = document.getElementById("MultipleData");
@@ -101,7 +100,12 @@ function submitForm() {
         // TODO: drawScattermatrix(getMultipleData());
         
     } else if (document.getElementById("histogramType").checked) {
-        var binSize = document.getElementById("BinSize").value;
+        if (document.getElementById("binCheck").checked){
+            binSize = document.getElementById("BinSize").value;
+        }
+        else {
+             binSize=0;
+        }
         drawHistogram(xAxisValue, binSize);
 
     
@@ -358,6 +362,7 @@ iR.forEach(function(d) {
 }
 
 function drawHistogram(xAxisValue, binSize) {
+    var bin = 0;
     var color = "grey";
     var dataset = csv_data.map(function(d) {
         return d[xAxisValue];
@@ -386,11 +391,17 @@ function drawHistogram(xAxisValue, binSize) {
     var x = d3.scale.linear()
         .domain([min, max])
         .range([0, width]);
-
-    // binsize?
+ 
+    
+  if (binSize==0){
+      bin = Math.log2(dataset.length)+1;
+    }
+    else {
+          bin=binSize;
+    }
+    
     var data = d3.layout.histogram()
-        //.bins(x.ticks(Math.log2(dataset.length)+1))
-        .bins(x.ticks(binSize))
+        .bins(x.ticks(bin))
         (dataset);
 
     var yMax = d3.max(data, function(d) {
@@ -657,13 +668,7 @@ function correlation(MultipleData) {
 }
 
 function histogramActive() {
-    if (document.getElementById("histogramType").checked) {
-        document.getElementById("xAxisValue").disabled = false;
-        document.getElementById("BinSize").disabled = false;
-    } else {
-        document.getElementById("xAxisValue").disabled = true;
-        document.getElementById("BinSize").disabled = true;
-    }
+
     /*  if (document.getElementById("scattermatrixType").checked)
    {    
        for (var i = 0; i < document.getElementsByName("boxes").length; i++) {
@@ -684,9 +689,13 @@ function histogramActive() {
     } else if (document.getElementById("histogramType").checked) {
         document.getElementById("xAxisValue").disabled = false;
         document.getElementById("yAxisValue").disabled = true;
+        //document.getElementById("BinSize").disabled = false;
+        document.getElementById("binCheck").disabled = false;
     } else {
         document.getElementById("xAxisValue").disabled = true;
         document.getElementById("yAxisValue").disabled = true;
+        document.getElementById("binCheck").disabled = true;
+        document.getElementById("BinSize").disabled = true;
     }
 
     if (document.getElementById("scattermatrixType").checked || document.getElementById("correlogramType").checked ) {
@@ -697,3 +706,13 @@ function histogramActive() {
 
     }
 }
+
+   function binCheckFunction(){
+        if (document.getElementById("binCheck").checked){
+        document.getElementById("BinSize").disabled=false;
+        }
+    else {
+        document.getElementById("BinSize").disabled=true;
+    
+    }
+    }
