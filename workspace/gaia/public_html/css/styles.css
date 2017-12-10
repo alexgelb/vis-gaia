@@ -173,3 +173,8 @@ button:focus {
     left: 0;
     font: 10px sans-serif;
 }
+
+.y.axis path{
+    fill: none;
+    stroke: none;
+}
