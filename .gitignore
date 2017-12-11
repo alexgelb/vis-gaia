@@ -3,3 +3,8 @@ M2_LoFiPrototype.synctex.gz
 M2_LoFiPrototype.pdf
 M2_LoFiPrototype.log
 /workspace/gaia/nbproject/private/
+
+# Webstorm stuff:
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
