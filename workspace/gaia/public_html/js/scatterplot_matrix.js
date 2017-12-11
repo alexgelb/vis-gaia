@@ -11,12 +11,12 @@ var y = d3.scaleLinear()
         .range([size - padding / 2, padding / 2]);
 
 var xAxis = d3.axisBottom()
-        .scale(x)
-        .ticks(6);
+        .scale(x);
+//        .ticks(6);
 
 var yAxis = d3.axisLeft()
-        .scale(y)
-        .ticks(6);
+        .scale(y);
+//        .ticks(6);
 
 var color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -25,21 +25,11 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
         throw error;
 
     var domainByTrait = {},
-//            traits = data,
-            traits = d3.keys(data[0]).filter(function (d) {
-        return d === "pmra" || d === "pmra_error";
-    }),
-//            .filter(number => number > -900)
-//            traits = d3.keys(data)
-//            .filter(function (d) {
-//                return (d !== undefined) && !isNaN(d) && d > -900;
-//                return (d.key d.value > 500);
-//            }),
-//                    .filter(
-//            function (d) {
-//                return d === "pmra" || d === "pmra_error" || d === "pmdec" || d === "pmdec_error" || d === "ra_dec_corr" || d === "ra_parallax_corr";
-////                return d !== "astrometric_primary_flag" && d !== "duplicated_source" && d !== "phot_variable_flag";
-//            }),
+            traits = d3.keys(data[0]).filter(
+            function (d) {
+//                return d === "pmra" || d === "pmdec" || d === "pmra_error";
+                return d;
+            }),
             n = traits.length;
 
     traits.forEach(function (trait) {
