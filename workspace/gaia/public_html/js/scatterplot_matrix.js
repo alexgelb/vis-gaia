@@ -189,3 +189,4 @@ function cross(a, b) {
             c.push({x: a[i], i: i, y: b[j], j: j});
     return c;
 }
+
