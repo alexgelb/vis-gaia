@@ -92,9 +92,9 @@ function submitForm() {
     var binSize;
 
 
-    if (document.getElementById("scatterplotType").checked) {
-        drawScatterplot(xAxisValue, yAxisValue);
-    } else if (document.getElementById("scattermatrixType").checked) {
+  /*  if (document.getElementById("scatterplotType").checked) {
+        drawScatterplot(xAxisValue, yAxisValue);*/
+    if (document.getElementById("scattermatrixType").checked) {
         //var dataMultiple = document.getElementById("MultipleData");
         //var MultipleDataValue = xAxis.options[dataMultiple.selectedIndex].text;
         correlation(getMultipleData());
@@ -114,14 +114,13 @@ function submitForm() {
     } else if (document.getElementById("correlogramType").checked) {
         //var dataMultiple = document.getElementById("MultipleData");
         //var MultipleDataValue = xAxis.options[dataMultiple.selectedIndex].text;
-
-        // TODO Nicole: drawCorrelogram(correlation(getMultipleData()));
-        console.log(getMultipleData());
         drawCorrelogram(correlation(getMultipleData()));
+        //correlation(getMultipleData());
     } else if (document.getElementById("pcaType").checked) {
         drawPCA();
     } else {
-        consolge.log("NONE")
+        console.log("NONE");
+        alert("Choose a type of plot please!");
     }
 }
 
@@ -131,137 +130,73 @@ function deleteAll() {
 }
 
 function drawCorrelogram(data) {
-
-// data Beispiel
-// TODO Nicole: anstatt bespiel, array von objects mit correlations von multiple data
-    //console.log(data);
-    /*var data = [
-        {x: "val1", y: "val1", value: 1},
-        {x: "val1", y: "val2", value: -0.852161959426613},
-        {x: "val1", y: "val3", value: -0.847551379262479},
-        {x: "val1", y: "val4", value: -0.776168371826586},
-        {x: "val1", y: "val5", value: 0.681171907806749},
-        {x: "val1", y: "val6", value: -0.867659376517228},
-        {x: "val1", y: "val7", value: 0.418684033921778},
-        {x: "val1", y: "val8", value: 0.664038919127593},
-        {x: "val1", y: "val9", value: 0.599832429454648},
-        {x: "val1", y: "val10", value: 0.480284757338842},
-        {x: "val2", y: "val1", value: -0.852161959426613},
-        {x: "val2", y: "val2", value: 1},
-        {x: "val2", y: "val3", value: 0.902032872146999},
-        {x: "val2", y: "val4", value: 0.83244745272182},
-        {x: "val2", y: "val5", value: -0.69993811382877},
-        {x: "val2", y: "val6", value: 0.782495794463241},
-        {x: "val2", y: "val7", value: -0.591242073768869},
-        {x: "val2", y: "val8", value: -0.810811796083005},
-        {x: "val2", y: "val9", value: -0.522607046900675},
-        {x: "val2", y: "val10", value: -0.492686599389471},
-        {x: "val3", y: "val1", value: -0.847551379262479},
-        {x: "val3", y: "val2", value: 0.902032872146999},
-        {x: "val3", y: "val3", value: 1},
-        {x: "val3", y: "val4", value: 0.790948586369806},
-        {x: "val3", y: "val5", value: -0.71021392716927},
-        {x: "val3", y: "val6", value: 0.887979922058138},
-        {x: "val3", y: "val7", value: -0.433697880811014},
-        {x: "val3", y: "val8", value: -0.7104158907906},
-        {x: "val3", y: "val9", value: -0.591227040063948},
-        {x: "val3", y: "val10", value: -0.555569198562483},
-        {x: "val4", y: "val1", value: -0.776168371826586},
-        {x: "val4", y: "val2", value: 0.83244745272182},
-        {x: "val4", y: "val3", value: 0.790948586369806},
-        {x: "val4", y: "val4", value: 1},
-        {x: "val4", y: "val5", value: -0.44875911687292},
-        {x: "val4", y: "val6", value: 0.658747887344759},
-        {x: "val4", y: "val7", value: -0.708223388861953},
-        {x: "val4", y: "val8", value: -0.72309673735245},
-        {x: "val4", y: "val9", value: -0.243204257185851},
-        {x: "val4", y: "val10", value: -0.125704258225474},
-        {x: "val5", y: "val1", value: 0.681171907806749},
-        {x: "val5", y: "val2", value: -0.69993811382877},
-        {x: "val5", y: "val3", value: -0.71021392716927},
-        {x: "val5", y: "val4", value: -0.44875911687292},
-        {x: "val5", y: "val5", value: 1},
-        {x: "val5", y: "val6", value: -0.712440646697372},
-        {x: "val5", y: "val7", value: 0.091204759651183},
-        {x: "val5", y: "val8", value: 0.440278464955349},
-        {x: "val5", y: "val9", value: 0.71271112722627},
-        {x: "val5", y: "val10", value: 0.699610131934665},
-        {x: "val6", y: "val1", value: -0.867659376517228},
-        {x: "val6", y: "val2", value: 0.782495794463241},
-        {x: "val6", y: "val3", value: 0.887979922058138},
-        {x: "val6", y: "val4", value: 0.658747887344759},
-        {x: "val6", y: "val5", value: -0.712440646697372},
-        {x: "val6", y: "val6", value: 1},
-        {x: "val6", y: "val7", value: -0.174715878713405},
-        {x: "val6", y: "val8", value: -0.554915677663994},
-        {x: "val6", y: "val9", value: -0.692495258839484},
-        {x: "val6", y: "val10", value: -0.583286996536648},
-        {x: "val7", y: "val1", value: 0.418684033921778},
-        {x: "val7", y: "val2", value: -0.591242073768869},
-        {x: "val7", y: "val3", value: -0.433697880811014},
-        {x: "val7", y: "val4", value: -0.708223388861953},
-        {x: "val7", y: "val5", value: 0.091204759651183},
-        {x: "val7", y: "val6", value: -0.174715878713405},
-        {x: "val7", y: "val7", value: 1},
-        {x: "val7", y: "val8", value: 0.744535443526254},
-        {x: "val7", y: "val9", value: -0.229860862184883},
-        {x: "val7", y: "val10", value: -0.212682229720365},
-        {x: "val8", y: "val1", value: 0.664038919127593},
-        {x: "val8", y: "val2", value: -0.810811796083005},
-        {x: "val8", y: "val3", value: -0.7104158907906},
-        {x: "val8", y: "val4", value: -0.72309673735245},
-        {x: "val8", y: "val5", value: 0.440278464955349},
-        {x: "val8", y: "val6", value: -0.554915677663994},
-        {x: "val8", y: "val7", value: 0.744535443526254},
-        {x: "val8", y: "val8", value: 1},
-        {x: "val8", y: "val9", value: 0.168345124585359},
-        {x: "val8", y: "val10", value: 0.206023348733579},
-        {x: "val9", y: "val1", value: 0.599832429454648},
-        {x: "val9", y: "val2", value: -0.522607046900675},
-        {x: "val9", y: "val3", value: -0.591227040063948},
-        {x: "val9", y: "val4", value: -0.243204257185851},
-        {x: "val9", y: "val5", value: 0.71271112722627},
-        {x: "val9", y: "val6", value: -0.692495258839484},
-        {x: "val9", y: "val7", value: -0.229860862184883},
-        {x: "val9", y: "val8", value: 0.168345124585359},
-        {x: "val9", y: "val9", value: 1},
-        {x: "val9", y: "val10", value: 0.794058760256343},
-        {x: "val10", y: "val1", value: 0.480284757338842},
-        {x: "val10", y: "val2", value: -0.492686599389471},
-        {x: "val10", y: "val3", value: -0.555569198562483},
-        {x: "val10", y: "val4", value: -0.125704258225474},
-        {x: "val10", y: "val5", value: 0.699610131934665},
-        {x: "val10", y: "val6", value: -0.583286996536648},
-        {x: "val10", y: "val7", value: -0.212682229720365},
-        {x: "val10", y: "val8", value: 0.206023348733579},
-        {x: "val10", y: "val9", value: 0.794058760256343},
-        {x: "val10", y: "val10", value: 1}
-    ];*/
- var data = [{ x: "pmra", y: "pmra", value: 1 },
+ 
+  /*   var data = [
+{ x: "pmra", y: "pmra", value: 1 },
 { x: "pmra", y: "pmra_error", value: -0.12330284733382797 },
 { x: "pmra", y: "pmdec", value: 0.01882460365078317 },
 { x: "pmra", y: "pmdec_error", value: -0.11668777466257425 },
+                { x: "pmra_error", y: "pmra_error", value: 1 },
 { x: "pmra_error", y: "pmra", value: -0.12330284733382797 },
-{ x: "pmra_error", y: "pmra_error", value: 1 },
 { x: "pmra_error", y: "pmdec", value: 0.10047853529158035 },
 { x: "pmra_error", y: "pmdec_error", value: 0.8239659961934964 },
+                 { x: "pmdec", y: "pmdec", value: 1 },
 { x: "pmdec", y: "pmra", value: 0.01882460365078317 },
 { x: "pmdec", y: "pmra_error", value: -0.11668777466257425 },
-{ x: "pmdec", y: "pmdec", value: 1 },
 { x: "pmdec", y: "pmdec_error", value: 0.04208788770905131 },
+                 { x: "pmdec_error", y: "pmdec_error", value: 1 },
 { x: "pmdec_error", y: "pmra", value: 0.8239659961934964 },
 { x: "pmdec_error", y: "pmra_error", value: -0.11668777466257425 },
-{ x: "pmdec_error", y: "pmdec", value: 0.04208788770905131 },
-{ x: "pmdec_error", y: "pmdec_error", value: 1 }];
+{ x: "pmdec_error", y: "pmdec", value: 0.04208788770905131 }
+]; */
+    
+    if (data.length<=1) {
+        alert("Choose more than one value please");
+        return;
+    }
 
+var width_parameter, height_parameter;
+    switch (true) {
+  case (data.length<=4):
+    width_parameter = 400; 
+    height_parameter = 250;
+    break;
+    case (data.length==9):
+    width_parameter = 450; 
+    height_parameter = 450;
+    break;
+  case (data.length==16 || data.length==36):
+    width_parameter = 600; 
+    height_parameter = 500;
+    break;
+  case (data.length==64):
+    width_parameter = 650; 
+    height_parameter = 550;
+    break;
+    case (data.length==100):
+    width_parameter = 700; 
+    height_parameter = 600;
+    break;
+    case (data.length>100):
+    width_parameter = 70*Math.sqrt(data.length); 
+    height_parameter = 60*Math.sqrt(data.length);
+    break;
+  default:
+    width_parameter = 600; 
+    height_parameter = 500;
+}
+           
+    console.log(width_parameter);
+    console.log(height_parameter);
+ 
     var margin = {
-            top: 45,
-            right: 80,
-            bottom: 25,
-            left: 40
+            top: 80,
+            right: 200,
+            bottom: 60,
+            left: 80
         },
-        width = 500 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom,
+        width = width_parameter - margin.left - margin.right,
+        height = height_parameter - margin.top - margin.bottom,
         domain = d3.set(data.map(function (d) {
             return d.x
         })).values(),
@@ -344,7 +279,7 @@ function drawCorrelogram(data) {
     })
         .append("circle")
         .attr("r", function (d) {
-            return (width / (num * 2)) * (Math.abs(d.value) + 0.15);
+            return (width / (num * 2)) * (Math.abs(d.value));
         })
         .style("fill", function (d) {
             if (d.value === 1) {
@@ -479,10 +414,12 @@ function drawHistogram(xAxisValue, binSize) {
         .on('mouseout', tip.hide);
     
     if (typeof(data[0]) == "undefined") {
-        alert("Change your bin size please!");
+        alert("Change your bin size or X-Axis-Value please!");
         deleteAll();
         return;
     }
+    
+    
     bar.append("rect")
         .attr("x", 1)
         .attr("width", (x(data[0].dx) - x(0)) - 1)
@@ -690,7 +627,7 @@ function getMultipleData() {
         MultipleData = 0;
     }*/
     //console.log(MultipleData);
-    return MultipleData
+    return MultipleData;
 }
 
 /*
@@ -721,15 +658,16 @@ function checkboxLimit() {
 
 function correlation(MultipleData) {
     var correlations = [];
-
+  
     var filtered_data = csv_data.filter(function (d) {
         return MultipleData.reduce(function (acc, column) {
             return acc && +d[column] && +d[column] != -999 && !isNaN(+d[column]);
         }, true);
     });
 
-    for (var i = 0; i < MultipleData.length - 1; i++) {
-        for (var j = i + 1; j < MultipleData.length; j++) {
+    for (var i = 0; i < MultipleData.length ; i++) {
+        
+        for (var j = 0; j < MultipleData.length; j++) {
             var col1 = filtered_data.map(function (d) {
                 return +d[MultipleData[i]]
             });
@@ -761,12 +699,15 @@ function correlation(MultipleData) {
                     return d
                 })
             );
+            
             var corrValue = {x: MultipleData[i], y: MultipleData[j], value: coeff};
-            //console.log(MultipleData[i] + " | " + MultipleData[j] + ": Koeffizient = " + coeff + "\n")
             correlations.push(corrValue);
+
         }
+        
+            
     }
-    console.log("aaaaaa");
+    console.log("aaa");
     console.log(correlations);
     return correlations;
 }
@@ -786,12 +727,12 @@ function histogramActive() {
       for (var i = 0; i < document.getElementsByName("boxes").length; i++) {
                 document.getElementsByName("boxes")[i].disabled = true;
             }
-   }*/
+   }
 
     if (document.getElementById("scatterplotType").checked) {
         document.getElementById("xAxisValue").disabled = false;
-        document.getElementById("yAxisValue").disabled = false;
-    } else if (document.getElementById("histogramType").checked) {
+        document.getElementById("yAxisValue").disabled = false; */
+    if (document.getElementById("histogramType").checked) {
         document.getElementById("xAxisValue").disabled = false;
         document.getElementById("yAxisValue").disabled = true;
         //document.getElementById("BinSize").disabled = false;
