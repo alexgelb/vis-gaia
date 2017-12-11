@@ -388,19 +388,12 @@ function drawHistogram(xAxisValue, binSize) {
     
     var bin = 0;
     var color = "grey";
-    var f_dataset = csv_data.map(function (d) {
+    var dataset = csv_data.map(function (d) {
         return d[xAxisValue];
     });
-/* var f_dataset = dataset.filter(function (d) {
-               
-                return d <-900;
-                                });
-     var f_dataset = csv_data.filter(function (d) {
-        return xAxisValue.reduce(function (acc, column) {
-            return acc && +d[column] && +d[column] != -999 && !isNaN(+d[column]);
-        }, true);
-    });*/
     
+    var f_dataset =dataset.filter(function(d) { return d !=-999 && !isNaN(+d) });
+
     var margin = {
             top: 50,
             right: 20,
