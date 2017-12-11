@@ -134,7 +134,7 @@ function drawCorrelogram(data) {
 
 // data Beispiel
 // TODO Nicole: anstatt bespiel, array von objects mit correlations von multiple data
-    console.log(data);
+    //console.log(data);
     /*var data = [
         {x: "val1", y: "val1", value: 1},
         {x: "val1", y: "val2", value: -0.852161959426613},
@@ -237,7 +237,22 @@ function drawCorrelogram(data) {
         {x: "val10", y: "val9", value: 0.794058760256343},
         {x: "val10", y: "val10", value: 1}
     ];*/
-
+ var data = [{ x: "pmra", y: "pmra", value: 1 },
+{ x: "pmra", y: "pmra_error", value: -0.12330284733382797 },
+{ x: "pmra", y: "pmdec", value: 0.01882460365078317 },
+{ x: "pmra", y: "pmdec_error", value: -0.11668777466257425 },
+{ x: "pmra_error", y: "pmra", value: -0.12330284733382797 },
+{ x: "pmra_error", y: "pmra_error", value: 1 },
+{ x: "pmra_error", y: "pmdec", value: 0.10047853529158035 },
+{ x: "pmra_error", y: "pmdec_error", value: 0.8239659961934964 },
+{ x: "pmdec", y: "pmra", value: 0.01882460365078317 },
+{ x: "pmdec", y: "pmra_error", value: -0.11668777466257425 },
+{ x: "pmdec", y: "pmdec", value: 1 },
+{ x: "pmdec", y: "pmdec_error", value: 0.04208788770905131 },
+{ x: "pmdec_error", y: "pmra", value: 0.8239659961934964 },
+{ x: "pmdec_error", y: "pmra_error", value: -0.11668777466257425 },
+{ x: "pmdec_error", y: "pmdec", value: 0.04208788770905131 },
+{ x: "pmdec_error", y: "pmdec_error", value: 1 }];
 
     var margin = {
             top: 45,
@@ -369,12 +384,23 @@ function drawCorrelogram(data) {
 }
 
 function drawHistogram(xAxisValue, binSize) {
+    
+    
     var bin = 0;
     var color = "grey";
-    var dataset = csv_data.map(function (d) {
+    var f_dataset = csv_data.map(function (d) {
         return d[xAxisValue];
     });
-
+/* var f_dataset = dataset.filter(function (d) {
+               
+                return d <-900;
+                                });
+     var f_dataset = csv_data.filter(function (d) {
+        return xAxisValue.reduce(function (acc, column) {
+            return acc && +d[column] && +d[column] != -999 && !isNaN(+d[column]);
+        }, true);
+    });*/
+    
     var margin = {
             top: 50,
             right: 20,
@@ -392,8 +418,8 @@ function drawHistogram(xAxisValue, binSize) {
             margin.bottom,
         height2 = 300 - margin2.top - margin2.bottom;
 
-    var max = d3.max(dataset);
-    var min = d3.min(dataset);
+    var max = d3.max(f_dataset);
+    var min = d3.min(f_dataset);
 
     var x = d3.scale.linear()
         .domain([min, max])
@@ -401,7 +427,7 @@ function drawHistogram(xAxisValue, binSize) {
 
 
     if (binSize == 0) {
-        bin = Math.log2(dataset.length) + 1;
+        bin = Math.log2(f_dataset.length) + 1;
     }
     else {
         bin = binSize;
@@ -409,7 +435,7 @@ function drawHistogram(xAxisValue, binSize) {
 
     var data = d3.layout.histogram()
         .bins(x.ticks(bin))
-        (dataset);
+        (f_dataset);
 
     var yMax = d3.max(data, function (d) {
         return d.length
@@ -458,6 +484,12 @@ function drawHistogram(xAxisValue, binSize) {
         })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
+    
+    if (typeof(data[0]) == "undefined") {
+        alert("Change your bin size please!");
+        deleteAll();
+        return;
+    }
     bar.append("rect")
         .attr("x", 1)
         .attr("width", (x(data[0].dx) - x(0)) - 1)
@@ -660,10 +692,10 @@ function getMultipleData() {
             return d;
 
     });
-    if (MultipleData.length > 5) {
+    /*if (MultipleData.length > 5) {
         alert("You can select only 5 values!");
         MultipleData = 0;
-    }
+    }*/
     //console.log(MultipleData);
     return MultipleData
 }
@@ -737,10 +769,12 @@ function correlation(MultipleData) {
                 })
             );
             var corrValue = {x: MultipleData[i], y: MultipleData[j], value: coeff};
-            console.log(MultipleData[i] + " | " + MultipleData[j] + ": Koeffizient = " + coeff + "\n")
+            //console.log(MultipleData[i] + " | " + MultipleData[j] + ": Koeffizient = " + coeff + "\n")
             correlations.push(corrValue);
         }
     }
+    console.log("aaaaaa");
+    console.log(correlations);
     return correlations;
 }
 
