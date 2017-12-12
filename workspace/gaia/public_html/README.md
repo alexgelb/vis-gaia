@@ -26,8 +26,12 @@ http://www.javascriptkit.com/script/script2/checkboxlimit.shtml
 https://gist.github.com/nnattawat/8916402
 https://www.bestcssbuttongenerator.com/#/28
 http://bl.ocks.org/tommyogden/9725439
+https://www.w3schools.com/js/js_arrays.asp
 
 FPC oder AOE fur Correlation matrix:
 https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
 http://www.datavis.ca/papers/corrgram.pdf
 https://bl.ocks.org/larsenmtl/dc2210055719b867e63d
+
+Korrelationskoeffizient:
+https://de.wikipedia.org/wiki/Korrelationskoeffizient
