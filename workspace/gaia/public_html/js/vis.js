@@ -545,12 +545,11 @@ function correlation(MultipleData) {
 
     var filtered_data = csv_data.filter(function(d) {
         return MultipleData.reduce(function(acc, column) {
-            return acc && +d[column] && +d[column] != -999 && !isNaN(+d[column]);
+            return acc && +d[column]!=null && +d[column] != -999 && !isNaN(+d[column]);
         }, true);
     });
-
+    console.log(filtered_data);
     for (var i = 0; i < MultipleData.length; i++) {
-
         for (var j = 0; j < MultipleData.length; j++) {
             var col1 = filtered_data.map(function(d) {
                 return +d[MultipleData[i]]
@@ -590,11 +589,9 @@ function correlation(MultipleData) {
                 value: coeff
             };
             correlations.push(corrValue);
-
         }
-
-
     }
+    console.log(correlations);
     return correlations;
 }
 
