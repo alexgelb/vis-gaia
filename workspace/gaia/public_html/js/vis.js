@@ -34,7 +34,7 @@ d3.csv("./data/GaiaSource_1.csv",
                 var tmp = parseFloat(fileData[i][key]);
 
                 if (tmp === undefined || isNaN(tmp) || tmp < -900) {
-                    fileData[i][key] = 0;
+//                    fileData[i][key] = 0;
                 } else {
                     fileData[i][key] = tmp;
                 }
@@ -462,7 +462,7 @@ function drawHistogram(xAxisValue, binSize) {
 
 }
 
-/*function drawPCA() {
+function drawPCA() {
 	d3.csv('GaiaSource_1.csv')
 	// d3.csv('data.csv')
 	.row((d) => {
@@ -516,7 +516,7 @@ function drawHistogram(xAxisValue, binSize) {
 	    }
 	  })
 
-}*/
+}
 
 // TODO vllt einfach astrometric_prios_used raus wegen NaN bei corr.werte ??
 

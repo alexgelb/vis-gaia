@@ -1,28 +1,28 @@
-const emlapack = require('./emlapack-custom')
+//const emlapack = require('./emlapack-custom')
 
-const dsyrk = emlapack.cwrap('f2c_dsyrk', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'])
-const dsyev = emlapack.cwrap('dsyev_', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'])
+const dsyrk = cwrap('f2c_dsyrk', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'])
+const dsyev = cwrap('dsyev_', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'])
 
 const cov = (x, n, m) => {
-  const puplo = emlapack._malloc(1)
-  const ptrans = emlapack._malloc(1)
-  const pm = emlapack._malloc(4)
-  const pn = emlapack._malloc(4)
-  const palpha = emlapack._malloc(8)
-  const plda = emlapack._malloc(4)
-  const pbeta = emlapack._malloc(8)
-  const pc = emlapack._malloc(m * m * 8)
-  const pldc = emlapack._malloc(4)
-  const c = new Float64Array(emlapack.HEAPF64.buffer, pc, m * m)
+  const puplo = _malloc(1)
+  const ptrans = _malloc(1)
+  const pm = _malloc(4)
+  const pn = _malloc(4)
+  const palpha = _malloc(8)
+  const plda = _malloc(4)
+  const pbeta = _malloc(8)
+  const pc = _malloc(m * m * 8)
+  const pldc = _malloc(4)
+  const c = new Float64Array(HEAPF64.buffer, pc, m * m)
 
-  emlapack.setValue(puplo, 'U'.charCodeAt(0), 'i8')
-  emlapack.setValue(ptrans, 'N'.charCodeAt(0), 'i8')
-  emlapack.setValue(pm, m, 'i32')
-  emlapack.setValue(pn, n, 'i32')
-  emlapack.setValue(palpha, 1 / n, 'double')
-  emlapack.setValue(pbeta, 0, 'double')
-  emlapack.setValue(plda, m, 'i32')
-  emlapack.setValue(pldc, m, 'i32')
+  setValue(puplo, 'U'.charCodeAt(0), 'i8')
+  setValue(ptrans, 'N'.charCodeAt(0), 'i8')
+  setValue(pm, m, 'i32')
+  setValue(pn, n, 'i32')
+  setValue(palpha, 1 / n, 'double')
+  setValue(pbeta, 0, 'double')
+  setValue(plda, m, 'i32')
+  setValue(pldc, m, 'i32')
 
   dsyrk(puplo, ptrans, pm, pn, palpha, x.byteOffset, plda, pbeta, pc, pldc)
 
@@ -31,27 +31,27 @@ const cov = (x, n, m) => {
 
 const eig = (x, n, m) => {
   const E = cov(x, n, m)
-  const pjobz = emlapack._malloc(1)
-  const puplo = emlapack._malloc(1)
-  const pn = emlapack._malloc(4)
-  const plda = emlapack._malloc(4)
-  const pw = emlapack._malloc(m * 8)
-  const plwork = emlapack._malloc(4)
-  const pinfo = emlapack._malloc(4)
-  const pworkopt = emlapack._malloc(4)
-  const lambda = new Float64Array(emlapack.HEAPF64.buffer, pw, m)
+  const pjobz = _malloc(1)
+  const puplo = _malloc(1)
+  const pn = _malloc(4)
+  const plda = _malloc(4)
+  const pw = _malloc(m * 8)
+  const plwork = _malloc(4)
+  const pinfo = _malloc(4)
+  const pworkopt = _malloc(4)
+  const lambda = new Float64Array(HEAPF64.buffer, pw, m)
 
-  emlapack.setValue(pjobz, 'V'.charCodeAt(0), 'i8')
-  emlapack.setValue(puplo, 'U'.charCodeAt(0), 'i8')
-  emlapack.setValue(pn, m, 'i32')
-  emlapack.setValue(plda, m, 'i32')
-  emlapack.setValue(plwork, -1, 'i32')
+  setValue(pjobz, 'V'.charCodeAt(0), 'i8')
+  setValue(puplo, 'U'.charCodeAt(0), 'i8')
+  setValue(pn, m, 'i32')
+  setValue(plda, m, 'i32')
+  setValue(plwork, -1, 'i32')
 
   dsyev(pjobz, puplo, pn, E.byteOffset, plda, pw, pworkopt, plwork, pinfo)
 
-  const workopt = emlapack.getValue(pworkopt, 'double')
-  const pwork = emlapack._malloc(workopt * 8)
-  emlapack.setValue(plwork, workopt, 'i32')
+  const workopt = getValue(pworkopt, 'double')
+  const pwork = _malloc(workopt * 8)
+  setValue(plwork, workopt, 'i32')
 
   dsyev(pjobz, puplo, pn, E.byteOffset, plda, pw, pwork, plwork, pinfo)
   E.sort(function(a, b){return b-a});
@@ -65,8 +65,8 @@ class PCA {
     const keys = Object.keys(data[0].values)
     const n = data.length
     const m = keys.length
-    const px = emlapack._malloc(n * m * 8)
-    const x = new Float64Array(emlapack.HEAPF64.buffer, px, n * m)
+    const px = _malloc(n * m * 8)
+    const x = new Float64Array(HEAPF64.buffer, px, n * m)
     const xBar = new Float64Array(m)
     for (let i = 0; i < m; ++i) {
       let sum = 0
@@ -137,4 +137,4 @@ class PCA {
   }
 }
 
-exports.PCA = PCA
+//exports.PCA = PCA
