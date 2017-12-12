@@ -44,19 +44,19 @@ d3.csv("./data/GaiaSource_1.csv",
         headerNames = traits;
         value = csv_data.length;
         var xAxis = document.getElementById("xAxisValue");
-        var yAxis = document.getElementById("yAxisValue");
+       // var yAxis = document.getElementById("yAxisValue");
         //var headerValue = document.getElementById("headerValues");
         var multipleValue = document.getElementById("MultipleData");
 
 
         for (var i = 0; i < headerNames.length; i++) {
             var xAxisOption = document.createElement("option");
-            var yAxisOption = document.createElement("option");
+           // var yAxisOption = document.createElement("option");
             //var headerValueBox = document.createElement("input");
             var multipleOption = document.createElement("option");
             //var headerValueElement = document.createElement("div");
             xAxisOption.text = headerNames[i];
-            yAxisOption.text = headerNames[i];
+           // yAxisOption.text = headerNames[i];
             multipleOption.text = headerNames[i];
             multipleOption.id = headerNames[i];
             /*headerValueBox.type = "checkbox";
@@ -70,7 +70,7 @@ d3.csv("./data/GaiaSource_1.csv",
 				headerValue.appendChild(headerValueElement);*/
 
             xAxis.add(xAxisOption);
-            yAxis.add(yAxisOption);
+           // yAxis.add(yAxisOption);
             multipleValue.add(multipleOption);
 
         }
@@ -87,11 +87,31 @@ function submitForm() {
     // var plotType = document.getElementById("plotType").value;
     var xAxis = document.getElementById("xAxisValue");
     var xAxisValue = xAxis.options[xAxis.selectedIndex].text;
-    var yAxis = document.getElementById("yAxisValue");
-    var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
+   // var yAxis = document.getElementById("yAxisValue");
+   // var yAxisValue = yAxis.options[yAxis.selectedIndex].text;
     var binSize;
-
-
+    if (document.getElementById("histogramType").checked) {
+    switch(xAxisValue) {
+    case "source_id":
+        alert("Don't choose source_id for this plottype!");
+        return;
+        break;
+    case "random_index":
+        alert("Don't choose random_index for this plottype!");
+      return;
+        break;
+            case "solution_id":
+        alert("Don't choose solution_id for this plottype!");
+      return;
+        break;
+            case "ref_epoch":
+        alert("Don't choose ref_epoch for this plottype!");
+            return;
+        break;
+    default: break;
+}
+       
+    }
   /*  if (document.getElementById("scatterplotType").checked) {
         drawScatterplot(xAxisValue, yAxisValue);*/
     if (document.getElementById("scattermatrixType").checked) {
@@ -163,12 +183,13 @@ var width_parameter, height_parameter;
     break;
     case (data.length==9):
     width_parameter = 450; 
-    height_parameter = 450;
+    height_parameter = 350;
     break;
   case (data.length==16 || data.length==36):
     width_parameter = 600; 
     height_parameter = 500;
     break;
+           
   case (data.length==64):
     width_parameter = 650; 
     height_parameter = 550;
@@ -186,8 +207,6 @@ var width_parameter, height_parameter;
     height_parameter = 500;
 }
            
-    console.log(width_parameter);
-    console.log(height_parameter);
  
     var margin = {
             top: 80,
@@ -254,11 +273,12 @@ var width_parameter, height_parameter;
     })
         .append("text")
         .attr("y", 5)
+        
         .text(function (d) {
             if (d.x === d.y) {
                 return d.x;
             } else {
-                return d.value.toFixed(2);
+                return d.value.toFixed(4);
             }
         })
         .style("fill", function (d) {
@@ -268,7 +288,7 @@ var width_parameter, height_parameter;
                 return color(d.value);
             }
         });
-
+ 
     cor.filter(function (d) {
         var ypos = domain.indexOf(d.y);
         var xpos = domain.indexOf(d.x);
@@ -279,7 +299,15 @@ var width_parameter, height_parameter;
     })
         .append("circle")
         .attr("r", function (d) {
-            return (width / (num * 2)) * (Math.abs(d.value));
+           if (data.length<=36) {
+            return ((width / (num * 2)) * (Math.abs(d.value)+0.06));
+    }
+              else if (data.length<=900) {
+              return ((width / (num * 2)) * (Math.abs(d.value)+0.02));
+              }
+        else {
+             return ((width / (num * 2)) * (Math.abs(d.value)-0.02));
+        }
         })
         .style("fill", function (d) {
             if (d.value === 1) {
@@ -289,6 +317,8 @@ var width_parameter, height_parameter;
             }
         });
 
+    //cor.style("font-size", "20px");
+    
     var aS = d3.scale
         .linear()
         .range([-margin.top + 9, height + margin.bottom - 5])
@@ -306,6 +336,7 @@ var width_parameter, height_parameter;
 
     var iR = d3.range(-1, 1.01, 0.01);
     var h = height / iR.length + 3;
+
     iR.forEach(function (d) {
         aG.append('rect')
             .style('fill', color(d))
@@ -418,6 +449,7 @@ function drawHistogram(xAxisValue, binSize) {
         deleteAll();
         return;
     }
+
     
     
     bar.append("rect")
@@ -453,7 +485,7 @@ function drawHistogram(xAxisValue, binSize) {
 
 }
 
-function drawScatterplot(xAxisValue, yAxisValue) {
+/*function drawScatterplot(xAxisValue, yAxisValue) {
     var margin = {
             top: 20,
             right: 20,
@@ -557,7 +589,7 @@ function drawScatterplot(xAxisValue, yAxisValue) {
         });
         focusView.select(".x-axis").call(xAxis1);
     }
-}
+} */
 
 
 /*function drawPCA() {
@@ -616,12 +648,22 @@ function drawScatterplot(xAxisValue, yAxisValue) {
 
 }*/
 
+// TODO vllt einfach astrometric_prios_used raus 
 function getMultipleData() {
     var MultipleData = headerNames.filter(function (d) {
-        if (document.getElementById(d).selected)
-            return d;
-
+        if (document.getElementById(d).selected) {
+            if (d!="solution_id" && d!="ref_epoch"){
+                return d; }
+            else if ( d=="solution_id") {
+                alert("Don't choose solution_id for this plottype!");
+                
+            }
+            else if (d=="ref_epoch"){
+             alert("Don't choose ref_epoch for this plottype!");
+            }
+        }
     });
+
     /*if (MultipleData.length > 5) {
         alert("You can select only 5 values!");
         MultipleData = 0;
@@ -656,6 +698,7 @@ function checkboxLimit() {
 }
 */
 
+// TODO was ist mit astrometric_prios_used los?, scheißvis :/
 function correlation(MultipleData) {
     var correlations = [];
   
@@ -707,8 +750,6 @@ function correlation(MultipleData) {
         
             
     }
-    console.log("aaa");
-    console.log(correlations);
     return correlations;
 }
 
@@ -734,12 +775,12 @@ function histogramActive() {
         document.getElementById("yAxisValue").disabled = false; */
     if (document.getElementById("histogramType").checked) {
         document.getElementById("xAxisValue").disabled = false;
-        document.getElementById("yAxisValue").disabled = true;
+        //document.getElementById("yAxisValue").disabled = true;
         //document.getElementById("BinSize").disabled = false;
         document.getElementById("binCheck").disabled = false;
     } else {
         document.getElementById("xAxisValue").disabled = true;
-        document.getElementById("yAxisValue").disabled = true;
+        //document.getElementById("yAxisValue").disabled = true;
         document.getElementById("binCheck").disabled = true;
         document.getElementById("BinSize").disabled = true;
     }
