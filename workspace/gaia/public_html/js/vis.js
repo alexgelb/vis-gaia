@@ -506,8 +506,8 @@ function drawScatterplot(xAxisValue, yAxisValue) {
             bottom: 30,
             left: 40
         },
-        width = 660 - margin.left - margin.right,
-        height = 300 - margin.top -
+        width = 960 - margin.left - margin.right,
+        height = 400 - margin.top -
         margin.bottom,
         height2 = 300 - margin2.top - margin2.bottom;
     var x1 = d3.time.scale().range([0, width]),
@@ -532,9 +532,6 @@ function drawScatterplot(xAxisValue, yAxisValue) {
         brushed);
     var contextView = scatterSVG.append("g").attr("class", "contextView").attr(
         "transform", "translate(" + margin.left + "," + margin2.top + ")");
-
-    var xText = "X-Values";
-    var yText = "Y-Values";
 
     x1.domain(d3.extent(csv_data, function(d) {
         return d[xAxisValue];

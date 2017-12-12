@@ -27,18 +27,21 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
     var domainByTrait = {},
             traits = d3.keys(data[0]).filter(
             function (d) {
-//                return d === "pmra" || d === "pmdec" || d === "pmra_error";
-                return d;
+                return d === "pmra" || d === "pmdec" || d === "pmra_error";
+//                return d;
             }),
             n = traits.length;
 
+
     traits.forEach(function (trait) {
         domainByTrait[trait] = d3.extent(data, function (d) {
-            if (d[trait] !== undefined && d[trait].length > 0 && d[trait] > -900) {
-                return d[trait];
+            var tmp = parseFloat(d[trait]);
+            if (!isNaN(tmp) && tmp > -900) {
+                return tmp;
             }
         });
     });
+
 
     xAxis.tickSize(size * n);
     yAxis.tickSize(-size * n);
@@ -99,7 +102,7 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
             })
             .each(plot);
 
-    // Titles for the diagonal.
+// Titles for the diagonal.
     cell.filter(function (d) {
         return d.i === d.j;
     }).append("text")
@@ -117,6 +120,8 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
 
         x.domain(domainByTrait[p.x]);
         y.domain(domainByTrait[p.y]);
+//    x.domain([-100, 100]);
+//    y.domain([-100, 100]);
 
         cell.append("rect")
                 .attr("class", "frame")
@@ -128,7 +133,7 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
         cell.selectAll("circle")
                 .data(data)
 //                .filter(function (d) {
-//                    return (d !== undefined) && !isNaN(d) && d > -900;
+//                    return (d !== undefined) && (d.length > 0) && !isNaN(d) && d > -900;
 //                })
                 .enter().append("circle")
                 .attr("cx", function (d) {
@@ -145,7 +150,7 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
 
     var brushCell;
 
-    // Clear the previously-active brush, if any.
+// Clear the previously-active brush, if any.
     function brushstart(p) {
         if (brushCell !== this) {
             d3.select(brushCell).call(brush.move, null);
@@ -155,7 +160,7 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
         }
     }
 
-    // Highlight the selected circles.
+// Highlight the selected circles.
     function brushmove(p) {
         var e = d3.brushSelection(this);
         svg.selectAll("circle").classed("hidden", function (d) {
@@ -165,13 +170,14 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
         });
     }
 
-    // If the brush is empty, select all circles.
+// If the brush is empty, select all circles.
     function brushend() {
         var e = d3.brushSelection(this);
         if (e === null)
             svg.selectAll(".hidden").classed("hidden", false);
     }
-});
+}
+);
 
 function cross(a, b) {
     if (a === undefined || b === undefined) {
