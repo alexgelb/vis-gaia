@@ -462,7 +462,7 @@ function drawHistogram(xAxisValue, binSize) {
 
 }
 
-function drawPCA() {
+/*function drawPCA() {
 	d3.csv('GaiaSource_1.csv')
 	// d3.csv('data.csv')
 	.row((d) => {
@@ -516,7 +516,7 @@ function drawPCA() {
 	    }
 	  })
 
-}
+}*/
 
 // TODO vllt einfach astrometric_prios_used raus wegen NaN bei corr.werte ??
 
@@ -545,7 +545,7 @@ function correlation(MultipleData) {
 
     var filtered_data = csv_data.filter(function(d) {
         return MultipleData.reduce(function(acc, column) {
-            return acc && +d[column] !== null && +d[column] != -999 && !isNaN(+d[column]);
+            return acc && +d[column] != null && +d[column] != -999 && !isNaN(+d[column]);
         }, true);
     });
 
@@ -590,7 +590,7 @@ function correlation(MultipleData) {
             };
             correlations.push(corrValue);
         }
-    }
+}
     console.log(correlations);
     return correlations;
 }
