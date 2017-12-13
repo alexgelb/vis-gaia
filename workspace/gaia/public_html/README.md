@@ -12,7 +12,7 @@ Projekt:	Gaia
 
 Libraries:
 		d3, d3.min, d3.v3, d3.tip.v0.6.3, jquery-3.2.1.slim.min, 
-		popper.min, bootstrap.min
+		popper.min, bootstrap.min ...
 
 Dauer der Entwicklung:
 		 1.5 Woche
@@ -28,11 +28,7 @@ https://www.bestcssbuttongenerator.com/#/28
 http://bl.ocks.org/tommyogden/9725439
 https://www.w3schools.com/js/js_arrays.asp
 http://bl.ocks.org/Caged/6476579
-
-Correllogram:
 //https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
 http://www.datavis.ca/papers/corrgram.pdf
 https://bl.ocks.org/larsenmtl/dc2210055719b867e63d
-
-Korrelationskoeffizient:
 https://de.wikipedia.org/wiki/Korrelationskoeffizient

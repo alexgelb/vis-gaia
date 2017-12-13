@@ -25,61 +25,45 @@
 Since the GAIA satelite is oberving millions of stars and scientists are only focusing on a small subset of the data, we wanted to provide a tool which gives information about the whole dataset. 
 We didn't really know much about the data, so we couldn't tell anything about the data itself, also it was too complicated for us to understand. So we focused on exploring the data by finding patters, correlations, outliers or maybe some other useful information.\\
 \section{Current visualization design}
-TODO another images
+// TODO another images
 \newpage
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1\textwidth]{images/m3/uebersicht.PNG}
 \label{fig1}
+\caption{Overview}
 \end{figure} 
-
-
-\begin{figure}[!h]
-\centering
-\includegraphics[width=1\textwidth]{images/m3/histogram_err1.PNG}
-\label{fig2}
-\end{figure}
-
+\newpage
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1\textwidth]{images/m3/histogram1.PNG}
-\label{fig3}
+\label{fig2}
+\caption{Histogram. Automatic bin size calculation.}
 \end{figure}
-
+\newpage
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1\textwidth]{images/m3/histogram2.PNG}
+\label{fig3}
+\caption{Histogram. The entered bin size.}
+\end{figure}
+
+\newpage
+\begin{figure}[!h]
+\centering
+\includegraphics[width=1\textwidth]{images/m3/corr1.PNG}
 \label{fig4}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=1\textwidth]{images/m3/corr_err1.PNG}
-\label{fig5}
-\end{figure}
-\newpage
-\begin{figure}[!h]
-\centering
-\includegraphics[width=1\textwidth]{images/m3/corr_err2.PNG}
-\label{fig6}
-\end{figure}
-\newpage
-\begin{figure}[!h]
-\centering
-\includegraphics[width=1\textwidth]{images/m3/corr1.PNG}
-\label{fig7}
-\end{figure}
-
-\begin{figure}[!h]
-\centering
 \includegraphics[width=1\textwidth]{images/m3/corr2.PNG}
-\label{fig8}
 \end{figure}
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=1\textwidth]{images/m3/corr3.PNG}
-\label{fig9}
+\caption{Correlogramen for the chosen values}
 \end{figure}
 \newpage
 
@@ -98,30 +82,24 @@ The biggest challenge of all is to handle the amount of data. Not only the datas
 \item correlation over multiple var
 \item filter
 \item tooltips
-\item zoom
 \item brushing and linking
 \end{itemize}
 
-\section {The work distribution}
-TODO
-
+\section {Work distribution}
 \begin{itemize}
-\item Nicole Cherches —
-\item Alexander Gelb —
-\item Benjamin Neckam —
-\item Axinya Tokareva — 
+\item Nicole Cherches —  correlations calculations, report, correlogram
+\item Alexander Gelb —  Scattermatrix, import data, Interface
+\item Benjamin Neckam — PCA, report, import data
+\item Axinya Tokareva — histogram, correlogram, website
 \end{itemize}
+
 
 \section {References}
 \begin{enumerate}
 \item Our website: http://wwwlab.cs.univie.ac.at/$\sim$a1368965/vis17/
+\item Git repository: https://github.com/alexgelb/vis-gaia
 \item https://medienportal.univie.ac.at/uniview/professuren/cv/artikel/univ-prof-dr-joao-alves/
-\item vis lectures
-\item http://gaia.ari.uni-heidelberg.de/tap/tables
+\item http://vda.univie.ac.at/Teaching/Vis/17w/project.html
 \item http://sci.esa.int/gaia/
-\item http://sci.esa.int/gaia/58275-data-release-1/
-\item https://en.wikipedia.org/wiki/
-\item http://www.mattboldt.com/demos/typed-js/
-\item another links in README
 \end{enumerate}
 \end{document}
