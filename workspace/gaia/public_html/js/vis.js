@@ -2,7 +2,7 @@
 //import {Renderer, PCA} from '/src'
 //const pcaClass = require('./pca')
 // TODO DataPlots-Bereich von size plots abhängig machen ?
-/* global d3 */
+/* global d3, d4 */
 var value = 0;
 var headerNames = [];
 var csv_data;
@@ -508,6 +508,217 @@ function drawHistogram(xAxisValue, binSize) {
 	    }
 	  })
 }*/
+
+function drawScatterPlotMatrix(chosenValues) {
+    var      size = 230,
+            padding = 20;
+
+    var x = d4.scaleLinear()
+            .range([padding / 2, size - padding / 2]);
+//    var x = d3.scale.linear()
+//            .range([padding / 2, size - padding / 2]);
+
+    var y = d4.scaleLinear()
+            .range([size - padding / 2, padding / 2]);
+//    var y = d3.scale.linear()
+//            .range([size - padding / 2, padding / 2]);
+
+
+    var xAxis = d4.axisBottom()
+            .scale(x);
+//    var xAxis = d3.svg.axis()
+//            .scale(x)
+//            .orient("bottom")
+
+    var yAxis = d4.axisLeft()
+            .scale(y);
+//    var yAxis = d3.svg.axis()
+//            .scale(y)
+//            .orient("left")
+
+    var color = d4.scaleOrdinal(d4.schemeCategory10);
+//    var color = d3.scale.category10();
+
+    var domainByTrait = {},
+            traits = chosenValues,
+            n = traits.length;
+
+    traits.forEach(function (trait) {
+        domainByTrait[trait] = d4.extent(csv_data, function (d) {
+            var tmp = parseFloat(d[trait]);
+            if (!isNaN(tmp) && tmp > -900) {
+                return tmp;
+            }
+        });
+    });
+
+
+    xAxis.tickSize(size * n);
+    yAxis.tickSize(-size * n);
+
+    var brush = d4.brush()
+            .on("start", brushstart)
+            .on("brush", brushmove)
+            .on("end", brushend)
+            .extent([[0, 0], [size, size]]);
+//    var brush = d3.svg.brush()
+//            .x(x)
+//            .y(y)
+//            .on("brushstart", brushstart)
+//            .on("brush", brushmove)
+//            .on("brushend", brushend);
+
+    var svg = d4.select("#plot").append("svg")
+            .attr("width", size * n + (padding + 100))
+            .attr("height", size * n + (padding + 100))
+            .append("g")
+            .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+
+    svg.selectAll(".x.axis")
+            .data(traits)
+            .enter()
+            .append("g")
+            .attr("class", "x axis")
+            .attr("transform", function (d, i) {
+                return "translate(" + (n - i - 1) * size + ",0)";
+            })
+            .each(function (d) {
+                x.domain(domainByTrait[d]);
+                d4.select(this).call(xAxis);
+            });
+
+    svg.selectAll(".y.axis")
+            .data(traits)
+            .enter()
+            .append("g")
+            .attr("class", "y axis")
+            .attr("transform", function (d, i) {
+                return "translate(0," + i * size + ")";
+            })
+            .each(function (d) {
+                y.domain(domainByTrait[d]);
+                d4.select(this).call(yAxis);
+            });
+
+    var crossedData = cross(traits, traits);
+    var cell = svg.selectAll(".cell")
+            .data(crossedData)
+            .enter().append("g")
+            .attr("class", "cell")
+            .attr("transform", function (d) {
+                return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
+            })
+            .each(plot);
+
+// Titles for the diagonal.
+    cell.filter(function (d) {
+        return d.i === d.j;
+    }).append("text")
+            .attr("x", padding)
+            .attr("y", padding)
+            .attr("dy", ".71em")
+            .text(function (d) {
+                return d.x;
+            });
+
+    cell.call(brush);
+
+    function plot(p) {
+        var cell = d4.select(this);
+
+        x.domain(domainByTrait[p.x]);
+        y.domain(domainByTrait[p.y]);
+
+        cell.append("rect")
+                .attr("class", "frame")
+                .attr("x", padding / 2)
+                .attr("y", padding / 2)
+                .attr("width", size - padding)
+                .attr("height", size - padding);
+
+        cell.selectAll("circle")
+                .data(csv_data)
+                .enter()
+                .filter(function (d) {
+                    var tmpX = parseFloat(d[p.x]);
+                    var tmpY = parseFloat(d[p.y]);
+                    return (tmpX !== undefined && tmpY !== undefined) && (!isNaN(tmpX) && !isNaN(tmpY)) && (tmpX > -900 && tmpY > -900);
+                })
+                .append("circle")
+                .attr("cx", function (d) {
+                    return x(d[p.x]);
+                })
+                .attr("cy", function (d) {
+                    return y(d[p.y]);
+                })
+                .attr("r", 4)
+                // change for different colours in clusters
+                .style("fill", function (d) {
+                    return color("blue");
+                });
+    }
+
+    var brushCell;
+
+// Clear the previously-active brush, if any.
+    function brushstart(p) {
+        if (brushCell !== this) {
+            d4.select(brushCell).call(brush.move, null);
+            brushCell = this;
+            x.domain(domainByTrait[p.x]);
+            y.domain(domainByTrait[p.y]);
+        }
+    }
+//    function brushstart(p) {
+//        if (brushCell !== this) {
+//            d3.select(brushCell).call(brush.clear());
+//            x.domain(domainByTrait[p.x]);
+//            y.domain(domainByTrait[p.y]);
+//            brushCell = this;
+//        }
+//    }
+
+// Highlight the selected circles.
+    function brushmove(p) {
+        var e = d4.brushSelection(this);
+        svg.selectAll("circle").classed("hidden", function (d) {
+            return !e ? false : (e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                    || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                    );
+        });
+    }
+//    function brushmove(p) {
+//        var e = brush.extent();
+//        svg.selectAll("circle").classed("hidden", function (d) {
+//            return e[0][0] > d[p.x] || d[p.x] > e[1][0]
+//                    || e[0][1] > d[p.y] || d[p.y] > e[1][1];
+//        });
+//    }
+
+// If the brush is empty, select all circles.
+    function brushend() {
+        var e = d4.brushSelection(this);
+        if (e === null)
+            svg.selectAll(".hidden").classed("hidden", false);
+    }
+//    function brushend() {
+//        if (brush.empty())
+//            svg.selectAll(".hidden").classed("hidden", false);
+//    }
+
+    function cross(a, b) {
+        var c = [], n = a.length, m = b.length, i, j;
+        for (i = -1; ++i < n; ) {
+            for (j = -1; ++j < m; ) {
+                var valueA = a[i];
+                var valueB = b[j];
+
+                c.push({x: valueA, i: i, y: valueB, j: j});
+            }
+        }
+        return c;
+    }
+}
 
 function getMultipleData() {
     var MultipleData = headerNames.filter(function(d) {

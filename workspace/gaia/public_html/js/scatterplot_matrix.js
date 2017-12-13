@@ -180,15 +180,6 @@ d3.csv("data/GaiaSource_1_small.csv", function (error, data) {
 );
 
 function cross(a, b) {
-    if (a === undefined || b === undefined) {
-        return;
-    }
-    if (!isNaN(a) || !isNaN(b)) {
-        return;
-    }
-    if (a < -900 || b < -900) {
-        return;
-    }
     var c = [], n = a.length, m = b.length, i, j;
     for (i = - 1; ++i < n; )
         for (j = - 1; ++j < m; )

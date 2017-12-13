@@ -23,7 +23,7 @@ body {
     padding-bottom: 5px;
 }
 .plots {
-    background: #f4f4f4;
+    /*background: #f4f4f4;*/
     /* For browsers that do not support gradients */
     /*    background: -webkit-linear-gradient(rgba(244,244,244,1),rgba(244,244,244,0),rgba(244,244,244,1)); Safari 5.1-6
     background: -o-linear-gradient(rgba(244,244,244,1),rgba(244,244,244,0),rgba(244,244,244,1)); Opera 11.1-12
@@ -183,4 +183,47 @@ button:focus {
 .y.axis path{
     fill: none;
     stroke: none;
+}
+
+svg {
+  font: 10px sans-serif;
+  padding: 10px;
+}
+
+.axis,
+.frame {
+  shape-rendering: crispEdges;
+}
+
+.axis line {
+  stroke: #ddd;
+}
+
+.axis path {
+  display: none;
+}
+
+.cell text {
+  font-weight: bold;
+  text-transform: capitalize;
+  fill: black;
+}
+
+.frame {
+  fill: none;
+  stroke: #aaa;
+}
+
+circle {
+  fill-opacity: .7;
+}
+
+circle.hidden {
+  fill: #ccc !important;
+}
+
+.extent {
+  fill: #000;
+  fill-opacity: .125;
+  stroke: #fff;
 }
