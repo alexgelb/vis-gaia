@@ -97,11 +97,8 @@ function submitForm() {
     }
 
     if (document.getElementById("scattermatrixType").checked) {
-        // TODO: drawScattermatrix(getMultipleData());
-        
-        // TODO ALEX ändere  das einfach, wenn du fertig bist 
-        
-         alert("It comes in M4 ...");
+
+      drawScatterPlotMatrix(getMultipleData());
     } else if (document.getElementById("histogramType").checked) {
         if (document.getElementById("binCheck").checked) {
             binSize = document.getElementById("BinSize").value;
@@ -140,7 +137,7 @@ function drawCorrelogram(data) {
     switch (true) {
         case (data.length <= 4):
             width_parameter = 400;
-            height_parameter = 250;
+            height_parameter = 200;
             break;
         case (data.length == 9):
             width_parameter = 450;
