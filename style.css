@@ -124,6 +124,26 @@ a:hover {
     font-size: 20px;
     text-align: justify;
 }
+
+.kontentm3 {
+    background-color: black;
+    opacity: 0.8;
+    box-shadow: 6px 6px 0px 0px rgba(97, 71, 110, 0.3);
+    height: 8000px;
+    margin-left: 70px;
+    margin-right: 70px;
+    margin-bottom: 70px;
+    margin-top: 100px;
+    table-layout: auto;
+    text-align: left;
+    padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    font-family: monospace;
+    font-kerning: none;
+    font-size: 20px;
+    text-align: justify;
+}
 .kontentabout {
     opacity: 0.9;
     height: 380px;
@@ -206,4 +226,9 @@ a {
 }
 .animate {
     opacity: 0.6;
+}
+.soon{
+    color:#9993A9;
+    text-decoration: none;
+    
 }
