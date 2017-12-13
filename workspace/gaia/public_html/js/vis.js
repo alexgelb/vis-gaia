@@ -97,8 +97,8 @@ function submitForm() {
     }
 
     if (document.getElementById("scattermatrixType").checked) {
-        // TODO: drawScattermatrix(getMultipleData());
 
+      drawScatterPlotMatrix(getMultipleData());
     } else if (document.getElementById("histogramType").checked) {
         if (document.getElementById("binCheck").checked) {
             binSize = document.getElementById("BinSize").value;
@@ -111,7 +111,8 @@ function submitForm() {
     } else if (document.getElementById("correlogramType").checked) {
         drawCorrelogram(correlation(getMultipleData()));
     } else if (document.getElementById("pcaType").checked) {
-        drawPCA();
+        alert("It comes in M4 ...");
+        //drawPCA();
     } else {
         console.log("NONE");
         alert("Choose a type of plot please!");
@@ -136,7 +137,7 @@ function drawCorrelogram(data) {
     switch (true) {
         case (data.length <= 4):
             width_parameter = 400;
-            height_parameter = 250;
+            height_parameter = 200;
             break;
         case (data.length == 9):
             width_parameter = 450;
