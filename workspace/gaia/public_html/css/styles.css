@@ -84,36 +84,7 @@ hr {
     padding: 5px 58px;
     text-decoration: none;
 }
-.Buttons:hover {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
-    background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-    background: -webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-    background: -o-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-    background: -ms-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-    background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9', GradientType=0);
-    background-color: #e9e9e9;
-}
-.Buttons:active {
-    position: relative;
-    top: 1px;
-}
-.Buttons1 {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
-    background: -moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-    background: -webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-    background: -o-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-    background: -ms-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-    background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9', GradientType=0);
-    background-color: #f9f9f9;
-    display: inline-block;
-    cursor: pointer;
-    color: black;
-    font-size: 15px;
-    padding: 5px 45px;
-    text-decoration: none;
-}
+
 .Buttons1:hover {
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
     background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -124,6 +95,37 @@ hr {
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9', GradientType=0);
     background-color: #e9e9e9;
 }
+.Buttons:hover {
+    background: -ms-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
+    background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    background: -webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    background: -o-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9', GradientType=0);
+    background-color: #e9e9e9;
+}
+.Buttons:active {
+    position: relative;
+    top: 1px;
+}
+.Buttons1 {
+    background: -webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+    background: -o-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+    background: -ms-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
+    background: -moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+    background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9', GradientType=0);
+    background-color: #f9f9f9;
+    display: inline-block;
+    cursor: pointer;
+    color: black;
+    font-size: 15px;
+    padding: 5px 45px;
+    text-decoration: none;
+}
+
 .Buttons1:active {
     position: relative;
     top: 1px;
@@ -131,14 +133,15 @@ hr {
 button:focus {
     outline: none;
 }
-.bar rect {
-    shape-rendering: crispEdges;
-    font: 10px sans-serif;
-}
 .bar text {
     fill: #999999;
     font: 10px sans-serif;
 }
+.bar rect {
+    shape-rendering: crispEdges;
+    font: 10px sans-serif;
+}
+
 .axis path,
 .axis line {
     fill: none;
@@ -155,24 +158,27 @@ button:focus {
     border-radius: 2px;
     font: 12px sans-serif;
 }
-.d3-tip:after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-    font: 12px sans-serif;
-}
+
 .d3-tip.n:after {
     margin: -1px 0 0 0;
     top: 100%;
     left: 0;
     font: 12px sans-serif;
 }
+.d3-tip:after {
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    
+    font: 12px sans-serif;
+}
+
 
 .y.axis path{
     fill: none;

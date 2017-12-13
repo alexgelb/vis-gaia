@@ -1,9 +1,7 @@
 //import * as d3 from 'd3'
 //import {Renderer, PCA} from '/src'
 //const pcaClass = require('./pca')
-
 // TODO DataPlots-Bereich von size plots abhängig machen ?
-
 /* global d3 */
 var value = 0;
 var headerNames = [];
@@ -34,7 +32,7 @@ d3.csv("./data/GaiaSource_1.csv",
                 var tmp = parseFloat(fileData[i][key]);
 
                 if (tmp === undefined || isNaN(tmp) || tmp < -900) {
-//                    fileData[i][key] = 0;
+                    //                    fileData[i][key] = 0;
                 } else {
                     fileData[i][key] = tmp;
                 }
@@ -111,8 +109,6 @@ function submitForm() {
 
 
     } else if (document.getElementById("correlogramType").checked) {
-        //var dataMultiple = document.getElementById("MultipleData");
-        //var MultipleDataValue = xAxis.options[dataMultiple.selectedIndex].text;
         drawCorrelogram(correlation(getMultipleData()));
     } else if (document.getElementById("pcaType").checked) {
         drawPCA();
@@ -127,14 +123,16 @@ function deleteAll() {
 }
 
 function drawCorrelogram(data) {
-
+    var width_parameter, height_parameter;
+    var range = d3.range(-1, 1.01, 0.01),
+        count = 0;
 
     if (data.length <= 1) {
         alert("Choose more than one value please");
         return;
     }
 
-    var width_parameter, height_parameter;
+
     switch (true) {
         case (data.length <= 4):
             width_parameter = 400;
@@ -178,8 +176,8 @@ function drawCorrelogram(data) {
         domain = d3.set(data.map(function(d) {
             return d.x
         })).values(),
-        num = Math.sqrt(data.length),
-        color = d3.scale.linear()
+        n_elemente = Math.sqrt(data.length),
+        col = d3.scale.linear()
         .domain([-1, 0, 1])
         .range(["#000000", "#A9E2F3", "#361CA0"]);
 
@@ -191,8 +189,8 @@ function drawCorrelogram(data) {
         .ordinal()
         .rangePoints([0, height])
         .domain(domain),
-        xSpace = x.range()[1] - x.range()[0],
-        ySpace = y.range()[1] - y.range()[0];
+        x2 = x.range()[1] - x.range()[0],
+        y2 = y.range()[1] - y.range()[0];
 
     var tip = d3.tip()
         .attr('class', 'd3-tip')
@@ -202,48 +200,76 @@ function drawCorrelogram(data) {
                 return "<strong>" + d.x + "</strong> ";
             } else if (isNaN(d.value)) {
                 return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
-            }
-            else {
+            } else {
                 return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + d.value + "</strong>";
             }
 
         });
-    var svg = d3.select("#plot").append("svg")
+
+    var svgObject = d3.select("#plot").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("text-anchor", "middle")
         .attr("font", "12px", "sans-serif")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    svg.call(tip);
 
+    svgObject.call(tip);
 
-    var cor = svg.selectAll(".cor")
+    var cor = svgObject.selectAll(".cor")
         .data(data)
         .enter()
         .append("g")
-        .attr("class", "cor")
         .attr("transform", function(d) {
             return "translate(" + x(d.x) + "," + y(d.y) + ")";
         })
+        .attr("class", "cor")
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
 
     cor.append("rect")
-        .attr("id", "corr_rect")
         .attr("stroke", "gray")
-        .attr("stroke-width", "1")
+        .attr("id", "corr_rect")
         .attr("fill", "none")
-        .attr("width", xSpace)
-        .attr("height", ySpace)
-        .attr("x", -xSpace / 2)
-        .attr("y", -ySpace / 2)
-    var g = 0;
+        .attr("stroke-width", "1")
+        .attr("height", y2)
+        .attr("width", x2)
+
+        .attr("x", -x2 / 2)
+        .attr("y", -y2 / 2);
+
+
     cor.filter(function(d) {
-            var ypos = domain.indexOf(d.y);
-            var xpos = domain.indexOf(d.x);
-            for (var i = (ypos + 1); i < num; i++) {
-                if (i === xpos) return false;
+            var xposition = domain.indexOf(d.x);
+            var yposition = domain.indexOf(d.y);
+            for (var i = (yposition + 1); i < n_elemente; i++) {
+                if (i === xposition) return true;
+            }
+            return false;
+        })
+        .append("circle")
+        .attr("r", function(d) {
+            if (data.length <= 36) {
+                return ((width / (n_elemente * 2)) * (Math.abs(d.value) + 0.06));
+            } else if (data.length <= 900) {
+                return ((width / (n_elemente * 2)) * (Math.abs(d.value) + 0.02));
+            } else {
+                return ((width / (n_elemente * 2)) * (Math.abs(d.value) - 0.02));
+            }
+        })
+        .style("fill", function(d) {
+            if (d.value === 1) {
+                return "#000";
+            } else {
+                return col(d.value);
+            }
+        });
+
+    cor.filter(function(d) {
+            var xposition = domain.indexOf(d.x);
+            var yposition = domain.indexOf(d.y);
+            for (var i = yposition + 1; i < n_elemente; i++) {
+                if (i === xposition) return false;
             }
             return true;
         })
@@ -252,84 +278,55 @@ function drawCorrelogram(data) {
 
         .text(function(d) {
             if (d.x === d.y) {
-                return "val " + ++g; //d.x
-            } else if (isNaN(d.value)){
+                return "val " + ++count; //d.x
+            } else if (isNaN(d.value)) {
                 return " - ";
             } else {
                 return d.value.toFixed(2);
-            }   
-            })
-        
+            }
+        })
+
         .style("fill", function(d) {
             if (d.value === 1) {
                 return "#000";
             } else {
-                return color(d.value);
+                return col(d.value);
             }
         });
 
-    cor.filter(function(d) {
-            var ypos = domain.indexOf(d.y);
-            var xpos = domain.indexOf(d.x);
-            for (var i = (ypos + 1); i < num; i++) {
-                if (i === xpos) return true;
-            }
-            return false;
-        })
-        .append("circle")
-        .attr("r", function(d) {
-            if (data.length <= 36) {
-                return ((width / (num * 2)) * (Math.abs(d.value) + 0.06));
-            } else if (data.length <= 900) {
-                return ((width / (num * 2)) * (Math.abs(d.value) + 0.02));
-            } else {
-                return ((width / (num * 2)) * (Math.abs(d.value) - 0.02));
-            }
-        })
-        .style("fill", function(d) {
-            if (d.value === 1) {
-                return "#000";
-            } else {
-                return color(d.value);
-            }
-        });
-
-    var aS = d3.scale
-        .linear()
-        .range([-margin.top + 9, height + margin.bottom - 5])
-        .domain([1, -1]);
-
-    var yA = d3.svg.axis()
-        .orient("right")
-        .scale(aS)
-        .tickPadding(7);
-
-    var aG = svg.append("g")
-        .attr("class", "y axis")
-        .call(yA)
-        .attr("transform", "translate(" + (width + margin.right / 2) + " ,0)")
-
-    var iR = d3.range(-1, 1.01, 0.01);
-    var h = height / iR.length + 3;
-
-    iR.forEach(function(d) {
-        aG.append('rect')
-            .style('fill', color(d))
+    d3.range(-1, 1.01, 0.01).forEach(function(d) {
+            svgObject.append("g")
+            .attr("class", "y axis")
+            .call(d3.svg.axis()
+            .orient("right")
+            .scale(d3.scale
+            .linear()
+            .range([-margin.top + 9, height + margin.bottom - 5])
+            .domain([1, -1]))
+            .tickPadding(7))
+            .attr("transform", "translate(" + (width + margin.right / 2) + " ,0)").append('rect')
+            .style('fill', col(d))
             .style('stroke-width', 0)
             .style('stoke', 'none')
-            .attr('height', h)
+            .attr('height', height / range.length + 3)
             .attr('width', 10)
             .attr('x', 0)
-            .attr('y', aS(d))
+            .attr('y', d3.scale
+            .linear()
+            .range([-margin.top + 9, height + margin.bottom - 5])
+            .domain([1, -1])(d))
     });
 
 
 }
 
 function drawHistogram(xAxisValue, binSize) {
-
+    
+    var parameter = 6;
     var bin = 0;
     var color = "grey";
+    var dy_em = ".80em";
+
     var dataset = csv_data.map(function(d) {
         return d[xAxisValue];
     });
@@ -355,13 +352,9 @@ function drawHistogram(xAxisValue, binSize) {
         margin.bottom,
         height2 = 300 - margin2.top - margin2.bottom;
 
-    var max = d3.max(f_dataset);
-    var min = d3.min(f_dataset);
-
     var x = d3.scale.linear()
-        .domain([min, max])
+        .domain([d3.min(f_dataset), d3.max(f_dataset)])
         .range([0, width]);
-
 
     if (binSize == 0) {
         bin = Math.log2(f_dataset.length) + 1;
@@ -369,32 +362,24 @@ function drawHistogram(xAxisValue, binSize) {
         bin = binSize;
     }
 
-    var data = d3.layout.histogram()
+    var dataset = d3.layout.histogram()
         .bins(x.ticks(bin))
         (f_dataset);
 
-    var yMax = d3.max(data, function(d) {
-        return d.length
-    });
-    var yMin = d3.min(data, function(d) {
-        return d.length
-    });
-
-    var colorScale = d3.scale.linear()
-        .domain([yMin, yMax])
+    var color2 = d3.scale.linear()
+        .domain([d3.min(dataset, function(d) {
+            return d.length
+        }), d3.max(dataset, function(d) {
+            return d.length
+        })])
         .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
 
     var y = d3.scale.linear()
-        .domain([0, yMax])
+        .domain([0, d3.max(dataset, function(d) {
+            return d.length
+        })])
         .range([height, 0]);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
 
     var tip = d3.tip()
         .attr('class', 'd3-tip')
@@ -403,40 +388,37 @@ function drawHistogram(xAxisValue, binSize) {
             return "<strong>" + xAxisValue + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
         });
 
-    var svg = d3.select("#plot").append("svg")
-        .attr("width", width + margin.left + margin.right)
+    var svgObject = d3.select("#plot")
+        .append("svg")
         .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width + margin.left + margin.right)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.call(tip);
+    svgObject.call(tip);
 
-    var bar = svg.selectAll(".bar")
-        .data(data)
+    if (typeof(dataset[0]) == "undefined") {
+        alert("Change your bin size or X-Axis-Value please!");
+        deleteAll();
+        return;
+    }
+
+    svgObject.selectAll(".bar")
+        .data(dataset)
         .enter().append("g")
         .attr("class", "bar")
         .attr("transform", function(d) {
             return "translate(" + x(d.x) + "," + y(d.y) + ")";
         })
         .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
-
-    if (typeof(data[0]) == "undefined") {
-        alert("Change your bin size or X-Axis-Value please!");
-        deleteAll();
-        return;
-    }
-
-
-
-    bar.append("rect")
+        .on('mouseout', tip.hide).append("rect")
         .attr("x", 1)
-        .attr("width", (x(data[0].dx) - x(0)) - 1)
+        .attr("width", (x(dataset[0].dx) - x(0)) - 1)
         .attr("height", function(d) {
             return height - y(d.y);
         })
         .attr("fill", function(d) {
-            return colorScale(d.y)
+            return color2(d.y)
         })
         .on("mouseover", function() {
             d3.select(this)
@@ -444,23 +426,30 @@ function drawHistogram(xAxisValue, binSize) {
         })
         .on("mouseout", function() {
             d3.select(this).attr("fill", function(d) {
-                return colorScale(d.y);
+                return color2(d.y);
             })
         });
 
-    svg.append("g")
+
+    svgObject.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-    svg.append("g")
+        .call(d3.svg.axis()
+        .scale(x)
+        .orient("bottom"));
+    
+    svgObject.append("g")
         .attr("class", "y axis")
-        .call(yAxis)
+        .call(d3.svg.axis()
+        .scale(y)
+        .orient("left"))
         .append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".80em");
+        .attr("y", parameter)
+        .attr("dy", dy_em);
 
 }
+
 
 /*function drawPCA() {
 	d3.csv('GaiaSource_1.csv')
@@ -493,7 +482,6 @@ function drawHistogram(xAxisValue, binSize) {
 	    const lambda = pca.lambda()
 	    const sumLambda = lambda.reduce((a, x) => a + x)
 	    const renderer = new Renderer().size([400, 400])
-
 	    let i
 	    let acc = 0
 	    for (i = 0; i < lambda.length; ++i) {
@@ -515,10 +503,7 @@ function drawHistogram(xAxisValue, binSize) {
 	      }
 	    }
 	  })
-
 }*/
-
-// TODO vllt einfach astrometric_prios_used raus wegen NaN bei corr.werte ??
 
 function getMultipleData() {
     var MultipleData = headerNames.filter(function(d) {
@@ -538,7 +523,6 @@ function getMultipleData() {
 }
 
 
-// TODO was ist mit astrometric_prios_used los?, scheißvis :/
 
 function correlation(MultipleData) {
     var correlations = [];
@@ -582,7 +566,7 @@ function correlation(MultipleData) {
                     return d
                 })
             );
-            
+
             var corrValue = {
                 x: MultipleData[i],
                 y: MultipleData[j],
@@ -590,8 +574,7 @@ function correlation(MultipleData) {
             };
             correlations.push(corrValue);
         }
-}
-    console.log(correlations);
+    }
     return correlations;
 }
 
