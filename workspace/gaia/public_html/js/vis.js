@@ -9,9 +9,9 @@ var csv_data;
 
 
 d3.csv("./data/GaiaSource_1.csv",
-    function(csv_data) {
+    function (csv_data) {
         var traits = d3.keys(csv_data[0]).filter(
-            function(d) {
+            function (d) {
                 return d !== "astrometric_primary_flag" &&
                     d !== "duplicated_source" &&
                     d !== "phot_variable_flag";
@@ -74,31 +74,31 @@ function submitForm() {
     var binSize;
     if (document.getElementById("histogramType").checked) {
         switch (xAxisValue) {
-            case "source_id":
-                alert("Don't choose source_id for this plottype!");
-                return;
-                break;
-            case "random_index":
-                alert("Don't choose random_index for this plottype!");
-                return;
-                break;
-            case "solution_id":
-                alert("Don't choose solution_id for this plottype!");
-                return;
-                break;
-            case "ref_epoch":
-                alert("Don't choose ref_epoch for this plottype!");
-                return;
-                break;
-            default:
-                break;
+        case "source_id":
+            alert("Don't choose source_id for this plottype!");
+            return;
+            break;
+        case "random_index":
+            alert("Don't choose random_index for this plottype!");
+            return;
+            break;
+        case "solution_id":
+            alert("Don't choose solution_id for this plottype!");
+            return;
+            break;
+        case "ref_epoch":
+            alert("Don't choose ref_epoch for this plottype!");
+            return;
+            break;
+        default:
+            break;
         }
 
     }
 
     if (document.getElementById("scattermatrixType").checked) {
 
-      drawScatterPlotMatrix(getMultipleData());
+        drawScatterPlotMatrix(getMultipleData());
     } else if (document.getElementById("histogramType").checked) {
         if (document.getElementById("binCheck").checked) {
             binSize = document.getElementById("BinSize").value;
@@ -135,34 +135,34 @@ function drawCorrelogram(data) {
 
 
     switch (true) {
-        case (data.length <= 4):
-            width_parameter = 400;
-            height_parameter = 200;
-            break;
-        case (data.length == 9):
-            width_parameter = 450;
-            height_parameter = 300;
-            break;
-        case (data.length == 16 || data.length == 36):
-            width_parameter = 600;
-            height_parameter = 500;
-            break;
+    case (data.length <= 4):
+        width_parameter = 400;
+        height_parameter = 200;
+        break;
+    case (data.length == 9):
+        width_parameter = 450;
+        height_parameter = 300;
+        break;
+    case (data.length == 16 || data.length == 36):
+        width_parameter = 600;
+        height_parameter = 500;
+        break;
 
-        case (data.length == 64):
-            width_parameter = 650;
-            height_parameter = 550;
-            break;
-        case (data.length == 100):
-            width_parameter = 700;
-            height_parameter = 600;
-            break;
-        case (data.length > 100):
-            width_parameter = 70 * Math.sqrt(data.length);
-            height_parameter = 60 * Math.sqrt(data.length);
-            break;
-        default:
-            width_parameter = 600;
-            height_parameter = 500;
+    case (data.length == 64):
+        width_parameter = 650;
+        height_parameter = 550;
+        break;
+    case (data.length == 100):
+        width_parameter = 700;
+        height_parameter = 600;
+        break;
+    case (data.length > 100):
+        width_parameter = 70 * Math.sqrt(data.length);
+        height_parameter = 60 * Math.sqrt(data.length);
+        break;
+    default:
+        width_parameter = 600;
+        height_parameter = 500;
     }
 
 
@@ -174,7 +174,7 @@ function drawCorrelogram(data) {
         },
         width = width_parameter - margin.left - margin.right,
         height = height_parameter - margin.top - margin.bottom,
-        domain = d3.set(data.map(function(d) {
+        domain = d3.set(data.map(function (d) {
             return d.x
         })).values(),
         n_elemente = Math.sqrt(data.length),
@@ -196,7 +196,7 @@ function drawCorrelogram(data) {
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
-        .html(function(d) {
+        .html(function (d) {
             if (d.x === d.y) {
                 return "<strong>" + d.x + "</strong> ";
             } else if (isNaN(d.value)) {
@@ -221,7 +221,7 @@ function drawCorrelogram(data) {
         .data(data)
         .enter()
         .append("g")
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "translate(" + x(d.x) + "," + y(d.y) + ")";
         })
         .attr("class", "cor")
@@ -236,11 +236,11 @@ function drawCorrelogram(data) {
         .attr("height", y2)
         .attr("width", x2)
 
-        .attr("x", -x2 / 2)
+    .attr("x", -x2 / 2)
         .attr("y", -y2 / 2);
 
 
-    cor.filter(function(d) {
+    cor.filter(function (d) {
             var xposition = domain.indexOf(d.x);
             var yposition = domain.indexOf(d.y);
             for (var i = (yposition + 1); i < n_elemente; i++) {
@@ -249,7 +249,7 @@ function drawCorrelogram(data) {
             return false;
         })
         .append("circle")
-        .attr("r", function(d) {
+        .attr("r", function (d) {
             if (data.length <= 36) {
                 return ((width / (n_elemente * 2)) * (Math.abs(d.value) + 0.06));
             } else if (data.length <= 900) {
@@ -258,7 +258,7 @@ function drawCorrelogram(data) {
                 return ((width / (n_elemente * 2)) * (Math.abs(d.value) - 0.02));
             }
         })
-        .style("fill", function(d) {
+        .style("fill", function (d) {
             if (d.value === 1) {
                 return "#000";
             } else {
@@ -266,7 +266,7 @@ function drawCorrelogram(data) {
             }
         });
 
-    cor.filter(function(d) {
+    cor.filter(function (d) {
             var xposition = domain.indexOf(d.x);
             var yposition = domain.indexOf(d.y);
             for (var i = yposition + 1; i < n_elemente; i++) {
@@ -277,34 +277,34 @@ function drawCorrelogram(data) {
         .append("text")
         .attr("y", 5)
 
-        .text(function(d) {
-            if (d.x === d.y) {
-                return "val " + ++count; //d.x
-            } else if (isNaN(d.value)) {
-                return " - ";
-            } else {
-                return d.value.toFixed(2);
-            }
-        })
+    .text(function (d) {
+        if (d.x === d.y) {
+            return "val " + ++count; //d.x
+        } else if (isNaN(d.value)) {
+            return " - ";
+        } else {
+            return d.value.toFixed(2);
+        }
+    })
 
-        .style("fill", function(d) {
-            if (d.value === 1) {
-                return "#000";
-            } else {
-                return col(d.value);
-            }
-        });
+    .style("fill", function (d) {
+        if (d.value === 1) {
+            return "#000";
+        } else {
+            return col(d.value);
+        }
+    });
 
-    d3.range(-1, 1.01, 0.01).forEach(function(d) {
-            svgObject.append("g")
+    d3.range(-1, 1.01, 0.01).forEach(function (d) {
+        svgObject.append("g")
             .attr("class", "y axis")
             .call(d3.svg.axis()
-            .orient("right")
-            .scale(d3.scale
-            .linear()
-            .range([-margin.top + 9, height + margin.bottom - 5])
-            .domain([1, -1]))
-            .tickPadding(7))
+                .orient("right")
+                .scale(d3.scale
+                    .linear()
+                    .range([-margin.top + 9, height + margin.bottom - 5])
+                    .domain([1, -1]))
+                .tickPadding(7))
             .attr("transform", "translate(" + (width + margin.right / 2) + " ,0)").append('rect')
             .style('fill', col(d))
             .style('stroke-width', 0)
@@ -313,26 +313,26 @@ function drawCorrelogram(data) {
             .attr('width', 10)
             .attr('x', 0)
             .attr('y', d3.scale
-            .linear()
-            .range([-margin.top + 9, height + margin.bottom - 5])
-            .domain([1, -1])(d))
+                .linear()
+                .range([-margin.top + 9, height + margin.bottom - 5])
+                .domain([1, -1])(d))
     });
 
 
 }
 
 function drawHistogram(xAxisValue, binSize) {
-    
+
     var parameter = 6;
     var bin = 0;
     var color = "grey";
     var dy_em = ".80em";
 
-    var dataset = csv_data.map(function(d) {
+    var dataset = csv_data.map(function (d) {
         return d[xAxisValue];
     });
 
-    var f_dataset = dataset.filter(function(d) {
+    var f_dataset = dataset.filter(function (d) {
         return d != -999 && !isNaN(+d)
     });
 
@@ -368,15 +368,15 @@ function drawHistogram(xAxisValue, binSize) {
         (f_dataset);
 
     var color2 = d3.scale.linear()
-        .domain([d3.min(dataset, function(d) {
+        .domain([d3.min(dataset, function (d) {
             return d.length
-        }), d3.max(dataset, function(d) {
+        }), d3.max(dataset, function (d) {
             return d.length
         })])
         .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
 
     var y = d3.scale.linear()
-        .domain([0, d3.max(dataset, function(d) {
+        .domain([0, d3.max(dataset, function (d) {
             return d.length
         })])
         .range([height, 0]);
@@ -385,7 +385,7 @@ function drawHistogram(xAxisValue, binSize) {
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
-        .html(function(d) {
+        .html(function (d) {
             return "<strong>" + xAxisValue + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
         });
 
@@ -398,7 +398,7 @@ function drawHistogram(xAxisValue, binSize) {
 
     svgObject.call(tip);
 
-    if (typeof(dataset[0]) == "undefined") {
+    if (typeof (dataset[0]) == "undefined") {
         alert("Change your bin size or X-Axis-Value please!");
         deleteAll();
         return;
@@ -408,25 +408,25 @@ function drawHistogram(xAxisValue, binSize) {
         .data(dataset)
         .enter().append("g")
         .attr("class", "bar")
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "translate(" + x(d.x) + "," + y(d.y) + ")";
         })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide).append("rect")
         .attr("x", 1)
         .attr("width", (x(dataset[0].dx) - x(0)) - 1)
-        .attr("height", function(d) {
+        .attr("height", function (d) {
             return height - y(d.y);
         })
-        .attr("fill", function(d) {
+        .attr("fill", function (d) {
             return color2(d.y)
         })
-        .on("mouseover", function() {
+        .on("mouseover", function () {
             d3.select(this)
                 .attr("fill", "#2e2e30");
         })
-        .on("mouseout", function() {
-            d3.select(this).attr("fill", function(d) {
+        .on("mouseout", function () {
+            d3.select(this).attr("fill", function (d) {
                 return color2(d.y);
             })
         });
@@ -436,14 +436,14 @@ function drawHistogram(xAxisValue, binSize) {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.svg.axis()
-        .scale(x)
-        .orient("bottom"));
-    
+            .scale(x)
+            .orient("bottom"));
+
     svgObject.append("g")
         .attr("class", "y axis")
         .call(d3.svg.axis()
-        .scale(y)
-        .orient("left"))
+            .scale(y)
+            .orient("left"))
         .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", parameter)
@@ -507,38 +507,45 @@ function drawHistogram(xAxisValue, binSize) {
 }*/
 
 function drawScatterPlotMatrix(chosenValues) {
-    var      size = 230,
-            padding = 20;
+
+    var correlations = correlation1(chosenValues);
+    col = d3.scale.linear()
+        .domain([-1, 0, 1])
+        .range(["#000000", "#A9E2F3", "#361CA0"]);
+
+
+    var size = 230,
+        padding = 40;
 
     var x = d4.scaleLinear()
-            .range([padding / 2, size - padding / 2]);
-//    var x = d3.scale.linear()
-//            .range([padding / 2, size - padding / 2]);
+        .range([padding / 2, size - padding / 2]);
+    //    var x = d3.scale.linear()
+    //            .range([padding / 2, size - padding / 2]);
 
     var y = d4.scaleLinear()
-            .range([size - padding / 2, padding / 2]);
-//    var y = d3.scale.linear()
-//            .range([size - padding / 2, padding / 2]);
+        .range([size - padding / 2, padding / 2]);
+    //    var y = d3.scale.linear()
+    //            .range([size - padding / 2, padding / 2]);
 
 
     var xAxis = d4.axisBottom()
-            .scale(x);
-//    var xAxis = d3.svg.axis()
-//            .scale(x)
-//            .orient("bottom")
+        .scale(x);
+    //    var xAxis = d3.svg.axis()
+    //            .scale(x)
+    //            .orient("bottom")
 
     var yAxis = d4.axisLeft()
-            .scale(y);
-//    var yAxis = d3.svg.axis()
-//            .scale(y)
-//            .orient("left")
+        .scale(y);
+    //    var yAxis = d3.svg.axis()
+    //            .scale(y)
+    //            .orient("left")
 
     var color = d4.scaleOrdinal(d4.schemeCategory10);
-//    var color = d3.scale.category10();
+    //    var color = d3.scale.category10();
 
     var domainByTrait = {},
-            traits = chosenValues,
-            n = traits.length;
+        traits = chosenValues,
+        n = traits.length;
 
     traits.forEach(function (trait) {
         domainByTrait[trait] = d4.extent(csv_data, function (d) {
@@ -554,110 +561,167 @@ function drawScatterPlotMatrix(chosenValues) {
     yAxis.tickSize(-size * n);
 
     var brush = d4.brush()
-            .on("start", brushstart)
-            .on("brush", brushmove)
-            .on("end", brushend)
-            .extent([[0, 0], [size, size]]);
-//    var brush = d3.svg.brush()
-//            .x(x)
-//            .y(y)
-//            .on("brushstart", brushstart)
-//            .on("brush", brushmove)
-//            .on("brushend", brushend);
+        .on("start", brushstart)
+        .on("brush", brushmove)
+        .on("end", brushend)
+        .extent([[0, 0], [size, size]]);
+    //    var brush = d3.svg.brush()
+    //            .x(x)
+    //            .y(y)
+    //            .on("brushstart", brushstart)
+    //            .on("brush", brushmove)
+    //            .on("brushend", brushend);
 
     var svg = d4.select("#plot").append("svg")
-            .attr("width", size * n + (padding + 100))
-            .attr("height", size * n + (padding + 100))
-            .append("g")
-            .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+        .attr("width", size * n + (padding + 100))
+        .attr("height", size * n + (padding + 100))
+        .append("g")
+        .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
     svg.selectAll(".x.axis")
-            .data(traits)
-            .enter()
-            .append("g")
-            .attr("class", "x axis")
-            .attr("transform", function (d, i) {
-                return "translate(" + (n - i - 1) * size + ",0)";
-            })
-            .each(function (d) {
-                x.domain(domainByTrait[d]);
-                d4.select(this).call(xAxis);
-            });
+        .data(traits)
+        .enter()
+        .append("g")
+        .attr("class", "x axis")
+        .attr("transform", function (d, i) {
+            return "translate(" + (n - i - 1) * size + ",0)";
+        })
+        .each(function (d) {
+            x.domain(domainByTrait[d]);
+            d4.select(this).call(xAxis);
+        });
 
     svg.selectAll(".y.axis")
-            .data(traits)
-            .enter()
-            .append("g")
-            .attr("class", "y axis")
-            .attr("transform", function (d, i) {
-                return "translate(0," + i * size + ")";
-            })
-            .each(function (d) {
-                y.domain(domainByTrait[d]);
-                d4.select(this).call(yAxis);
-            });
+        .data(traits)
+        .enter()
+        .append("g")
+        .attr("class", "y axis")
+        .attr("transform", function (d, i) {
+            return "translate(0," + i * size + ")";
+        })
+        .each(function (d) {
+            y.domain(domainByTrait[d]);
+            d4.select(this).call(yAxis);
+        });
 
     var crossedData = cross(traits, traits);
     var cell = svg.selectAll(".cell")
-            .data(crossedData)
-            .enter().append("g")
-            .attr("class", "cell")
-            .attr("transform", function (d) {
-                return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
-            })
-            .each(plot);
+        .data(crossedData)
+        .enter().append("g")
+        .attr("class", "cell")
+        .attr("transform", function (d) {
+            return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
+        });
 
-// Titles for the diagonal.
     cell.filter(function (d) {
-        return d.i === d.j;
-    }).append("text")
-            .attr("x", padding)
-            .attr("y", padding)
-            .attr("dy", ".71em")
-            .text(function (d) {
-                return d.x;
-            });
 
-    cell.call(brush);
+        return d.i !== d.j && d.i > d.j;
+    }).each(plot);
 
-    function plot(p) {
+    cell.filter(function (d) {
+
+        return d.i === d.j || d.i < d.j;
+    }).each(plot_histo);
+    /* cell.filter(function (d) {
+               return d.i === d.j;
+               }).each(plot_histo);*/
+
+    // Titles for the diagonal.
+   cell.filter(function (d) {
+            return d.i === d.j;
+        }).append("text")
+  
+        .attr("x", padding)
+        .attr("y", padding)
+        .attr("dy", ".71em")
+        .text(function (d) {
+            return d.x;
+        });
+
+    cell.filter(function (d) {
+            return d.i < d.j;
+        }).append("text")
+    
+        .attr("x", padding)
+        .attr("y", padding)
+        .attr("dy", "8.50em")
+        .attr("dx", "5.80em")
+        .text(function (d, i) {
+            return correlations[i].toFixed(3);
+        }).style("fill", function (d, i) {
+            if (correlations[i] === 1) {
+                return "#000";
+            } else {
+                return col(correlations[i]);
+            }
+        });
+    ////
+
+
+
+    cell.filter(function (d) {
+        return d.i !== d.j && d.i > d.j;
+    }).call(brush);
+
+    function plot_histo(p) {
+
+
         var cell = d4.select(this);
 
         x.domain(domainByTrait[p.x]);
         y.domain(domainByTrait[p.y]);
 
         cell.append("rect")
-                .attr("class", "frame")
-                .attr("x", padding / 2)
-                .attr("y", padding / 2)
-                .attr("width", size - padding)
-                .attr("height", size - padding);
+            .attr("class", "frame")
+            .attr("x", padding / 2)
+            .attr("y", padding / 2)
+            .attr("width", size - padding)
+            .attr("height", size - padding);
+
+    }
+
+    function plot(p) {
+
+
+        var cell = d4.select(this);
+
+        x.domain(domainByTrait[p.x]);
+        y.domain(domainByTrait[p.y]);
+
+        cell.append("rect")
+            .attr("class", "frame")
+            .attr("x", padding / 2)
+            .attr("y", padding / 2)
+            .attr("width", size - padding)
+            .attr("height", size - padding);
 
         cell.selectAll("circle")
-                .data(csv_data)
-                .enter()
-                .filter(function (d) {
-                    var tmpX = parseFloat(d[p.x]);
-                    var tmpY = parseFloat(d[p.y]);
-                    return (tmpX !== undefined && tmpY !== undefined) && (!isNaN(tmpX) && !isNaN(tmpY)) && (tmpX > -900 && tmpY > -900);
-                })
-                .append("circle")
-                .attr("cx", function (d) {
-                    return x(d[p.x]);
-                })
-                .attr("cy", function (d) {
-                    return y(d[p.y]);
-                })
-                .attr("r", 4)
-                // change for different colours in clusters
-                .style("fill", function (d) {
-                    return color("blue");
-                });
+            .data(csv_data)
+            .enter()
+            .filter(function (d) {
+                var tmpX = parseFloat(d[p.x]);
+                var tmpY = parseFloat(d[p.y]);
+                return (tmpX !== undefined && tmpY !== undefined) && (!isNaN(tmpX) && !isNaN(tmpY)) && (tmpX > -900 && tmpY > -900);
+            })
+            .append("circle")
+            .attr("cx", function (d) {
+                return x(d[p.x]);
+            })
+            .attr("cy", function (d) {
+                return y(d[p.y]);
+            })
+            .attr("r", 4)
+            // change for different colours in clusters
+            .style("fill", function (d) {
+                return color("blue");
+            });
+
+
     }
 
     var brushCell;
 
-// Clear the previously-active brush, if any.
+    // Clear the previously-active brush, if any.
     function brushstart(p) {
         if (brushCell !== this) {
             d4.select(brushCell).call(brush.move, null);
@@ -666,51 +730,57 @@ function drawScatterPlotMatrix(chosenValues) {
             y.domain(domainByTrait[p.y]);
         }
     }
-//    function brushstart(p) {
-//        if (brushCell !== this) {
-//            d3.select(brushCell).call(brush.clear());
-//            x.domain(domainByTrait[p.x]);
-//            y.domain(domainByTrait[p.y]);
-//            brushCell = this;
-//        }
-//    }
+    //    function brushstart(p) {
+    //        if (brushCell !== this) {
+    //            d3.select(brushCell).call(brush.clear());
+    //            x.domain(domainByTrait[p.x]);
+    //            y.domain(domainByTrait[p.y]);
+    //            brushCell = this;
+    //        }
+    //    }
 
-// Highlight the selected circles.
+    // Highlight the selected circles.
     function brushmove(p) {
         var e = d4.brushSelection(this);
         svg.selectAll("circle").classed("hidden", function (d) {
-            return !e ? false : (e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
-                    || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
-                    );
+            return !e ? false : (e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0] || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]);
         });
     }
-//    function brushmove(p) {
-//        var e = brush.extent();
-//        svg.selectAll("circle").classed("hidden", function (d) {
-//            return e[0][0] > d[p.x] || d[p.x] > e[1][0]
-//                    || e[0][1] > d[p.y] || d[p.y] > e[1][1];
-//        });
-//    }
+    //    function brushmove(p) {
+    //        var e = brush.extent();
+    //        svg.selectAll("circle").classed("hidden", function (d) {
+    //            return e[0][0] > d[p.x] || d[p.x] > e[1][0]
+    //                    || e[0][1] > d[p.y] || d[p.y] > e[1][1];
+    //        });
+    //    }
 
-// If the brush is empty, select all circles.
+    // If the brush is empty, select all circles.
     function brushend() {
         var e = d4.brushSelection(this);
         if (e === null)
             svg.selectAll(".hidden").classed("hidden", false);
     }
-//    function brushend() {
-//        if (brush.empty())
-//            svg.selectAll(".hidden").classed("hidden", false);
-//    }
+    //    function brushend() {
+    //        if (brush.empty())
+    //            svg.selectAll(".hidden").classed("hidden", false);
+    //    }
 
     function cross(a, b) {
-        var c = [], n = a.length, m = b.length, i, j;
-        for (i = -1; ++i < n; ) {
-            for (j = -1; ++j < m; ) {
+        var c = [],
+            n = a.length,
+            m = b.length,
+            i, j;
+        for (i = -1; ++i < n;) {
+            for (j = -1; ++j < m;) {
                 var valueA = a[i];
                 var valueB = b[j];
 
-                c.push({x: valueA, i: i, y: valueB, j: j});
+                c.push({
+                    x: valueA,
+                    i: i,
+                    y: valueB,
+                    j: j
+                });
             }
         }
         return c;
@@ -718,7 +788,7 @@ function drawScatterPlotMatrix(chosenValues) {
 }
 
 function getMultipleData() {
-    var MultipleData = headerNames.filter(function(d) {
+    var MultipleData = headerNames.filter(function (d) {
         if (document.getElementById(d).selected) {
             if (d != "solution_id" && d != "ref_epoch") {
                 return d;
@@ -739,42 +809,42 @@ function getMultipleData() {
 function correlation(MultipleData) {
     var correlations = [];
 
-    var filtered_data = csv_data.filter(function(d) {
-        return MultipleData.reduce(function(acc, column) {
+    var filtered_data = csv_data.filter(function (d) {
+        return MultipleData.reduce(function (acc, column) {
             return acc && +d[column] != null && +d[column] != -999 && !isNaN(+d[column]);
         }, true);
     });
 
     for (var i = 0; i < MultipleData.length; i++) {
         for (var j = 0; j < MultipleData.length; j++) {
-            var col1 = filtered_data.map(function(d) {
+            var col1 = filtered_data.map(function (d) {
                 return +d[MultipleData[i]]
             });
 
-            var col2 = filtered_data.map(function(d) {
+            var col2 = filtered_data.map(function (d) {
                 return +d[MultipleData[j]]
             });
 
-            var avg_col1 = d3.sum(col1, function(d) {
+            var avg_col1 = d3.sum(col1, function (d) {
                 return d
             }) / col1.length;
 
-            var avg_col2 = d3.sum(col2, function(d) {
+            var avg_col2 = d3.sum(col2, function (d) {
                 return d
             }) / col2.length;
 
-            var coeff = d3.sum(col1.map(function(d, i) {
+            var coeff = d3.sum(col1.map(function (d, i) {
                 return (d - avg_col1) * (col2[i] - avg_col2)
-            }), function(d) {
+            }), function (d) {
                 return d
             }) / Math.sqrt(
-                d3.sum(col1.map(function(d) {
+                d3.sum(col1.map(function (d) {
                     return Math.pow((d - avg_col1), 2)
-                }), function(d) {
+                }), function (d) {
                     return d
-                }) * d3.sum(col2.map(function(d) {
+                }) * d3.sum(col2.map(function (d) {
                     return Math.pow((d - avg_col2), 2)
-                }), function(d) {
+                }), function (d) {
                     return d
                 })
             );
@@ -790,6 +860,61 @@ function correlation(MultipleData) {
     return correlations;
 }
 
+
+function correlation1(MultipleData) {
+    var correlations = [];
+
+    var filtered_data = csv_data.filter(function (d) {
+        return MultipleData.reduce(function (acc, column) {
+            return acc && +d[column] != null && +d[column] != -999 && !isNaN(+d[column]);
+        }, true);
+    });
+
+    for (var i = 0; i < MultipleData.length; i++) {
+        for (var j = i + 1; j < MultipleData.length; j++) {
+            var col1 = filtered_data.map(function (d) {
+                return +d[MultipleData[i]]
+            });
+
+            var col2 = filtered_data.map(function (d) {
+                return +d[MultipleData[j]]
+            });
+
+            var avg_col1 = d3.sum(col1, function (d) {
+                return d
+            }) / col1.length;
+
+            var avg_col2 = d3.sum(col2, function (d) {
+                return d
+            }) / col2.length;
+
+            var coeff = d3.sum(col1.map(function (d, i) {
+                return (d - avg_col1) * (col2[i] - avg_col2)
+            }), function (d) {
+                return d
+            }) / Math.sqrt(
+                d3.sum(col1.map(function (d) {
+                    return Math.pow((d - avg_col1), 2)
+                }), function (d) {
+                    return d
+                }) * d3.sum(col2.map(function (d) {
+                    return Math.pow((d - avg_col2), 2)
+                }), function (d) {
+                    return d
+                })
+            );
+
+            /*var corrValue = {
+                x: MultipleData[i],
+                y: MultipleData[j],
+                value: coeff
+            };*/
+            var corrValue = coeff;
+            correlations.push(corrValue);
+        }
+    }
+    return correlations;
+}
 
 function histogramActive() {
 

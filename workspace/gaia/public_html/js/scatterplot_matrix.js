@@ -187,3 +187,126 @@ function cross(a, b) {
     return c;
 }
 
+
+
+
+
+
+function drawHistogram(xAxisValue, binSize) {
+    
+    var parameter = 6;
+    var bin = 0;
+    var color = "grey";
+    var dy_em = ".80em";
+
+    var dataset = csv_data.map(function(d) {
+        return d[xAxisValue];
+    });
+
+    var f_dataset = dataset.filter(function(d) {
+        return d != -999 && !isNaN(+d)
+    });
+
+    var margin = {
+            top: 50,
+            right: 20,
+            bottom: 110,
+            left: 60
+        },
+        margin2 = {
+            top: 230,
+            right: 20,
+            bottom: 30,
+            left: 40
+        },
+        width = 660 - margin.left - margin.right,
+        height = 300 - margin.top -
+        margin.bottom,
+        height2 = 300 - margin2.top - margin2.bottom;
+
+    var x = d3.scale.linear()
+        .domain([d3.min(f_dataset), d3.max(f_dataset)])
+        .range([0, width]);
+
+    if (binSize == 0) {
+        bin = Math.log2(f_dataset.length) + 1;
+    } else {
+        bin = binSize;
+    }
+
+    var dataset = d3.layout.histogram()
+        .bins(x.ticks(bin))
+        (f_dataset);
+
+    var color2 = d3.scale.linear()
+        .domain([d3.min(dataset, function(d) {
+            return d.length
+        }), d3.max(dataset, function(d) {
+            return d.length
+        })])
+        .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+
+    var y = d3.scale.linear()
+        .domain([0, d3.max(dataset, function(d) {
+            return d.length
+        })])
+        .range([height, 0]);
+
+
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<strong>" + xAxisValue + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
+        });
+
+    var svgObject = d3.select("#plot")
+        .append("svg")
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width + margin.left + margin.right)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svgObject.call(tip);
+
+    if (typeof(dataset[0]) == "undefined") {
+        alert("Change your bin size or X-Axis-Value please!");
+        deleteAll();
+        return;
+    }
+
+    svgObject.selectAll(".bar")
+        .data(dataset)
+        .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) {
+            return "translate(" + x(d.x) + "," + y(d.y) + ")";
+        })
+        .attr("x", 1)
+        .attr("width", (x(dataset[0].dx) - x(0)) - 1)
+        .attr("height", function(d) {
+            return height - y(d.y);
+        })
+        .attr("fill", function(d) {
+            return color2(d.y)
+        });
+
+
+    svgObject.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.svg.axis()
+        .scale(x)
+        .orient("bottom"));
+    
+    svgObject.append("g")
+        .attr("class", "y axis")
+        .call(d3.svg.axis()
+        .scale(y)
+        .orient("left"))
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", parameter)
+        .attr("dy", dy_em);
+
+}
