@@ -640,9 +640,22 @@ function drawScatterPlotMatrix(chosenValues) {
             return d.x;
         });
     
-    var  n_elemente = Math.sqrt(correlations.length);
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function (d, i) {
+          if (isNaN(correlations[i])) {
+                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
+            } else {
+                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[i] + "</strong>";
+            }
+
+        });
+    
+    svg.call(tip);
+
   
- 
+  
     
     cell.filter(function (d) {
             return d.i < d.j;
@@ -665,6 +678,15 @@ function drawScatterPlotMatrix(chosenValues) {
 
         })
     ;
+    
+     d3.selectAll(".cell").filter(function (d) {
+            return d.i < d.j;
+        }).selectAll("text")
+    .on('mouseover', tip.show)
+        .on('mouseout', tip.hide);
+    
+     
+    
    // .style("fill", function (d, i) {
    //         if (correlations[i] === 1) {
     //            return "#000";
@@ -700,9 +722,9 @@ function drawScatterPlotMatrix(chosenValues) {
     }
 
     function plot(p) {
-    
+      
         var cell = d4.select(this);
-   
+    
         x.domain(domainByTrait[p.x]);
         y.domain(domainByTrait[p.y]);
 
@@ -732,9 +754,7 @@ function drawScatterPlotMatrix(chosenValues) {
             // change for different colours in clusters
             .style("fill", function (d) {
                 return color("blue");
-            })
-        ;
-
+            });
 
     }
 
