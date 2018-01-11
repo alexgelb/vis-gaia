@@ -322,17 +322,17 @@ function drawCorrelogram(data) {
 }
 
 function drawHistogram(xAxisValue, binSize) {
-
+    
     var parameter = 6;
     var bin = 0;
     var color = "grey";
     var dy_em = ".80em";
 
-    var dataset = csv_data.map(function (d) {
+    var dataset = csv_data.map(function(d) {
         return d[xAxisValue];
     });
 
-    var f_dataset = dataset.filter(function (d) {
+    var f_dataset = dataset.filter(function(d) {
         return d != -999 && !isNaN(+d)
     });
 
@@ -368,15 +368,15 @@ function drawHistogram(xAxisValue, binSize) {
         (f_dataset);
 
     var color2 = d3.scale.linear()
-        .domain([d3.min(dataset, function (d) {
+        .domain([d3.min(dataset, function(d) {
             return d.length
-        }), d3.max(dataset, function (d) {
+        }), d3.max(dataset, function(d) {
             return d.length
         })])
         .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
 
     var y = d3.scale.linear()
-        .domain([0, d3.max(dataset, function (d) {
+        .domain([0, d3.max(dataset, function(d) {
             return d.length
         })])
         .range([height, 0]);
@@ -385,7 +385,7 @@ function drawHistogram(xAxisValue, binSize) {
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
-        .html(function (d) {
+        .html(function(d) {
             return "<strong>" + xAxisValue + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
         });
 
@@ -398,7 +398,7 @@ function drawHistogram(xAxisValue, binSize) {
 
     svgObject.call(tip);
 
-    if (typeof (dataset[0]) == "undefined") {
+    if (typeof(dataset[0]) == "undefined") {
         alert("Change your bin size or X-Axis-Value please!");
         deleteAll();
         return;
@@ -408,23 +408,25 @@ function drawHistogram(xAxisValue, binSize) {
         .data(dataset)
         .enter().append("g")
         .attr("class", "bar")
-        .attr("transform", function (d) {
+        .attr("transform", function(d) {
             return "translate(" + x(d.x) + "," + y(d.y) + ")";
         })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide).append("rect")
-        .attr("height", function (d) {
+        .attr("x", 1)
+        .attr("width", (x(dataset[0].dx) - x(0)) - 1)
+        .attr("height", function(d) {
             return height - y(d.y);
         })
-        .attr("fill", function (d) {
+        .attr("fill", function(d) {
             return color2(d.y)
         })
-        .on("mouseover", function () {
+        .on("mouseover", function() {
             d3.select(this)
                 .attr("fill", "#2e2e30");
         })
-        .on("mouseout", function () {
-            d3.select(this).attr("fill", function (d) {
+        .on("mouseout", function() {
+            d3.select(this).attr("fill", function(d) {
                 return color2(d.y);
             })
         });
@@ -434,14 +436,14 @@ function drawHistogram(xAxisValue, binSize) {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.svg.axis()
-            .scale(x)
-            .orient("bottom"));
-
+        .scale(x)
+        .orient("bottom"));
+    
     svgObject.append("g")
         .attr("class", "y axis")
         .call(d3.svg.axis()
-            .scale(y)
-            .orient("left"))
+        .scale(y)
+        .orient("left"))
         .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", parameter)
@@ -579,11 +581,13 @@ function drawScatterPlotMatrix(chosenValues) {
         .append("g")
         .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
+    var dy_em = ".80em";
     
     svg.selectAll(".x.axis")
         .data(traits)
         .enter()
         .append("g")
+
         .attr("class", "x axis")
         .attr("transform", function (d, i) {
             return "translate(" + (n - i - 1) * size + ",0)";
@@ -598,6 +602,7 @@ function drawScatterPlotMatrix(chosenValues) {
         .enter()
         .append("g")
         .attr("class", "y axis")
+       
         .attr("transform", function (d, i) {
             return "translate(0," + i * size + ")";
         })
@@ -660,7 +665,7 @@ function drawScatterPlotMatrix(chosenValues) {
     cell.filter(function (d) {
             return d.i < d.j;
         })
-    
+   
     .append("text")
     
         .attr("x", padding)
@@ -695,7 +700,7 @@ function drawScatterPlotMatrix(chosenValues) {
     //        }
      //   })
     ;
-    ////
+
 
 
 
@@ -703,10 +708,16 @@ function drawScatterPlotMatrix(chosenValues) {
         return d.i !== d.j && d.i > d.j;
     }).call(brush);
 
-   
-    function plot_histo(p) {
+     cell.filter(function (d) {
 
+        return d.i === d.j;
+    }).each(plot_histo1);
+    //
+    //d3.selectAll("line").attr("hidden", true);
+ 
+     function plot_histo(p) {
 
+      
         var cell = d4.select(this);
 
         x.domain(domainByTrait[p.x]);
@@ -717,7 +728,125 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr("x", padding / 2)
             .attr("y", padding / 2)
             .attr("width", size - padding)
-            .attr("height", size - padding);
+            .attr("height", size - padding)
+        .style("fill", "#ffffff");
+         
+     }
+    function plot_histo1(p) {
+        
+    var parameter = 6;
+    var color = "grey";
+    var dy_em = ".80em";
+
+    var dataset = csv_data.map(function(d, i) {
+        return d[chosenValues[0]];
+    });
+
+    var f_dataset = dataset.filter(function(d) {
+        return d != -999 && !isNaN(+d)
+    });
+
+     // .attr("x", padding / 2)
+        //    .attr("y", padding / 2)
+        var width =size - padding,
+            height =size - padding;
+
+    var x = d3.scale.linear()
+        .domain([d3.min(f_dataset), d3.max(f_dataset)])
+        .range([0, width]);
+
+   
+      var  bin = Math.log2(f_dataset.length) + 1;
+   
+
+    var dataset = d3.layout.histogram()
+        .bins(x.ticks(bin))
+        (f_dataset);
+
+    var color2 = d3.scale.linear()
+        .domain([d3.min(dataset, function(d) {
+            return d.length
+        }), d3.max(dataset, function(d) {
+            return d.length
+        })])
+        .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+
+    var y = d3.scale.linear()
+        .domain([0, d3.max(dataset, function(d) {
+            return d.length
+        })])
+        .range([height, 0]);
+
+
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d, i) {
+            return "<strong>" + chosenValues[0] + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
+        });
+
+    var svgObject = 
+        cell.filter(function (d) {
+
+        return d.i === d.j;
+    }).append("svg")
+        .attr("height", height)
+        .attr("width", width)
+        .append("g");
+       // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svgObject.call(tip);
+
+    if (typeof(dataset[0]) == "undefined") {
+        alert("Change your bin size or X-Axis-Value please!");
+        deleteAll();
+        return;
+    }
+
+    svgObject.selectAll(".bar")
+        .data(dataset)
+        .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) {
+            return "translate(" + x(d.x) + "," + y(d.y) + ")";
+        })
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide).append("rect")
+        .attr("x", 1)
+        .attr("width", (x(dataset[0].dx) - x(0)) - 1)
+        .attr("height", function(d) {
+            return height - y(d.y);
+        })
+        .attr("fill", function(d) {
+            return color2(d.y)
+        })
+        .on("mouseover", function() {
+            d3.select(this)
+                .attr("fill", "#2e2e30");
+        })
+        .on("mouseout", function() {
+            d3.select(this).attr("fill", function(d) {
+                return color2(d.y);
+            })
+        });
+
+
+    svgObject.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.svg.axis()
+        .scale(x)
+        .orient("bottom"));
+    
+    svgObject.append("g")
+        .attr("class", "y axis")
+        .call(d3.svg.axis()
+        .scale(y)
+        .orient("left"))
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", parameter)
+        .attr("dy", dy_em);
 
     }
 
