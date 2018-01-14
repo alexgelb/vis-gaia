@@ -1,8 +1,8 @@
 //import * as d3 from 'd3'
 //import {Renderer, PCA} from '/src'
 //const pcaClass = require('./pca')
-// TODO DataPlots-Bereich von size plots abhängig machen ?
 /* global d3, d4 */
+
 var value = 0;
 var headerNames = [];
 var csv_data;
@@ -42,18 +42,18 @@ d3.csv("./data/GaiaSource_1.csv",
 
         headerNames = traits;
         value = csv_data.length;
-        var xAxis = document.getElementById("xAxisValue");
+
         var multipleValue = document.getElementById("MultipleData");
 
 
         for (var i = 0; i < headerNames.length; i++) {
-            var xAxisOption = document.createElement("option");
+
             var multipleOption = document.createElement("option");
-            xAxisOption.text = headerNames[i];
+
             multipleOption.text = headerNames[i];
             multipleOption.id = headerNames[i];
 
-            xAxis.add(xAxisOption);
+
             multipleValue.add(multipleOption);
 
         }
@@ -67,61 +67,539 @@ d3.csv("./data/GaiaSource_1.csv",
     });
 
 function submitForm() {
-    // var plotType = document.getElementById("plotType").value;
-    var xAxis = document.getElementById("xAxisValue");
-    var xAxisValue = xAxis.options[xAxis.selectedIndex].text;
 
-    var binSize;
-    if (document.getElementById("histogramType").checked) {
-        switch (xAxisValue) {
-        case "source_id":
-            alert("Don't choose source_id for this plottype!");
-            return;
-            break;
-        case "random_index":
-            alert("Don't choose random_index for this plottype!");
-            return;
-            break;
-        case "solution_id":
-            alert("Don't choose solution_id for this plottype!");
-            return;
-            break;
-        case "ref_epoch":
-            alert("Don't choose ref_epoch for this plottype!");
-            return;
-            break;
-        default:
-            break;
-        }
-
-    }
-
-    if (document.getElementById("scattermatrixType").checked) {
-
+    if (getMultipleData() != 0) {
         drawScatterPlotMatrix(getMultipleData());
-    } else if (document.getElementById("histogramType").checked) {
-        if (document.getElementById("binCheck").checked) {
-            binSize = document.getElementById("BinSize").value;
-        } else {
-            binSize = 0;
-        }
-        drawHistogram(xAxisValue, binSize);
-
-
-    } else if (document.getElementById("correlogramType").checked) {
-        drawCorrelogram(correlation(getMultipleData()));
-    } else if (document.getElementById("pcaType").checked) {
-        alert("It comes in M4 ...");
-        //drawPCA();
     } else {
-        console.log("NONE");
-        alert("Choose a type of plot please!");
+        alert("Select please any values!");
+
     }
 }
 
 function deleteAll() {
+    if (d3.select("svg") == 0) {
+        alert("Nothing to delete!");
+    }
     d3.select("svg").remove();
+    headerNames.filter(function (d) {
+        document.getElementById(d).selected = false;
+    })
 }
+
+function drawScatterPlotMatrix(chosenValues) {
+
+    var correlations = correlation(chosenValues);
+    
+    col = d3.scale.linear()
+        .domain([-1, 0, 1])
+        // .range(["#000000", "#A9E2F3", "#361CA0"]);
+        .range(["#0174DF", "#A9E2F3", "#DF013A"]);
+
+    var size = 230,
+        padding = 40;
+
+    var x = d4.scaleLinear()
+        .range([padding / 2, size - padding / 2]);
+    //    var x = d3.scale.linear()
+    //            .range([padding / 2, size - padding / 2]);
+
+    var y = d4.scaleLinear()
+        .range([size - padding / 2, padding / 2]);
+    //    var y = d3.scale.linear()
+    //            .range([size - padding / 2, padding / 2]);
+
+
+    var xAxis = d4.axisBottom()
+        .scale(x);
+    //    var xAxis = d3.svg.axis()
+    //            .scale(x)
+    //            .orient("bottom")
+
+    var yAxis = d4.axisLeft()
+        .scale(y);
+    //    var yAxis = d3.svg.axis()
+    //            .scale(y)
+    //            .orient("left")
+
+    var color = d4.scaleOrdinal(d4.schemeCategory10);
+    //    var color = d3.scale.category10();
+
+    var domainByTrait = {},
+        traits = chosenValues,
+        n = traits.length;
+
+    traits.forEach(function (trait) {
+        domainByTrait[trait] = d4.extent(csv_data, function (d) {
+            var tmp = parseFloat(d[trait]);
+            if (!isNaN(tmp) && tmp > -900) {
+                return tmp;
+            }
+        });
+    });
+
+
+    xAxis.tickSize(size * n);
+    yAxis.tickSize(-size * n);
+
+    var brush = d4.brush()
+        .on("start", brushstart)
+        .on("brush", brushmove)
+        .on("end", brushend)
+        .extent([[0, 0], [size, size]]);
+    //    var brush = d3.svg.brush()
+    //            .x(x)
+    //            .y(y)
+    //            .on("brushstart", brushstart)
+    //            .on("brush", brushmove)
+    //            .on("brushend", brushend);
+
+
+
+
+    var svg = d4.select("#plot").append("svg")
+        .attr("width", size * n + (padding + 100))
+        .attr("height", size * n + (padding + 100))
+        .append("g")
+        .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
+
+    var dy_em = ".80em";
+
+    svg.selectAll(".x.axis")
+        .data(traits)
+        .enter()
+        .append("g")
+
+    .attr("class", "x axis")
+        .attr("transform", function (d, i) {
+            return "translate(" + (n - i - 1) * size + ",0)";
+        })
+        .each(function (d) {
+            x.domain(domainByTrait[d]);
+            d4.select(this).call(xAxis);
+        });
+
+    svg.selectAll(".y.axis")
+        .data(traits)
+        .enter()
+        .append("g")
+        .attr("class", "y axis")
+
+    .attr("transform", function (d, i) {
+            return "translate(0," + i * size + ")";
+        })
+        .each(function (d) {
+            y.domain(domainByTrait[d]);
+            d4.select(this).call(yAxis);
+        });
+
+    var crossedData = cross(traits, traits);
+    var cell = svg.selectAll(".cell")
+        .data(crossedData)
+        .enter().append("g")
+        .attr("class", "cell")
+        .attr("transform", function (d) {
+            return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
+        });
+
+    cell.filter(function (d) {
+
+        return d.i !== d.j && d.i > d.j;
+    }).each(plot);
+
+    cell.filter(function (d) {
+
+        return d.i === d.j || d.i < d.j;
+    }).each(plot_histo);
+    /* cell.filter(function (d) {
+               return d.i === d.j;
+               }).each(plot_histo);*/
+
+    cell.filter(function (d) {
+        return d.i === d.j;
+    }).append("text")
+
+    .attr("x", padding)
+        .attr("y", padding)
+        .attr("dy", ".71em")
+        .text(function (d) {
+            return d.x;
+        });
+
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function (d, i) {
+            if (isNaN(correlations[i])) {
+                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
+            } else {
+                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[i] + "</strong>";
+            }
+
+        });
+
+    svg.call(tip);
+
+    cell.filter(function (d) {
+        return d.i < d.j;
+    })
+
+    .append("text")
+
+    .attr("x", padding)
+        .attr("y", padding)
+        .attr("dy", "90px")
+        .attr("dx", "75px")
+
+    .style("text-anchor", "middle")
+        .text(function (d, i) {
+            return correlations[i].toFixed(3);
+        })
+
+    .style("font-size", function (d, i) {
+        return (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) + "px";
+
+    });
+
+    d3.selectAll(".cell").filter(function (d) {
+            return d.i < d.j;
+        }).selectAll("text")
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide);
+
+
+    // .style("fill", function (d, i) {
+    //         if (correlations[i] === 1) {
+    //            return "#000";
+    //        } else {
+    //          return col(correlations[i]);
+    //        }
+    //   })
+    ;
+
+
+    cell.filter(function (d) {
+        return d.i !== d.j && d.i > d.j;
+    }).call(brush);
+
+    cell.filter(function (d) {
+
+        return d.i === d.j;
+    }).each(plot_histo1);
+    //
+    d3.selectAll("line").attr("hidden", true);
+
+    function plot_histo(p) {
+
+
+        var cell = d4.select(this);
+
+        x.domain(domainByTrait[p.x]);
+        y.domain(domainByTrait[p.y]);
+
+        cell.append("rect")
+            .attr("class", "frame")
+            .attr("x", padding / 2)
+            .attr("y", padding / 2)
+            .attr("width", size - padding)
+            .attr("height", size - padding)
+            .style("fill", "#ffffff");
+
+    }
+
+    function plot_histo1(p) {
+
+        var parameter = 6;
+        var color = "grey";
+        var dy_em = ".80em";
+
+        var dataset = csv_data.map(function (d, i) {
+            return d[chosenValues[0]];
+        });
+
+        var f_dataset = dataset.filter(function (d) {
+            return d != -999 && !isNaN(+d)
+        });
+
+        // .attr("x", padding / 2)
+        //    .attr("y", padding / 2)
+        var width = size - padding,
+            height = size - padding;
+
+        var x = d3.scale.linear()
+            .domain([d3.min(f_dataset), d3.max(f_dataset)])
+            .range([0, width]);
+
+
+        var bin = Math.log2(f_dataset.length) + 1;
+
+
+        var dataset = d3.layout.histogram()
+            .bins(x.ticks(bin))
+            (f_dataset);
+
+        var color2 = d3.scale.linear()
+            .domain([d3.min(dataset, function (d) {
+                return d.length
+            }), d3.max(dataset, function (d) {
+                return d.length
+            })])
+            .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+
+        var y = d3.scale.linear()
+            .domain([0, d3.max(dataset, function (d) {
+                return d.length
+            })])
+            .range([height, 0]);
+
+
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function (d, i) {
+                return "<strong>" + chosenValues[0] + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
+            });
+
+        var svgObject =
+            cell.filter(function (d) {
+
+                return d.i === d.j;
+            }).append("svg")
+            .attr("height", height)
+            .attr("width", width)
+            .append("g");
+        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svgObject.call(tip);
+
+        if (typeof (dataset[0]) == "undefined") {
+            alert("Change your bin size or X-Axis-Value please!");
+            deleteAll();
+            return;
+        }
+
+        svgObject.selectAll(".bar")
+            .data(dataset)
+            .enter().append("g")
+            .attr("class", "bar")
+            .attr("transform", function (d) {
+                return "translate(" + x(d.x) + "," + y(d.y) + ")";
+            })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide).append("rect")
+            .attr("x", 1)
+            .attr("width", (x(dataset[0].dx) - x(0)) - 1)
+            .attr("height", function (d) {
+                return height - y(d.y);
+            })
+            .attr("fill", function (d) {
+                return color2(d.y)
+            })
+            .on("mouseover", function () {
+                d3.select(this)
+                    .attr("fill", "#2e2e30");
+            })
+            .on("mouseout", function () {
+                d3.select(this).attr("fill", function (d) {
+                    return color2(d.y);
+                })
+            });
+
+
+        svgObject.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.svg.axis()
+                .scale(x)
+                .orient("bottom"));
+
+        svgObject.append("g")
+            .attr("class", "y axis")
+            .call(d3.svg.axis()
+                .scale(y)
+                .orient("left"))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", parameter)
+            .attr("dy", dy_em);
+
+    }
+
+    function plot(p) {
+
+        var cell = d4.select(this);
+
+        x.domain(domainByTrait[p.x]);
+        y.domain(domainByTrait[p.y]);
+
+        cell.append("rect")
+            .attr("class", "frame")
+            .attr("x", padding / 2)
+            .attr("y", padding / 2)
+            .attr("width", size - padding)
+            .attr("height", size - padding);
+
+        cell.selectAll("circle")
+            .data(csv_data)
+            .enter()
+            .filter(function (d) {
+                var tmpX = parseFloat(d[p.x]);
+                var tmpY = parseFloat(d[p.y]);
+                return (tmpX !== undefined && tmpY !== undefined) && (!isNaN(tmpX) && !isNaN(tmpY)) && (tmpX > -900 && tmpY > -900);
+            })
+            .append("circle")
+            .attr("cx", function (d) {
+                return x(d[p.x]);
+            })
+            .attr("cy", function (d) {
+                return y(d[p.y]);
+            })
+            .attr("r", 4)
+            // change for different colours in clusters
+            .style("fill", function (d) {
+                return color("blue");
+            });
+
+    }
+
+    var brushCell;
+
+    function brushstart(p) {
+        if (brushCell !== this) {
+            d4.select(brushCell).call(brush.move, null);
+            brushCell = this;
+            x.domain(domainByTrait[p.x]);
+            y.domain(domainByTrait[p.y]);
+        }
+    }
+    //    function brushstart(p) {
+    //        if (brushCell !== this) {
+    //            d3.select(brushCell).call(brush.clear());
+    //            x.domain(domainByTrait[p.x]);
+    //            y.domain(domainByTrait[p.y]);
+    //            brushCell = this;
+    //        }
+    //    }
+
+
+    function brushmove(p) {
+        var e = d4.brushSelection(this);
+        svg.selectAll("circle").classed("hidden", function (d) {
+            return !e ? false : (e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0] || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]);
+        });
+    }
+    //    function brushmove(p) {
+    //        var e = brush.extent();
+    //        svg.selectAll("circle").classed("hidden", function (d) {
+    //            return e[0][0] > d[p.x] || d[p.x] > e[1][0]
+    //                    || e[0][1] > d[p.y] || d[p.y] > e[1][1];
+    //        });
+    //    }
+
+    function brushend() {
+        var e = d4.brushSelection(this);
+        if (e === null)
+            svg.selectAll(".hidden").classed("hidden", false);
+    }
+    //    function brushend() {
+    //        if (brush.empty())
+    //            svg.selectAll(".hidden").classed("hidden", false);
+    //    }
+
+    function cross(a, b) {
+        var c = [],
+            n = a.length,
+            m = b.length,
+            i, j;
+        for (i = -1; ++i < n;) {
+            for (j = -1; ++j < m;) {
+                var valueA = a[i];
+                var valueB = b[j];
+
+                c.push({
+                    x: valueA,
+                    i: i,
+                    y: valueB,
+                    j: j
+                });
+            }
+        }
+        return c;
+    }
+}
+
+function getMultipleData() {
+    var MultipleData = headerNames.filter(function (d) {
+        if (document.getElementById(d).selected) {
+            if (d != "solution_id" && d != "ref_epoch" && d != "source_id" && d != "random_index") {
+                return d;
+            } else {
+                alert("Please select those values that are not 'solution_id', 'ref_epoch', 'source_id' or 'random_index' ! ");
+                document.getElementById(d).selected = false;
+                return 0;
+            }
+        }
+    });
+
+    return MultipleData;
+}
+
+
+function correlation(MultipleData) {
+    var correlations = [];
+
+    var filtered_data = csv_data.filter(function (d) {
+        return MultipleData.reduce(function (acc, column) {
+            return acc && +d[column] != null && +d[column] != -999 && !isNaN(+d[column]);
+        }, true);
+    });
+
+    for (var i = 0; i < MultipleData.length; i++) {
+        for (var j = i + 1; j < MultipleData.length; j++) { //j=0
+            var col1 = filtered_data.map(function (d) {
+                return +d[MultipleData[i]]
+            });
+
+            var col2 = filtered_data.map(function (d) {
+                return +d[MultipleData[j]]
+            });
+
+            var avg_col1 = d3.sum(col1, function (d) {
+                return d
+            }) / col1.length;
+
+            var avg_col2 = d3.sum(col2, function (d) {
+                return d
+            }) / col2.length;
+
+            var coeff = d3.sum(col1.map(function (d, i) {
+                return (d - avg_col1) * (col2[i] - avg_col2)
+            }), function (d) {
+                return d
+            }) / Math.sqrt(
+                d3.sum(col1.map(function (d) {
+                    return Math.pow((d - avg_col1), 2)
+                }), function (d) {
+                    return d
+                }) * d3.sum(col2.map(function (d) {
+                    return Math.pow((d - avg_col2), 2)
+                }), function (d) {
+                    return d
+                })
+            );
+
+            /*var corrValue = {
+                x: MultipleData[i],
+                y: MultipleData[j],
+                value: coeff
+            };*/
+            var corrValue = coeff;
+            correlations.push(corrValue);
+        }
+    }
+    return correlations;
+}
+
+///////////////////// TODO delete
 
 function drawCorrelogram(data) {
     var width_parameter, height_parameter;
@@ -322,17 +800,17 @@ function drawCorrelogram(data) {
 }
 
 function drawHistogram(xAxisValue, binSize) {
-    
+
     var parameter = 6;
     var bin = 0;
     var color = "grey";
     var dy_em = ".80em";
 
-    var dataset = csv_data.map(function(d) {
+    var dataset = csv_data.map(function (d) {
         return d[xAxisValue];
     });
 
-    var f_dataset = dataset.filter(function(d) {
+    var f_dataset = dataset.filter(function (d) {
         return d != -999 && !isNaN(+d)
     });
 
@@ -368,15 +846,15 @@ function drawHistogram(xAxisValue, binSize) {
         (f_dataset);
 
     var color2 = d3.scale.linear()
-        .domain([d3.min(dataset, function(d) {
+        .domain([d3.min(dataset, function (d) {
             return d.length
-        }), d3.max(dataset, function(d) {
+        }), d3.max(dataset, function (d) {
             return d.length
         })])
         .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
 
     var y = d3.scale.linear()
-        .domain([0, d3.max(dataset, function(d) {
+        .domain([0, d3.max(dataset, function (d) {
             return d.length
         })])
         .range([height, 0]);
@@ -385,7 +863,7 @@ function drawHistogram(xAxisValue, binSize) {
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
-        .html(function(d) {
+        .html(function (d) {
             return "<strong>" + xAxisValue + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
         });
 
@@ -398,7 +876,7 @@ function drawHistogram(xAxisValue, binSize) {
 
     svgObject.call(tip);
 
-    if (typeof(dataset[0]) == "undefined") {
+    if (typeof (dataset[0]) == "undefined") {
         alert("Change your bin size or X-Axis-Value please!");
         deleteAll();
         return;
@@ -408,25 +886,25 @@ function drawHistogram(xAxisValue, binSize) {
         .data(dataset)
         .enter().append("g")
         .attr("class", "bar")
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "translate(" + x(d.x) + "," + y(d.y) + ")";
         })
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide).append("rect")
         .attr("x", 1)
         .attr("width", (x(dataset[0].dx) - x(0)) - 1)
-        .attr("height", function(d) {
+        .attr("height", function (d) {
             return height - y(d.y);
         })
-        .attr("fill", function(d) {
+        .attr("fill", function (d) {
             return color2(d.y)
         })
-        .on("mouseover", function() {
+        .on("mouseover", function () {
             d3.select(this)
                 .attr("fill", "#2e2e30");
         })
-        .on("mouseout", function() {
-            d3.select(this).attr("fill", function(d) {
+        .on("mouseout", function () {
+            d3.select(this).attr("fill", function (d) {
                 return color2(d.y);
             })
         });
@@ -436,21 +914,20 @@ function drawHistogram(xAxisValue, binSize) {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.svg.axis()
-        .scale(x)
-        .orient("bottom"));
-    
+            .scale(x)
+            .orient("bottom"));
+
     svgObject.append("g")
         .attr("class", "y axis")
         .call(d3.svg.axis()
-        .scale(y)
-        .orient("left"))
+            .scale(y)
+            .orient("left"))
         .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", parameter)
         .attr("dy", dy_em);
 
 }
-
 
 /*function drawPCA() {
 	d3.csv('GaiaSource_1.csv')
@@ -505,611 +982,3 @@ function drawHistogram(xAxisValue, binSize) {
 	    }
 	  })
 }*/
-
-function drawScatterPlotMatrix(chosenValues) {
-
-    var correlations = correlation1(chosenValues);
-    col = d3.scale.linear()
-        .domain([-1, 0, 1])
-       // .range(["#000000", "#A9E2F3", "#361CA0"]);
-        .range(["#0174DF", "#A9E2F3", "#DF013A"]);
-
-    var size = 230,
-        padding = 40;
-
-    var x = d4.scaleLinear()
-        .range([padding / 2, size - padding / 2]);
-    //    var x = d3.scale.linear()
-    //            .range([padding / 2, size - padding / 2]);
-
-    var y = d4.scaleLinear()
-        .range([size - padding / 2, padding / 2]);
-    //    var y = d3.scale.linear()
-    //            .range([size - padding / 2, padding / 2]);
-
-
-    var xAxis = d4.axisBottom()
-        .scale(x);
-    //    var xAxis = d3.svg.axis()
-    //            .scale(x)
-    //            .orient("bottom")
-
-    var yAxis = d4.axisLeft()
-        .scale(y);
-    //    var yAxis = d3.svg.axis()
-    //            .scale(y)
-    //            .orient("left")
-
-    var color = d4.scaleOrdinal(d4.schemeCategory10);
-    //    var color = d3.scale.category10();
-
-    var domainByTrait = {},
-        traits = chosenValues,
-        n = traits.length;
-
-    traits.forEach(function (trait) {
-        domainByTrait[trait] = d4.extent(csv_data, function (d) {
-            var tmp = parseFloat(d[trait]);
-            if (!isNaN(tmp) && tmp > -900) {
-                return tmp;
-            }
-        });
-    });
-
-  
-    xAxis.tickSize(size * n);
-    yAxis.tickSize(-size * n);
-
-    var brush = d4.brush()
-        .on("start", brushstart)
-        .on("brush", brushmove)
-        .on("end", brushend)
-        .extent([[0, 0], [size, size]]);
-    //    var brush = d3.svg.brush()
-    //            .x(x)
-    //            .y(y)
-    //            .on("brushstart", brushstart)
-    //            .on("brush", brushmove)
-    //            .on("brushend", brushend);
-
-
-
-    
-    var svg = d4.select("#plot").append("svg")
-        .attr("width", size * n + (padding + 100))
-        .attr("height", size * n + (padding + 100))
-        .append("g")
-        .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
-
-    var dy_em = ".80em";
-    
-    svg.selectAll(".x.axis")
-        .data(traits)
-        .enter()
-        .append("g")
-
-        .attr("class", "x axis")
-        .attr("transform", function (d, i) {
-            return "translate(" + (n - i - 1) * size + ",0)";
-        })
-        .each(function (d) {
-            x.domain(domainByTrait[d]);
-            d4.select(this).call(xAxis);
-        });
-
-    svg.selectAll(".y.axis")
-        .data(traits)
-        .enter()
-        .append("g")
-        .attr("class", "y axis")
-       
-        .attr("transform", function (d, i) {
-            return "translate(0," + i * size + ")";
-        })
-        .each(function (d) {
-            y.domain(domainByTrait[d]);
-            d4.select(this).call(yAxis);
-        });
-   
-    var crossedData = cross(traits, traits);
-    var cell = svg.selectAll(".cell")
-        .data(crossedData)
-        .enter().append("g")
-        .attr("class", "cell")
-        .attr("transform", function (d) {
-            return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
-        });
-
-    cell.filter(function (d) {
-
-        return d.i !== d.j && d.i > d.j;
-    }).each(plot);
-
-    cell.filter(function (d) {
-
-        return d.i === d.j || d.i < d.j;
-    }).each(plot_histo);
-    /* cell.filter(function (d) {
-               return d.i === d.j;
-               }).each(plot_histo);*/
-
-    // Titles for the diagonal.
-   cell.filter(function (d) {
-            return d.i === d.j;
-        }).append("text")
-  
-        .attr("x", padding)
-        .attr("y", padding)
-        .attr("dy", ".71em")
-        .text(function (d) {
-            return d.x;
-        });
-    
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function (d, i) {
-          if (isNaN(correlations[i])) {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
-            } else {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[i] + "</strong>";
-            }
-
-        });
-    
-    svg.call(tip);
-
-  
-  
-    
-    cell.filter(function (d) {
-            return d.i < d.j;
-        })
-   
-    .append("text")
-    
-        .attr("x", padding)
-        .attr("y", padding)
-      .attr("dy", "90px")
-    .attr("dx", "75px")
-    
-    .style("text-anchor", "middle")
-        .text(function (d, i) {
-            return correlations[i].toFixed(3);
-        })
-   
-    .style("font-size", function (d, i) {
-                return (((size-padding) / 7) * (Math.abs(correlations[i]) + 0.7))+"px";
-
-        })
-    ;
-    
-     d3.selectAll(".cell").filter(function (d) {
-            return d.i < d.j;
-        }).selectAll("text")
-    .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
-    
-     
-    
-   // .style("fill", function (d, i) {
-   //         if (correlations[i] === 1) {
-    //            return "#000";
-    //        } else {
-      //          return col(correlations[i]);
-    //        }
-     //   })
-    ;
-
-
-
-
-    cell.filter(function (d) {
-        return d.i !== d.j && d.i > d.j;
-    }).call(brush);
-
-     cell.filter(function (d) {
-
-        return d.i === d.j;
-    }).each(plot_histo1);
-    //
-    //d3.selectAll("line").attr("hidden", true);
- 
-     function plot_histo(p) {
-
-      
-        var cell = d4.select(this);
-
-        x.domain(domainByTrait[p.x]);
-        y.domain(domainByTrait[p.y]);
-
-        cell.append("rect")
-            .attr("class", "frame")
-            .attr("x", padding / 2)
-            .attr("y", padding / 2)
-            .attr("width", size - padding)
-            .attr("height", size - padding)
-        .style("fill", "#ffffff");
-         
-     }
-    function plot_histo1(p) {
-        
-    var parameter = 6;
-    var color = "grey";
-    var dy_em = ".80em";
-
-    var dataset = csv_data.map(function(d, i) {
-        return d[chosenValues[0]];
-    });
-
-    var f_dataset = dataset.filter(function(d) {
-        return d != -999 && !isNaN(+d)
-    });
-
-     // .attr("x", padding / 2)
-        //    .attr("y", padding / 2)
-        var width =size - padding,
-            height =size - padding;
-
-    var x = d3.scale.linear()
-        .domain([d3.min(f_dataset), d3.max(f_dataset)])
-        .range([0, width]);
-
-   
-      var  bin = Math.log2(f_dataset.length) + 1;
-   
-
-    var dataset = d3.layout.histogram()
-        .bins(x.ticks(bin))
-        (f_dataset);
-
-    var color2 = d3.scale.linear()
-        .domain([d3.min(dataset, function(d) {
-            return d.length
-        }), d3.max(dataset, function(d) {
-            return d.length
-        })])
-        .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
-
-    var y = d3.scale.linear()
-        .domain([0, d3.max(dataset, function(d) {
-            return d.length
-        })])
-        .range([height, 0]);
-
-
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function(d, i) {
-            return "<strong>" + chosenValues[0] + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
-        });
-
-    var svgObject = 
-        cell.filter(function (d) {
-
-        return d.i === d.j;
-    }).append("svg")
-        .attr("height", height)
-        .attr("width", width)
-        .append("g");
-       // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    svgObject.call(tip);
-
-    if (typeof(dataset[0]) == "undefined") {
-        alert("Change your bin size or X-Axis-Value please!");
-        deleteAll();
-        return;
-    }
-
-    svgObject.selectAll(".bar")
-        .data(dataset)
-        .enter().append("g")
-        .attr("class", "bar")
-        .attr("transform", function(d) {
-            return "translate(" + x(d.x) + "," + y(d.y) + ")";
-        })
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide).append("rect")
-        .attr("x", 1)
-        .attr("width", (x(dataset[0].dx) - x(0)) - 1)
-        .attr("height", function(d) {
-            return height - y(d.y);
-        })
-        .attr("fill", function(d) {
-            return color2(d.y)
-        })
-        .on("mouseover", function() {
-            d3.select(this)
-                .attr("fill", "#2e2e30");
-        })
-        .on("mouseout", function() {
-            d3.select(this).attr("fill", function(d) {
-                return color2(d.y);
-            })
-        });
-
-
-    svgObject.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.svg.axis()
-        .scale(x)
-        .orient("bottom"));
-    
-    svgObject.append("g")
-        .attr("class", "y axis")
-        .call(d3.svg.axis()
-        .scale(y)
-        .orient("left"))
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", parameter)
-        .attr("dy", dy_em);
-
-    }
-
-    function plot(p) {
-      
-        var cell = d4.select(this);
-    
-        x.domain(domainByTrait[p.x]);
-        y.domain(domainByTrait[p.y]);
-
-        cell.append("rect")
-            .attr("class", "frame")
-            .attr("x", padding / 2)
-            .attr("y", padding / 2)
-            .attr("width", size - padding)
-            .attr("height", size - padding);
-
-        cell.selectAll("circle")
-            .data(csv_data)
-            .enter()
-            .filter(function (d) {
-                var tmpX = parseFloat(d[p.x]);
-                var tmpY = parseFloat(d[p.y]);
-                return (tmpX !== undefined && tmpY !== undefined) && (!isNaN(tmpX) && !isNaN(tmpY)) && (tmpX > -900 && tmpY > -900);
-            })
-            .append("circle")
-            .attr("cx", function (d) {
-                return x(d[p.x]);
-            })
-            .attr("cy", function (d) {
-                return y(d[p.y]);
-            })
-            .attr("r", 4)
-            // change for different colours in clusters
-            .style("fill", function (d) {
-                return color("blue");
-            });
-
-    }
-
-    var brushCell;
-
-    // Clear the previously-active brush, if any.
-    function brushstart(p) {
-        if (brushCell !== this) {
-            d4.select(brushCell).call(brush.move, null);
-            brushCell = this;
-            x.domain(domainByTrait[p.x]);
-            y.domain(domainByTrait[p.y]);
-        }
-    }
-    //    function brushstart(p) {
-    //        if (brushCell !== this) {
-    //            d3.select(brushCell).call(brush.clear());
-    //            x.domain(domainByTrait[p.x]);
-    //            y.domain(domainByTrait[p.y]);
-    //            brushCell = this;
-    //        }
-    //    }
-
-    // Highlight the selected circles.
-    function brushmove(p) {
-        var e = d4.brushSelection(this);
-        svg.selectAll("circle").classed("hidden", function (d) {
-            return !e ? false : (e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0] || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]);
-        });
-    }
-    //    function brushmove(p) {
-    //        var e = brush.extent();
-    //        svg.selectAll("circle").classed("hidden", function (d) {
-    //            return e[0][0] > d[p.x] || d[p.x] > e[1][0]
-    //                    || e[0][1] > d[p.y] || d[p.y] > e[1][1];
-    //        });
-    //    }
-
-    // If the brush is empty, select all circles.
-    function brushend() {
-        var e = d4.brushSelection(this);
-        if (e === null)
-            svg.selectAll(".hidden").classed("hidden", false);
-    }
-    //    function brushend() {
-    //        if (brush.empty())
-    //            svg.selectAll(".hidden").classed("hidden", false);
-    //    }
-
-    function cross(a, b) {
-        var c = [],
-            n = a.length,
-            m = b.length,
-            i, j;
-        for (i = -1; ++i < n;) {
-            for (j = -1; ++j < m;) {
-                var valueA = a[i];
-                var valueB = b[j];
-
-                c.push({
-                    x: valueA,
-                    i: i,
-                    y: valueB,
-                    j: j
-                });
-            }
-        }
-        return c;
-    }
-}
-
-function getMultipleData() {
-    var MultipleData = headerNames.filter(function (d) {
-        if (document.getElementById(d).selected) {
-            if (d != "solution_id" && d != "ref_epoch") {
-                return d;
-            } else if (d == "solution_id") {
-                alert("Don't choose solution_id for this plottype!");
-
-            } else if (d == "ref_epoch") {
-                alert("Don't choose ref_epoch for this plottype!");
-            }
-        }
-    });
-
-    return MultipleData;
-}
-
-
-
-function correlation(MultipleData) {
-    var correlations = [];
-
-    var filtered_data = csv_data.filter(function (d) {
-        return MultipleData.reduce(function (acc, column) {
-            return acc && +d[column] != null && +d[column] != -999 && !isNaN(+d[column]);
-        }, true);
-    });
-
-    for (var i = 0; i < MultipleData.length; i++) {
-        for (var j = 0; j < MultipleData.length; j++) {
-            var col1 = filtered_data.map(function (d) {
-                return +d[MultipleData[i]]
-            });
-
-            var col2 = filtered_data.map(function (d) {
-                return +d[MultipleData[j]]
-            });
-
-            var avg_col1 = d3.sum(col1, function (d) {
-                return d
-            }) / col1.length;
-
-            var avg_col2 = d3.sum(col2, function (d) {
-                return d
-            }) / col2.length;
-
-            var coeff = d3.sum(col1.map(function (d, i) {
-                return (d - avg_col1) * (col2[i] - avg_col2)
-            }), function (d) {
-                return d
-            }) / Math.sqrt(
-                d3.sum(col1.map(function (d) {
-                    return Math.pow((d - avg_col1), 2)
-                }), function (d) {
-                    return d
-                }) * d3.sum(col2.map(function (d) {
-                    return Math.pow((d - avg_col2), 2)
-                }), function (d) {
-                    return d
-                })
-            );
-
-            var corrValue = {
-                x: MultipleData[i],
-                y: MultipleData[j],
-                value: coeff
-            };
-            correlations.push(corrValue);
-        }
-    }
-    return correlations;
-}
-
-
-function correlation1(MultipleData) {
-    var correlations = [];
-
-    var filtered_data = csv_data.filter(function (d) {
-        return MultipleData.reduce(function (acc, column) {
-            return acc && +d[column] != null && +d[column] != -999 && !isNaN(+d[column]);
-        }, true);
-    });
-
-    for (var i = 0; i < MultipleData.length; i++) {
-        for (var j = i + 1; j < MultipleData.length; j++) {
-            var col1 = filtered_data.map(function (d) {
-                return +d[MultipleData[i]]
-            });
-
-            var col2 = filtered_data.map(function (d) {
-                return +d[MultipleData[j]]
-            });
-
-            var avg_col1 = d3.sum(col1, function (d) {
-                return d
-            }) / col1.length;
-
-            var avg_col2 = d3.sum(col2, function (d) {
-                return d
-            }) / col2.length;
-
-            var coeff = d3.sum(col1.map(function (d, i) {
-                return (d - avg_col1) * (col2[i] - avg_col2)
-            }), function (d) {
-                return d
-            }) / Math.sqrt(
-                d3.sum(col1.map(function (d) {
-                    return Math.pow((d - avg_col1), 2)
-                }), function (d) {
-                    return d
-                }) * d3.sum(col2.map(function (d) {
-                    return Math.pow((d - avg_col2), 2)
-                }), function (d) {
-                    return d
-                })
-            );
-
-            /*var corrValue = {
-                x: MultipleData[i],
-                y: MultipleData[j],
-                value: coeff
-            };*/
-            var corrValue = coeff;
-            correlations.push(corrValue);
-        }
-    }
-    return correlations;
-}
-
-function histogramActive() {
-
-
-    if (document.getElementById("histogramType").checked) {
-        document.getElementById("xAxisValue").disabled = false;
-        document.getElementById("binCheck").disabled = false;
-    } else {
-        document.getElementById("xAxisValue").disabled = true;
-        document.getElementById("binCheck").disabled = true;
-        document.getElementById("BinSize").disabled = true;
-    }
-
-    if (document.getElementById("scattermatrixType").checked || document.getElementById("correlogramType").checked) {
-        document.getElementById("MultipleData").disabled = false;
-
-    } else {
-        document.getElementById("MultipleData").disabled = true;
-
-    }
-}
-
-function binCheckFunction() {
-    if (document.getElementById("binCheck").checked) {
-        document.getElementById("BinSize").disabled = false;
-    } else {
-        document.getElementById("BinSize").disabled = true;
-
-    }
-}

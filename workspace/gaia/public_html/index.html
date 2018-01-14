@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Visualization and Visual Data - GAIA</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,42 +12,45 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <script src="js/d3.js"></script>
     <script data-require="d3@3.5.3" data-semver="3.5.3" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="navbar-left">
-      <div class="data-menu border rounded">
-        <h6>Data</h6>
-        <hr>
-        <div class="row">
-          <div class="col-6">
-            <label class="head-text">Datasetname:</label>
-          </div>
-          <div class="col-6">
-            <label class="text-size" id="datasetname"></label>
-          </div>
+        <div class="data-menu border rounded">
+            <h6>Data</h6>
+            <hr>
+            <div class="row">
+                <div class="col-6">
+                    <label class="head-text">Datasetname:</label>
+                </div>
+                <div class="col-6">
+                    <label class="text-size" id="datasetname"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="head-text">Rows:</label>
+                </div>
+                <div class="col">
+                    <label class="text-size" id="rowCount"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label class="head-text">Columns:</label>
+                </div>
+                <div class="col">
+                    <label class="text-size" id="columnCount"></label>
+                </div>
+            </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <label class="head-text">Rows:</label>
-          </div>
-          <div class="col">
-            <label class="text-size" id="rowCount"></label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <label class="head-text">Columns:</label>
-          </div>
-          <div class="col">
-            <label class="text-size" id="columnCount"></label>
-          </div>
-        </div>
-      </div>
-      <form>
-        <div class="options-menu border rounded">
-          <h6>Options</h6>
-          <hr>
-          <div class="row">
+        <form>
+            <div class="options-menu border rounded">
+                <h6>Options</h6>
+                <hr>
+                <!-- TODO delete -->
+
+                <!-- <div class="row">
             <div class="col-4">
               <br><label class="head-text">Plottype:</label>
             </div>
@@ -56,7 +60,7 @@
                 <input class="form-check-input" type="radio" name="plotType" id="scatterplotType" value="scatterplot" onclick='histogramActive()'>
                 Scatterplot
                 </label>
-                </div> -->
+                </div> 
               <div class="col-12">
                 <label class="form-check-label">
                 <input class="form-check-input" type="radio" name="plotType" id="scattermatrixType" value="scattermatrix" onclick='histogramActive()'>
@@ -75,63 +79,68 @@
                 Histogram
                 </label>
               </div>
-              <div class="col-12">
+             <!-- <div class="col-12">
                 <label class="form-check-label">
                 <input class="form-check-input" type="radio" name="plotType" id="pcaType" value="pca" onclick='histogramActive()' >
                 PCA
-                </label>
-              </div>
-            </div>
-          </div>
-          <br>
-          <div class="row">
+                </label> 
+              </div> 
+            </div> 
+          </div> -->
+                <br>
+                <!-- <div class="row">
             <div class="col-4">
               <label class="head-text">Data Value</label>
             </div>
             <div class="col-8">
               <select class="col-12" id="xAxisValue" disabled=true></select>
             </div>
-          </div>
-          <div class="row">
+          </div> -->
+                <!-- <div class="row">
             <div class="col-4">
               <label class="head-text">#Bin<span style='padding-left:14px;'></span></label><input id="binCheck" type="checkbox" disabled=true onclick='binCheckFunction()'> 
             </div>
             <div class="col-8">
               <input class="col-12" type ="number" id="BinSize" placeholder="20" disabled=true>
+            </div> 
+          </div> -->
+                <div class="row">
+                    <div class="col-4">
+                        <label class="head-text">Data values: </label>
+                    </div>
+                    <div class="col-8">
+                        <select class="col-12" id="MultipleData" size=12 multiple></select>
+                    </div>
+                </div>
+                <div class="button-align">
+                    <br>
+                    <button type="button" class="Buttons" onclick="submitForm()" onselect>Plot</button>
+                </div>
+                <div class="button-align">
+                    <p> </p>
+                    <button type="button" class="Buttons1" onclick="deleteAll()" onselect>Remove</button>
+                </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-4">
-              <label class="head-text">Multiple Data</label>
-            </div>
-            <div class="col-8">
-              <select class="col-12" id="MultipleData" disabled=true size =5 multiple></select>
-            </div>
-          </div>
-          <div class="button-align"> <br>
-            <button type="button" class="Buttons" onclick="submitForm()" onselect>Plot</button>
-          </div>
-          <div class="button-align">
-            <p> </p>
-            <button type="button" class="Buttons1" onclick="deleteAll()" onselect>Remove</button>
-          </div>
-        </div>
-      </form>
+        </form>
     </div>
     <div class="content">
-      <div class="plots">
-        <h6>Data-Plots</h6>
-        <div id="plot"></div>
-      </div>
+        <div class="plots">
+            <h6>Plots</h6>
+            <div id="plot"></div>
+        </div>
     </div>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-    <script> src="js/src/emlapack-custom.js"</script>
-    <script> src="js/src/pca.js"</script>
-    <script> src="js/src/renderer.js"</script>
+    <script>
+        src = "js/src/emlapack-custom.js"
+    </script>
+    <script>
+        src = "js/src/pca.js"
+    </script>
+    <script>
+        src = "js/src/renderer.js"
+    </script>
     <script type="text/javascript" src="js/vis.js"></script>
-  </body>
+</body>
+
 </html>
-
-
-
