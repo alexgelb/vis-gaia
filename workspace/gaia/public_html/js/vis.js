@@ -89,7 +89,7 @@ function deleteAll() {
 function drawScatterPlotMatrix(chosenValues) {
 
     var correlations = correlation(chosenValues);
-    
+
     col = d3.scale.linear()
         .domain([-1, 0, 1])
         // .range(["#000000", "#A9E2F3", "#361CA0"]);
@@ -277,15 +277,35 @@ function drawScatterPlotMatrix(chosenValues) {
     ;
 
 
+
     cell.filter(function (d) {
         return d.i !== d.j && d.i > d.j;
     }).call(brush);
 
-    cell.filter(function (d) {
 
-        return d.i === d.j;
-    }).each(plot_histo1);
-    //
+    var histodaten = [];
+    for (var j = 0; j < chosenValues.length; j++) { //j=0
+        var dataset = csv_data.map(function (d) {
+            return d[chosenValues[j]];
+        });
+
+        var f_dataset = dataset.filter(function (d) {
+            return d != -999 && !isNaN(+d)
+        });
+
+        histodaten.push(f_dataset);
+    };
+
+
+    for (var i = 0; i < histodaten.length; i++) {
+
+        plot_histo1(histodaten[i], chosenValues[i], d3.select(cell.filter(function (d) {
+            return d.i == d.j;
+        })._groups[0][i]));
+    }
+
+
+
     d3.selectAll("line").attr("hidden", true);
 
     function plot_histo(p) {
@@ -306,19 +326,15 @@ function drawScatterPlotMatrix(chosenValues) {
 
     }
 
-    function plot_histo1(p) {
+    function plot_histo1(f_dataset, valuename, histocell) {
+
+
+
+
 
         var parameter = 6;
         var color = "grey";
         var dy_em = ".80em";
-
-        var dataset = csv_data.map(function (d, i) {
-            return d[chosenValues[0]];
-        });
-
-        var f_dataset = dataset.filter(function (d) {
-            return d != -999 && !isNaN(+d)
-        });
 
         // .attr("x", padding / 2)
         //    .attr("y", padding / 2)
@@ -356,14 +372,11 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d, i) {
-                return "<strong>" + chosenValues[0] + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
+                return "<strong>" + valuename + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
             });
 
         var svgObject =
-            cell.filter(function (d) {
-
-                return d.i === d.j;
-            }).append("svg")
+            histocell.append("svg")
             .attr("height", height)
             .attr("width", width)
             .append("g");
