@@ -140,6 +140,7 @@ button:focus {
 .bar rect {
     shape-rendering: crispEdges;
     font: 10px sans-serif;
+    opacity: .9;
 }
 
 .axis path,
@@ -215,7 +216,8 @@ svg {
 }
 
 circle {
-  fill-opacity: .7;
+  fill-opacity: .6;
+fill: black;
 }
 
 circle.hidden {

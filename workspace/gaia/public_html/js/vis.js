@@ -90,10 +90,10 @@ function drawScatterPlotMatrix(chosenValues) {
 
     var correlations = correlation(chosenValues);
 
-    col = d3.scale.linear()
+   /* col = d3.scale.linear()
         .domain([-1, 0, 1])
         // .range(["#000000", "#A9E2F3", "#361CA0"]);
-        .range(["#0174DF", "#A9E2F3", "#DF013A"]);
+        .range(["#0174DF", "#A9E2F3", "#DF013A"]);*/
 
     var size = 230,
         padding = 40;
@@ -225,41 +225,48 @@ function drawScatterPlotMatrix(chosenValues) {
             return d.x;
         });
 
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function (d, i) {
-            if (isNaN(correlations[i])) {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
-            } else {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[i] + "</strong>";
-            }
 
-        });
-
-    svg.call(tip);
 
     cell.filter(function (d) {
         return d.i < d.j;
     })
 
     .append("text")
-
     .attr("x", padding)
         .attr("y", padding)
         .attr("dy", "90px")
         .attr("dx", "75px")
 
+    .style("opacity", "0.8")
     .style("text-anchor", "middle")
         .text(function (d, i) {
-            return correlations[i].toFixed(3);
+        
+     
+
+        
+      return  correlations[i].toFixed(3);
+           
         })
 
     .style("font-size", function (d, i) {
         return (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) + "px";
 
     });
-
+  
+    
+       var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function (d, i, j) {
+            if (isNaN(correlations[i])) {
+                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
+            } else {
+                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j]+ "</strong>";
+            }
+  console.log(d.x);
+        });
+    
+    svg.call(tip);
     d3.selectAll(".cell").filter(function (d) {
             return d.i < d.j;
         }).selectAll("text")
@@ -305,7 +312,7 @@ function drawScatterPlotMatrix(chosenValues) {
     }
 
 
-   // d3.selectAll("line").attr("hidden", true);
+    d3.selectAll("line").attr("hidden", true);
 
     function plot_histo(p) {
 
@@ -367,7 +374,7 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d, i) {
-                return "<strong>" + valuename + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
+                return "<strong>value : </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
             });
 
         var svgObject =
@@ -468,8 +475,7 @@ function drawScatterPlotMatrix(chosenValues) {
                 return y(d[p.y]);
             })
             .attr("r", 4)
-            // change for different colours in clusters
-            .style("fill", function (d) {
+            .attr("fill", function (d) {
                 return color("blue");
             });
 
