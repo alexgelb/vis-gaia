@@ -305,8 +305,7 @@ function drawScatterPlotMatrix(chosenValues) {
     }
 
 
-
-    d3.selectAll("line").attr("hidden", true);
+   // d3.selectAll("line").attr("hidden", true);
 
     function plot_histo(p) {
 
@@ -329,25 +328,21 @@ function drawScatterPlotMatrix(chosenValues) {
     function plot_histo1(f_dataset, valuename, histocell) {
 
 
-
-
-
         var parameter = 6;
         var color = "grey";
         var dy_em = ".80em";
 
         // .attr("x", padding / 2)
         //    .attr("y", padding / 2)
-        var width = size - padding,
-            height = size - padding;
+        var width = size - padding-10;
+            height = size-padding-70;
 
         var x = d3.scale.linear()
             .domain([d3.min(f_dataset), d3.max(f_dataset)])
             .range([0, width]);
 
 
-        var bin = Math.log2(f_dataset.length) + 1;
-
+        var bin = Math.pow(f_dataset.length,1/3);
 
         var dataset = d3.layout.histogram()
             .bins(x.ticks(bin))
@@ -377,8 +372,14 @@ function drawScatterPlotMatrix(chosenValues) {
 
         var svgObject =
             histocell.append("svg")
-            .attr("height", height)
-            .attr("width", width)
+           /*.attr("height", height)
+            .attr("width", width)*/
+        .attr("x", padding-15)
+        .attr("y", padding+30)
+        /*.attr("dy", "40px")
+        .attr("dx", "75px")*/
+        .style("vertical-align", "middle")
+        .style("height", "100%") 
             .append("g");
         // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -417,7 +418,7 @@ function drawScatterPlotMatrix(chosenValues) {
                 })
             });
 
-
+/*
         svgObject.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
@@ -429,11 +430,11 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr("class", "y axis")
             .call(d3.svg.axis()
                 .scale(y)
-                .orient("left"))
+                .orient("right"))
             .append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", parameter)
-            .attr("dy", dy_em);
+            .attr("dy", dy_em);*/
 
     }
 
