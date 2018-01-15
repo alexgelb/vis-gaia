@@ -138,8 +138,7 @@ function drawScatterPlotMatrix(chosenValues) {
     });
 
 
-    xAxis.tickSize(size * n);
-    yAxis.tickSize(-size * n);
+    xAxis.tickSize(size * n-23);
 
     var brush = d4.brush()
         .on("start", brushstart)
@@ -171,13 +170,14 @@ function drawScatterPlotMatrix(chosenValues) {
 
     .attr("class", "x axis")
         .attr("transform", function (d, i) {
-            return "translate(" + (n - i - 1) * size + ",0)";
+            return "translate(" + (n - i -1) * size + ",20)";
         })
         .each(function (d) {
             x.domain(domainByTrait[d]);
             d4.select(this).call(xAxis);
         });
-
+var g=0;
+    var k = chosenValues.length-1;
     svg.selectAll(".y.axis")
         .data(traits)
         .enter()
@@ -187,9 +187,20 @@ function drawScatterPlotMatrix(chosenValues) {
     .attr("transform", function (d, i) {
             return "translate(0," + i * size + ")";
         })
+      
+   /* for (var i = 0; i < svg.selectAll(".y.axis")._groups[0].length-1; i++) {
+        svg.selectAll(".y.axis")._groups[0][i].
+        plot_histo1(histodaten[i], chosenValues[i], d3.select(cell.filter(function (d) {
+            return d.i == d.j;
+        })._groups[0][i]));
+    }*/
+    
         .each(function (d) {
+         g++;
+            if (g!= svg.selectAll(".y.axis")._groups[0].length) {
+            yAxis.tickSize(-(k)*230+20); k--;
             y.domain(domainByTrait[d]);
-            d4.select(this).call(yAxis);
+            d4.select(this).call(yAxis);}
         });
 
     var crossedData = cross(traits, traits);
@@ -201,6 +212,7 @@ function drawScatterPlotMatrix(chosenValues) {
             return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
         });
 
+  
     cell.filter(function (d) {
 
         return d.i !== d.j && d.i > d.j;
@@ -210,6 +222,11 @@ function drawScatterPlotMatrix(chosenValues) {
 
         return d.i === d.j || d.i < d.j;
     }).each(plot_histo);
+    
+    cell.filter(function (d) {
+
+        return  d.i < d.j;
+    }).selectAll("rect").style("fill", "#ffffff");
     /* cell.filter(function (d) {
                return d.i === d.j;
                }).each(plot_histo);*/
@@ -232,6 +249,7 @@ function drawScatterPlotMatrix(chosenValues) {
     })
 
     .append("text")
+    
     .attr("x", padding)
         .attr("y", padding)
         .attr("dy", "90px")
@@ -312,7 +330,7 @@ function drawScatterPlotMatrix(chosenValues) {
     }
 
 
-    d3.selectAll("line").attr("hidden", true);
+    //d3.selectAll("line").attr("hidden", true);
 
     function plot_histo(p) {
 
@@ -328,9 +346,11 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr("y", padding / 2)
             .attr("width", size - padding)
             .attr("height", size - padding)
-            .style("fill", "#ffffff");
+        
 
     }
+    
+
 
     function plot_histo1(f_dataset, valuename, histocell) {
 
@@ -341,7 +361,7 @@ function drawScatterPlotMatrix(chosenValues) {
 
         // .attr("x", padding / 2)
         //    .attr("y", padding / 2)
-        var width = size - padding-10;
+        var width = size - padding;
             height = size-padding-70;
 
         var x = d3.scale.linear()
@@ -381,7 +401,7 @@ function drawScatterPlotMatrix(chosenValues) {
             histocell.append("svg")
            /*.attr("height", height)
             .attr("width", width)*/
-        .attr("x", padding-15)
+        .attr("x", padding-19.5)
         .attr("y", padding+30)
         /*.attr("dy", "40px")
         .attr("dx", "75px")*/
@@ -441,8 +461,8 @@ function drawScatterPlotMatrix(chosenValues) {
             .append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", parameter)
-            .attr("dy", dy_em);*/
-
+            .attr("dy", dy_em);
+*/
     }
 
     function plot(p) {
@@ -451,6 +471,7 @@ function drawScatterPlotMatrix(chosenValues) {
 
         x.domain(domainByTrait[p.x]);
         y.domain(domainByTrait[p.y]);
+
 
         cell.append("rect")
             .attr("class", "frame")
@@ -477,15 +498,17 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr("r", 4)
             .attr("fill", function (d) {
                 return color("blue");
-            });
+            }) ;
 
     }
 
     var brushCell;
 
     function brushstart(p) {
+        
         if (brushCell !== this) {
             d4.select(brushCell).call(brush.move, null);
+          
             brushCell = this;
             x.domain(domainByTrait[p.x]);
             y.domain(domainByTrait[p.y]);
