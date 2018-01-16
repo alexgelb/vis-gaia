@@ -7,7 +7,6 @@ var value = 0;
 var headerNames = [];
 var csv_data;
 
-
 d3.csv("./data/GaiaSource_1.csv",
     function (csv_data) {
         var traits = d3.keys(csv_data[0]).filter(
@@ -17,11 +16,7 @@ d3.csv("./data/GaiaSource_1.csv",
                     d !== "phot_variable_flag";
             })
         this.csv_data = csv_data;
-        // for(var i = 0; i < csv_data.length; i++ ) {
-        // delete csv_data[i]["astrometric_primary_flag"];
-        // delete csv_data[i]["duplicated_source"];
-        // delete csv_data[i]["phot_variable_flag"];
-        // }
+
         var fileData = csv_data;
         for (var i = 0; i < fileData.length; i++) {
             delete fileData[i]["astrometric_primary_flag"];
@@ -44,7 +39,6 @@ d3.csv("./data/GaiaSource_1.csv",
         value = csv_data.length;
 
         var multipleValue = document.getElementById("MultipleData");
-
 
         for (var i = 0; i < headerNames.length; i++) {
 
@@ -90,39 +84,21 @@ function drawScatterPlotMatrix(chosenValues) {
 
     var correlations = correlation(chosenValues);
 
-   /* col = d3.scale.linear()
-        .domain([-1, 0, 1])
-        // .range(["#000000", "#A9E2F3", "#361CA0"]);
-        .range(["#0174DF", "#A9E2F3", "#DF013A"]);*/
-
     var size = 230,
-        padding = 40;
+        padding = 50;
 
     var x = d4.scaleLinear()
         .range([padding / 2, size - padding / 2]);
-    //    var x = d3.scale.linear()
-    //            .range([padding / 2, size - padding / 2]);
 
     var y = d4.scaleLinear()
         .range([size - padding / 2, padding / 2]);
-    //    var y = d3.scale.linear()
-    //            .range([size - padding / 2, padding / 2]);
 
-
-    var xAxis = d4.axisBottom()
+    var xAxis = d4.axisBottom().ticks(4).tickFormat(d3.format(",.2f"))
         .scale(x);
-    //    var xAxis = d3.svg.axis()
-    //            .scale(x)
-    //            .orient("bottom")
-
-    var yAxis = d4.axisLeft()
+    var yAxis = d4.axisLeft().ticks(5).tickFormat(d3.format(",.2f"))
         .scale(y);
-    //    var yAxis = d3.svg.axis()
-    //            .scale(y)
-    //            .orient("left")
 
     var color = d4.scaleOrdinal(d4.schemeCategory10);
-    //    var color = d3.scale.category10();
 
     var domainByTrait = {},
         traits = chosenValues,
@@ -134,25 +110,18 @@ function drawScatterPlotMatrix(chosenValues) {
             if (!isNaN(tmp) && tmp > -900) {
                 return tmp;
             }
+
         });
     });
 
 
-    xAxis.tickSize(size * n-23);
+    xAxis.tickSize(size * n - 23);
 
     var brush = d4.brush()
         .on("start", brushstart)
         .on("brush", brushmove)
         .on("end", brushend)
         .extent([[0, 0], [size, size]]);
-    //    var brush = d3.svg.brush()
-    //            .x(x)
-    //            .y(y)
-    //            .on("brushstart", brushstart)
-    //            .on("brush", brushmove)
-    //            .on("brushend", brushend);
-
-
 
 
     var svg = d4.select("#plot").append("svg")
@@ -170,14 +139,15 @@ function drawScatterPlotMatrix(chosenValues) {
 
     .attr("class", "x axis")
         .attr("transform", function (d, i) {
-            return "translate(" + (n - i -1) * size + ",20)";
+            return "translate(" + (n - i - 1) * size + ",25)";
         })
         .each(function (d) {
             x.domain(domainByTrait[d]);
             d4.select(this).call(xAxis);
         });
-var g=0;
-    var k = chosenValues.length-1;
+    var g = 0;
+    var k = chosenValues.length - 1;
+
     svg.selectAll(".y.axis")
         .data(traits)
         .enter()
@@ -185,25 +155,22 @@ var g=0;
         .attr("class", "y axis")
 
     .attr("transform", function (d, i) {
-            return "translate(0," + i * size + ")";
-        })
-      
-   /* for (var i = 0; i < svg.selectAll(".y.axis")._groups[0].length-1; i++) {
-        svg.selectAll(".y.axis")._groups[0][i].
-        plot_histo1(histodaten[i], chosenValues[i], d3.select(cell.filter(function (d) {
-            return d.i == d.j;
-        })._groups[0][i]));
-    }*/
-    
-        .each(function (d) {
-         g++;
-            if (g!= svg.selectAll(".y.axis")._groups[0].length) {
-            yAxis.tickSize(-(k)*230+20); k--;
+        return "translate(5," + i * size + ")";
+    })
+
+    .each(function (d) {
+        g++;
+        if (g != svg.selectAll(".y.axis")._groups[0].length) {
+            yAxis.tickSize(-(k) * 230 + 20 + 10);
+            k--;
             y.domain(domainByTrait[d]);
-            d4.select(this).call(yAxis);}
-        });
+
+            d4.select(this).call(yAxis);
+        }
+    });
 
     var crossedData = cross(traits, traits);
+
     var cell = svg.selectAll(".cell")
         .data(crossedData)
         .enter().append("g")
@@ -212,7 +179,7 @@ var g=0;
             return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
         });
 
-  
+
     cell.filter(function (d) {
 
         return d.i !== d.j && d.i > d.j;
@@ -222,26 +189,23 @@ var g=0;
 
         return d.i === d.j || d.i < d.j;
     }).each(plot_histo);
-    
+
     cell.filter(function (d) {
 
-        return  d.i < d.j;
+        return d.i < d.j;
     }).selectAll("rect").style("fill", "#ffffff");
-    /* cell.filter(function (d) {
-               return d.i === d.j;
-               }).each(plot_histo);*/
+
 
     cell.filter(function (d) {
         return d.i === d.j;
     }).append("text")
 
-    .attr("x", padding)
-        .attr("y", padding)
+    .attr("x", padding - 10)
+        .attr("y", padding - 10)
         .attr("dy", ".71em")
         .text(function (d) {
             return d.x;
         });
-
 
 
     cell.filter(function (d) {
@@ -249,58 +213,43 @@ var g=0;
     })
 
     .append("text")
-    
-    .attr("x", padding)
-        .attr("y", padding)
+
+    .attr("x", padding - 10)
+        .attr("y", padding - 10)
         .attr("dy", "90px")
         .attr("dx", "75px")
 
     .style("opacity", "0.8")
-    .style("text-anchor", "middle")
+        .style("text-anchor", "middle")
         .text(function (d, i) {
-        
-     
+            return correlations[i].toFixed(3);
 
-        
-      return  correlations[i].toFixed(3);
-           
         })
 
     .style("font-size", function (d, i) {
         return (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) + "px";
 
     });
-  
-    
-       var tip = d3.tip()
+
+
+    var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function (d, i, j) {
             if (isNaN(correlations[i])) {
                 return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
             } else {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j]+ "</strong>";
+                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j] + "</strong>";
             }
-  console.log(d.x);
+            console.log(d.x);
         });
-    
+
     svg.call(tip);
     d3.selectAll(".cell").filter(function (d) {
             return d.i < d.j;
         }).selectAll("text")
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
-
-
-    // .style("fill", function (d, i) {
-    //         if (correlations[i] === 1) {
-    //            return "#000";
-    //        } else {
-    //          return col(correlations[i]);
-    //        }
-    //   })
-    ;
-
 
 
     cell.filter(function (d) {
@@ -330,8 +279,6 @@ var g=0;
     }
 
 
-    //d3.selectAll("line").attr("hidden", true);
-
     function plot_histo(p) {
 
 
@@ -346,30 +293,26 @@ var g=0;
             .attr("y", padding / 2)
             .attr("width", size - padding)
             .attr("height", size - padding)
-        
+
 
     }
-    
 
 
     function plot_histo1(f_dataset, valuename, histocell) {
-
 
         var parameter = 6;
         var color = "grey";
         var dy_em = ".80em";
 
-        // .attr("x", padding / 2)
-        //    .attr("y", padding / 2)
         var width = size - padding;
-            height = size-padding-70;
+        height = size - padding - 70;
 
         var x = d3.scale.linear()
             .domain([d3.min(f_dataset), d3.max(f_dataset)])
             .range([0, width]);
 
 
-        var bin = Math.pow(f_dataset.length,1/3);
+        var bin = Math.pow(f_dataset.length, 1 / 3);
 
         var dataset = d3.layout.histogram()
             .bins(x.ticks(bin))
@@ -399,16 +342,11 @@ var g=0;
 
         var svgObject =
             histocell.append("svg")
-           /*.attr("height", height)
-            .attr("width", width)*/
-        .attr("x", padding-19.5)
-        .attr("y", padding+30)
-        /*.attr("dy", "40px")
-        .attr("dx", "75px")*/
-        .style("vertical-align", "middle")
-        .style("height", "100%") 
+            .attr("x", padding - 19.5 - 5)
+            .attr("y", padding + 30)
+            .style("vertical-align", "middle")
+            .style("height", "100%")
             .append("g");
-        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         svgObject.call(tip);
 
@@ -444,25 +382,6 @@ var g=0;
                     return color2(d.y);
                 })
             });
-
-/*
-        svgObject.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.svg.axis()
-                .scale(x)
-                .orient("bottom"));
-
-        svgObject.append("g")
-            .attr("class", "y axis")
-            .call(d3.svg.axis()
-                .scale(y)
-                .orient("right"))
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", parameter)
-            .attr("dy", dy_em);
-*/
     }
 
     function plot(p) {
@@ -498,31 +417,22 @@ var g=0;
             .attr("r", 4)
             .attr("fill", function (d) {
                 return color("blue");
-            }) ;
+            });
 
     }
 
     var brushCell;
 
     function brushstart(p) {
-        
+
         if (brushCell !== this) {
             d4.select(brushCell).call(brush.move, null);
-          
+
             brushCell = this;
             x.domain(domainByTrait[p.x]);
             y.domain(domainByTrait[p.y]);
         }
     }
-    //    function brushstart(p) {
-    //        if (brushCell !== this) {
-    //            d3.select(brushCell).call(brush.clear());
-    //            x.domain(domainByTrait[p.x]);
-    //            y.domain(domainByTrait[p.y]);
-    //            brushCell = this;
-    //        }
-    //    }
-
 
     function brushmove(p) {
         var e = d4.brushSelection(this);
@@ -530,23 +440,12 @@ var g=0;
             return !e ? false : (e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0] || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]);
         });
     }
-    //    function brushmove(p) {
-    //        var e = brush.extent();
-    //        svg.selectAll("circle").classed("hidden", function (d) {
-    //            return e[0][0] > d[p.x] || d[p.x] > e[1][0]
-    //                    || e[0][1] > d[p.y] || d[p.y] > e[1][1];
-    //        });
-    //    }
 
     function brushend() {
         var e = d4.brushSelection(this);
         if (e === null)
             svg.selectAll(".hidden").classed("hidden", false);
     }
-    //    function brushend() {
-    //        if (brush.empty())
-    //            svg.selectAll(".hidden").classed("hidden", false);
-    //    }
 
     function cross(a, b) {
         var c = [],
@@ -597,7 +496,7 @@ function correlation(MultipleData) {
     });
 
     for (var i = 0; i < MultipleData.length; i++) {
-        for (var j = i + 1; j < MultipleData.length; j++) { //j=0
+        for (var j = i + 1; j < MultipleData.length; j++) {
             var col1 = filtered_data.map(function (d) {
                 return +d[MultipleData[i]]
             });
@@ -629,347 +528,11 @@ function correlation(MultipleData) {
                     return d
                 })
             );
-
-            /*var corrValue = {
-                x: MultipleData[i],
-                y: MultipleData[j],
-                value: coeff
-            };*/
             var corrValue = coeff;
             correlations.push(corrValue);
         }
     }
     return correlations;
-}
-
-///////////////////// TODO delete
-
-function drawCorrelogram(data) {
-    var width_parameter, height_parameter;
-    var range = d3.range(-1, 1.01, 0.01),
-        count = 0;
-
-    if (data.length <= 1) {
-        alert("Choose more than one value please");
-        return;
-    }
-
-
-    switch (true) {
-    case (data.length <= 4):
-        width_parameter = 400;
-        height_parameter = 200;
-        break;
-    case (data.length == 9):
-        width_parameter = 450;
-        height_parameter = 300;
-        break;
-    case (data.length == 16 || data.length == 36):
-        width_parameter = 600;
-        height_parameter = 500;
-        break;
-
-    case (data.length == 64):
-        width_parameter = 650;
-        height_parameter = 550;
-        break;
-    case (data.length == 100):
-        width_parameter = 700;
-        height_parameter = 600;
-        break;
-    case (data.length > 100):
-        width_parameter = 70 * Math.sqrt(data.length);
-        height_parameter = 60 * Math.sqrt(data.length);
-        break;
-    default:
-        width_parameter = 600;
-        height_parameter = 500;
-    }
-
-
-    var margin = {
-            top: 80,
-            right: 200,
-            bottom: 60,
-            left: 80
-        },
-        width = width_parameter - margin.left - margin.right,
-        height = height_parameter - margin.top - margin.bottom,
-        domain = d3.set(data.map(function (d) {
-            return d.x
-        })).values(),
-        n_elemente = Math.sqrt(data.length),
-        col = d3.scale.linear()
-        .domain([-1, 0, 1])
-        .range(["#000000", "#A9E2F3", "#361CA0"]);
-
-    var x = d3.scale
-        .ordinal()
-        .rangePoints([0, width])
-        .domain(domain),
-        y = d3.scale
-        .ordinal()
-        .rangePoints([0, height])
-        .domain(domain),
-        x2 = x.range()[1] - x.range()[0],
-        y2 = y.range()[1] - y.range()[0];
-
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function (d) {
-            if (d.x === d.y) {
-                return "<strong>" + d.x + "</strong> ";
-            } else if (isNaN(d.value)) {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
-            } else {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + d.value + "</strong>";
-            }
-
-        });
-
-    var svgObject = d3.select("#plot").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .attr("text-anchor", "middle")
-        .attr("font", "12px", "sans-serif")
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    svgObject.call(tip);
-
-    var cor = svgObject.selectAll(".cor")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("transform", function (d) {
-            return "translate(" + x(d.x) + "," + y(d.y) + ")";
-        })
-        .attr("class", "cor")
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
-
-    cor.append("rect")
-        .attr("stroke", "gray")
-        .attr("id", "corr_rect")
-        .attr("fill", "none")
-        .attr("stroke-width", "1")
-        .attr("height", y2)
-        .attr("width", x2)
-
-    .attr("x", -x2 / 2)
-        .attr("y", -y2 / 2);
-
-
-    cor.filter(function (d) {
-            var xposition = domain.indexOf(d.x);
-            var yposition = domain.indexOf(d.y);
-            for (var i = (yposition + 1); i < n_elemente; i++) {
-                if (i === xposition) return true;
-            }
-            return false;
-        })
-        .append("circle")
-        .attr("r", function (d) {
-            if (data.length <= 36) {
-                return ((width / (n_elemente * 2)) * (Math.abs(d.value) + 0.06));
-            } else if (data.length <= 900) {
-                return ((width / (n_elemente * 2)) * (Math.abs(d.value) + 0.02));
-            } else {
-                return ((width / (n_elemente * 2)) * (Math.abs(d.value) - 0.02));
-            }
-        })
-        .style("fill", function (d) {
-            if (d.value === 1) {
-                return "#000";
-            } else {
-                return col(d.value);
-            }
-        });
-
-    cor.filter(function (d) {
-            var xposition = domain.indexOf(d.x);
-            var yposition = domain.indexOf(d.y);
-            for (var i = yposition + 1; i < n_elemente; i++) {
-                if (i === xposition) return false;
-            }
-            return true;
-        })
-        .append("text")
-        .attr("y", 5)
-
-    .text(function (d) {
-        if (d.x === d.y) {
-            return "val " + ++count; //d.x
-        } else if (isNaN(d.value)) {
-            return " - ";
-        } else {
-            return d.value.toFixed(2);
-        }
-    })
-
-    .style("fill", function (d) {
-        if (d.value === 1) {
-            return "#000";
-        } else {
-            return col(d.value);
-        }
-    });
-
-    d3.range(-1, 1.01, 0.01).forEach(function (d) {
-        svgObject.append("g")
-            .attr("class", "y axis")
-            .call(d3.svg.axis()
-                .orient("right")
-                .scale(d3.scale
-                    .linear()
-                    .range([-margin.top + 9, height + margin.bottom - 5])
-                    .domain([1, -1]))
-                .tickPadding(7))
-            .attr("transform", "translate(" + (width + margin.right / 2) + " ,0)").append('rect')
-            .style('fill', col(d))
-            .style('stroke-width', 0)
-            .style('stoke', 'none')
-            .attr('height', height / range.length + 3)
-            .attr('width', 10)
-            .attr('x', 0)
-            .attr('y', d3.scale
-                .linear()
-                .range([-margin.top + 9, height + margin.bottom - 5])
-                .domain([1, -1])(d))
-    });
-
-
-}
-
-function drawHistogram(xAxisValue, binSize) {
-
-    var parameter = 6;
-    var bin = 0;
-    var color = "grey";
-    var dy_em = ".80em";
-
-    var dataset = csv_data.map(function (d) {
-        return d[xAxisValue];
-    });
-
-    var f_dataset = dataset.filter(function (d) {
-        return d != -999 && !isNaN(+d)
-    });
-
-    var margin = {
-            top: 50,
-            right: 20,
-            bottom: 110,
-            left: 60
-        },
-        margin2 = {
-            top: 230,
-            right: 20,
-            bottom: 30,
-            left: 40
-        },
-        width = 660 - margin.left - margin.right,
-        height = 300 - margin.top -
-        margin.bottom,
-        height2 = 300 - margin2.top - margin2.bottom;
-
-    var x = d3.scale.linear()
-        .domain([d3.min(f_dataset), d3.max(f_dataset)])
-        .range([0, width]);
-
-    if (binSize == 0) {
-        bin = Math.log2(f_dataset.length) + 1;
-    } else {
-        bin = binSize;
-    }
-
-    var dataset = d3.layout.histogram()
-        .bins(x.ticks(bin))
-        (f_dataset);
-
-    var color2 = d3.scale.linear()
-        .domain([d3.min(dataset, function (d) {
-            return d.length
-        }), d3.max(dataset, function (d) {
-            return d.length
-        })])
-        .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
-
-    var y = d3.scale.linear()
-        .domain([0, d3.max(dataset, function (d) {
-            return d.length
-        })])
-        .range([height, 0]);
-
-
-    var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function (d) {
-            return "<strong>" + xAxisValue + ": </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
-        });
-
-    var svgObject = d3.select("#plot")
-        .append("svg")
-        .attr("height", height + margin.top + margin.bottom)
-        .attr("width", width + margin.left + margin.right)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    svgObject.call(tip);
-
-    if (typeof (dataset[0]) == "undefined") {
-        alert("Change your bin size or X-Axis-Value please!");
-        deleteAll();
-        return;
-    }
-
-    svgObject.selectAll(".bar")
-        .data(dataset)
-        .enter().append("g")
-        .attr("class", "bar")
-        .attr("transform", function (d) {
-            return "translate(" + x(d.x) + "," + y(d.y) + ")";
-        })
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide).append("rect")
-        .attr("x", 1)
-        .attr("width", (x(dataset[0].dx) - x(0)) - 1)
-        .attr("height", function (d) {
-            return height - y(d.y);
-        })
-        .attr("fill", function (d) {
-            return color2(d.y)
-        })
-        .on("mouseover", function () {
-            d3.select(this)
-                .attr("fill", "#2e2e30");
-        })
-        .on("mouseout", function () {
-            d3.select(this).attr("fill", function (d) {
-                return color2(d.y);
-            })
-        });
-
-
-    svgObject.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.svg.axis()
-            .scale(x)
-            .orient("bottom"));
-
-    svgObject.append("g")
-        .attr("class", "y axis")
-        .call(d3.svg.axis()
-            .scale(y)
-            .orient("left"))
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", parameter)
-        .attr("dy", dy_em);
-
 }
 
 /*function drawPCA() {

@@ -31,7 +31,7 @@ body {
     background: linear-gradient(rgba(200,200,200,0.8),rgba(200,200,200,0),rgba(200,200,200,0.8)); Standard*/
     /*background-color: #f4f4f4;*/
     
-    height: 100%
+    height: 100%;
 }
 .plots h6 {
     margin-left: 5px;
