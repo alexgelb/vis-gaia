@@ -138,14 +138,12 @@ The user can also set the bin size manually.
 
 Then the system also provides a function to compute a Correlogram. For this, the user has also to select a set of columns. For these columns the function computes and displays the correlation coefficient. So it is easy to see how the different columns of a set are connected and if the user needs to analyse it further.
 
-The last part of the system is the PCA. Blabla über das PCA.
-
 \section{Implementation}
-The whole program was written in JavaScript combined with CSS. Therefore it works on every web browser For the front-end we decided to use the toolkit "Bootstrap"\cite{bootstrap} which provides different templates so we needn't to spend to much time for the user-interface.\\
-To visualize the data the JavaScript library "D3"\cite{d3} was used which offers the ability to let the user interact with the data itself.\\
+The whole program was written in JavaScript combined with CSS. For the front-end we decided to use the toolkit "Bootstrap"\cite{bootstrap} which provides different templates so we needn't to spend to much time for designing the user-interface.\\
+To visualize the data the JavaScript library "D3"\cite{d3} was used which offers the ability to let the user interact with the data.\\
 \\
 We encounters many problems which challenged us to implement things properly. One of the problems where to filter the data that all plots can be realized. We figured out that we just can't delete all the entries which contains a NULL or any other non valid values because this would reduce the data set to almost zero entries. Therefore we went through the documentation of the dataset and tried to figure out which features of the stars can be excluded and which not. Unfortunately we can not filter out all unnecessary values at the beginning , we have to do a "pre-filtering" to remove all non integer values and afterwards almost every function has to do their own filtering to adapt the data to their specific task.\\
-
+To minimize the dataset we got the hint to have a look on "principal component analysis" which can help to reduce the dimensions. At the beginning we had the idea to implement a plugin\cite{pca} for D3 which processes the input data first and then work with it. But after implementing successfully we recognized that the produced result by the plugin was not that what we had in mind. It was built for datasets with less dimension than we have and therefore the performance was tremendously slow. So we focused on "DimStiller"\cite{dimstiller} and try to work with it. Basically it almost fulfilled our requirements but unfortunately it doesn't offer an API to connect it to our application. Due to time issues we weren't able to create pipeline where the input file is send to DimStiller which processes it and then send back to our application where the user can work with a trimmed file.
 \section{Results}
 We started with making a side bar, which shows a few details about the dataset and allows the user to make some specific settings.
 On top, we can see the Dataset name, rows and columns of our dataset.
