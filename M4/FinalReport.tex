@@ -29,6 +29,7 @@
 \usepackage{tabu}                      % only used for the table example
 \usepackage{booktabs}                  % only used for the table example
 \usepackage{url}
+\usepackage{float}
 %% OnlineID. Otherwise, you may safely leave it at ``0''.
 \onlineid{0}
 
@@ -140,23 +141,23 @@ We encounters many problems which challenged us to implement things properly. On
 To minimize the dataset we got the hint to have a look on "principal component analysis" which can help to reduce the dimensions. At the beginning we had the idea to implement a plugin\cite{pca} for D3 which processes the input data first and then work with it. But after implementing successfully we recognized that the produced result by the plugin was not that what we had in mind. It was built for datasets with less dimension than we have and therefore the performance was tremendously slow. So we focused on "DimStiller"\cite{dimstiller} and try to work with it. Basically it almost fulfilled our requirements but unfortunately it doesn't offer an API to connect it to our application. Due to time issues we weren't able to create pipeline where the input file is send to DimStiller which processes it and then send it back to our application where the user can work with a trimmed file. Although it is not realised yet we were curios how the result of DimStiller would look like and played around with it a little bit and decided to present the outcome here.\\
 DimStiller's principal component analysis consists of five so called steps which happens consecutively. These are "Cull:Variance", "Data:Normalize", "Collect:Pearson", "Reduce:PCA" and "View:SPLOM". The first interesting and a little bit disappointment result appeared at "Collect:Pearson" which shows the correlation between the dimensions. It reduced the dimension from 52 to 28 dimension When we look on figure 2 we see that most of the dimensions are uncorrelated where we expected more correlation since the amount of data is enormous.\\
 At the "Reduce:PCA" step one can choose interactively the final number of dimension via the user interface which is shown in figure 3. The problem here is that most dimensions get combined together and we are not sure how much and if there is an information loss. Due to this fusion the old names of the columns are discarded and get new names like "S4.D1" like we in figure 4 on the x axis. Furthermore we can see that picture concerning correlations haven changed, there are no or just slight correlation among the new dimensions.
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{pearsoncoeff.PNG}
 \centering
 \caption{Pearson coefficient where blue means positive correlation, yellow no correlation and red negative correlation}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{pca.PNG}
 \centering
 \caption{PCA step}
 \end{figure}
-\begin{figure}
+\begin{figure}[H]
 \includegraphics[width=0.5\textwidth]{splom.PNG}
 \centering
 \caption{Scatterplot matrix with reduced dimension to 8}
 \end{figure}
-\\
-\\
+
+
 As correlations are a major part in this project, we needed a way to compute correlations between columns in our big dataset.
 So we used the formula for computing the correlation coefficient.\cite{corr}
 \\
@@ -167,7 +168,37 @@ $\rho_x{}_y$ = $\frac{\sum_{i=1}^n ((x_i-\overline{x}_n)(y_i - \overline{y}_n)}{
 This function is used for the correlogram and the scatterplot matrix.
 The hard part about this, was that the formula is long and nested, so it was hard to compute in d3. Also it was difficult to debug this function because of the size of the dataset. Another challenge, was the right filtering of our data. For computing the correlation, we had to filter out empty entries or NaN values without modifying the data.
 \section{Results}
-The first thing the user will probably look on, is the information about the Gaia dataset. The name, number of rows and columns is displayed on the top left in the sidebar (Hier Bild). This sidebar contains also the Options: Here the user can choose the Columns he wants to analyse and chooses from all the columns in the Gaia Dataset. In this scenario our user wants to see the correlations between the columns "ra", "dec", "astrometric\_n\_obs\_al" and "l" (Hier Bild von Options und so). Then he presses "Plot" and the Scatterplot Matrix is displayed on the site (Hier Bild von mega nicer Scatter matrix). As said before now he can see all the columns on one look in one big view. The correlations between all the columns are computed and displayed as Scatterplots in the upper half of the Matrix, the values in the lower half. In the diagonal he can see histograms showing the distribution in the columns, also they have the column name in the title. When hovering over the bars he can read the exact value of the bar. Hovering over the correlation value displays the two column names, which where analysed. To clear the view, he can press "remove" and select new columns to plot. Or he just plots a new matrix underneath the old one.
+The first thing the user will probably look on, is the information about the Gaia dataset. The name, number of rows and columns is displayed on the top left in the sidebar. \\
+
+\begin{figure}[H]
+\includegraphics[width=0.3\textwidth]{1d.png}
+\centering
+\caption{Dataset overview}
+\end{figure}
+
+ This sidebar contains also the Options: Here the user can choose the Columns he wants to analyse and chooses from all the columns in the Gaia Dataset. In this scenario our user wants to see the correlations between the columns "ra", "dec", "astrometric\_n\_obs\_al" and "l".
+ 
+\begin{figure}[H]
+\includegraphics[width=0.2\textwidth]{options.png}
+\centering
+\caption{Options}
+\end{figure} 
+ 
+Then he presses "Plot" and the Scatterplot Matrix is displayed on the site.
+
+\begin{figure}[H]
+\includegraphics[width=0.5\textwidth]{scattermatrix.png}
+\centering
+\caption{Scatterplotmatrix}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=0.3\textwidth]{tooltip.png}
+\centering
+\caption{Cell with Tooltip function}
+\end{figure}
+
+As said before now he can see all the columns on one look in one big view. The correlations between all the columns are computed and displayed as Scatterplots in the upper half of the Matrix, the values in the lower half. In the diagonal he can see histograms showing the distribution in the columns, also they have the column name in the title. When hovering over the bars he can read the exact value of the bar. Hovering over the correlation value displays the two column names, which where analysed. To clear the view, he can press "remove" and select new columns to plot. Or he just plots a new matrix underneath the old one.
 \section{Discussion}
 The main strength of our visualization project is, that the user has a fast overview, where he can see all the patterns and has "the big picture" of the dataset. With the Scatterplot Matrix he already can see how a set of columns correlates with each other, but that is not it: There are also histograms in the diagonal of the Matrix displaying the distribution of values in the chosen columns. The Scatterplots are displayed in the upper half and the correlation values in the lower half of the matrix. Also we implemented a regression line for the scatter plots. We are using tooltip for displaying furher information about plot objects and a filter, so the user can manually choose what he wants to see and ignore the rest. The visual strengths of our project are the simple design, because we only use few colours ("Less is more!"). 
 The weakness of the design is the weak performance. The size of the dataset is a big problem, so it takes a lot of time to display the plots with so many points with Javascript and D3. Also we had a time management problem and couldn't achieve all that we wanted to do in this project (e.g. the PCA). 

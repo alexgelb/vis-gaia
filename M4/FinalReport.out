@@ -1,9 +1,11 @@
-\BOOKMARK [1][]{section.2}{Motivation}{}% 1
-\BOOKMARK [1][]{section.3}{Related Work}{}% 2
-\BOOKMARK [1][]{section.5}{Approach}{}% 3
-\BOOKMARK [1][]{section.6}{Implementation}{}% 4
-\BOOKMARK [1][]{section.7}{Results}{}% 5
-\BOOKMARK [1][]{section.8}{Discussion}{}% 6
-\BOOKMARK [2][]{subsection.9}{Lessons learned}{section.8}% 7
-\BOOKMARK [3][-]{subsubsection.10}{Benjamin Neckam}{subsection.9}% 8
-\BOOKMARK [1][]{section.11}{Separation of Tasks}{}% 9
+\BOOKMARK [1][]{section.1}{Motivation}{}% 1
+\BOOKMARK [1][]{section.2}{Related Work}{}% 2
+\BOOKMARK [1][]{section.4}{Approach}{}% 3
+\BOOKMARK [1][]{section.5}{Implementation}{}% 4
+\BOOKMARK [1][]{section.9}{Results}{}% 5
+\BOOKMARK [1][]{section.14}{Discussion}{}% 6
+\BOOKMARK [2][]{subsection.15}{Lessons learned}{section.14}% 7
+\BOOKMARK [3][-]{subsubsection.16}{Nicole Cherches}{subsection.15}% 8
+\BOOKMARK [3][-]{subsubsection.17}{Alexander Gelb}{subsection.15}% 9
+\BOOKMARK [3][-]{subsubsection.18}{Benjamin Neckam}{subsection.15}% 10
+\BOOKMARK [1][]{section.19}{Separation of Tasks}{}% 11
