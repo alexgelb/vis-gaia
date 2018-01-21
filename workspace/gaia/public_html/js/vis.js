@@ -404,7 +404,7 @@ function drawScatterPlotMatrix(chosenValues) {
     function plot(p) {
 
         var cell = d4.select(this);
-
+a=x; b=y;
         x.domain(domainByTrait[p.x]);
         y.domain(domainByTrait[p.y]);
 
@@ -436,21 +436,18 @@ function drawScatterPlotMatrix(chosenValues) {
                     return color("blue");
                 });
 
-
-        var xAxisData = csv_data.map(function (d) {
-            return d[p.x];
-        });
-        var yAxisData = csv_data.map(function (d) {
-            return d[p.y];
-        });
-        var regression = leastSquaresequation(xAxisData, yAxisData);
+  a.domain(domainByTrait[p.x]).nice(8);
+        b.domain(domainByTrait[p.y]).nice(8);
+        var xAxisData = csv_data.map(function(d) { return d[p.x]; });
+        var yAxisData = csv_data.map(function(d) { return d[p.y]; });
+        var regression = leastSquaresequation(xAxisData,yAxisData);
 
         var line = d3.svg.line()
                 .x(function (d) {
-                    return x(d[p.x]);
+                    return a(d[p.x]);
                 })
                 .y(function (d) {
-                    return y(regression(d[p.x]));
+                    return b(regression(d[p.x]));
                 });
 
 
