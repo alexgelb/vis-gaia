@@ -5,8 +5,8 @@ var headerNames = [];
 var csv_data;
 var regressions = [];
 
-d3.csv("./data/GaiaSource_1.csv",
-//d3.csv("./data/GaiaSource_1_big.csv",
+//d3.csv("./data/GaiaSource_1.csv",
+d3.csv("./data/GaiaSource_1_1k.csv",
         function (csv_data) {
             var traits = d3.keys(csv_data[0]).filter(
                     function (d) {
@@ -61,12 +61,15 @@ d3.csv("./data/GaiaSource_1.csv",
 
 function submitForm() {
 
+
+    console.time('drawScatterPlotMatrix');
     if (getMultipleData() != 0) {
         drawScatterPlotMatrix(getMultipleData());
     } else {
         alert("Select please any values!");
-
     }
+
+    console.timeEnd('drawScatterPlotMatrix');
 }
 
 function deleteAll() {
@@ -212,6 +215,27 @@ function drawScatterPlotMatrix(chosenValues) {
     cell.filter(function (d) {
         return d.i < d.j;
     }).append("text")
+            .attr("x", padding - 10)
+            .attr("y", padding - 10)
+            .attr("dy", function (d, i) {return 90 - (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) +"px";})
+            .attr("dx", "75px")
+
+            .style("opacity", "0.8")
+            .style("text-anchor", "middle")
+            .text(function (d, i) {
+                return "Correlation: ";
+
+            })
+
+            .style("font-size", function (d, i) {
+                return "10px";
+
+            });
+
+    cell.filter(function (d) {
+        return d.i < d.j;
+    })
+            .append("text")
             .attr("x", padding - 10)
             .attr("y", padding - 10)
             .attr("dy", "90px")
@@ -413,9 +437,13 @@ function drawScatterPlotMatrix(chosenValues) {
                 });
 
 
-        var xAxisData = csv_data.map(function(d) { return d[p.x]; });
-        var yAxisData = csv_data.map(function(d) { return d[p.y]; });
-        var regression = leastSquaresequation(xAxisData,yAxisData);
+        var xAxisData = csv_data.map(function (d) {
+            return d[p.x];
+        });
+        var yAxisData = csv_data.map(function (d) {
+            return d[p.y];
+        });
+        var regression = leastSquaresequation(xAxisData, yAxisData);
 
         var line = d3.svg.line()
                 .x(function (d) {
@@ -432,19 +460,21 @@ function drawScatterPlotMatrix(chosenValues) {
                 .attr("d", line)
                 .on("mousemove", function () {
                     d3.select(".tooltip").style("left", function (d) {
-                        return (d3.event.pageX + 10) + "px"
+                        return (d3.event.pageX + 10) + "px";
                     }).style("top", function (d) {
-                        return (d3.event.pageY - 50) + "px"
+                        return (d3.event.pageY - 50) + "px";
                     });
                     d3.select(".tooltip").style("visibility", "visible");
-                    reg = parseFloat(regression(x.invert(d3.event.pageX - cell.node().getBoundingClientRect().left - 20))).toFixed(3);
-                    d3.select(".tooltip").text("" + reg);
+                    reg = parseFloat(regression(x.invert(d4.event.pageX - cell.node().getBoundingClientRect().left - 20))).toFixed(3);
+                    d3.select(".tooltip").text("test " + reg);
 
                 })
                 .on("mouseout", function () {
                     d3.select(".tooltip").style("visibility", "hidden");
 
                 });
+
+        cell.append("div").attr("class", "tooltip");
 
     }
 
