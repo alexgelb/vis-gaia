@@ -76,11 +76,6 @@
 %  \caption{Lookit! Lookit!}
 %}
 
-%% Abstract section.
-\abstract{
-Some blabla here
-} % end of abstract
-
 %% ACM Computing Classification System (CCS). 
 %% See <http://www.acm.org/about/class> for details.
 %% We recommend the 2012 system <http://www.acm.org/about/class/class/2012>
@@ -143,9 +138,15 @@ The whole program was written in JavaScript combined with CSS. For the front-end
 To visualize the data the JavaScript library "D3"\cite{d3} was used which offers the ability to let the user interact with the data.\\
 \\
 We encounters many problems which challenged us to implement things properly. One of the problems where to filter the data that all plots can be realized. We figured out that we just can't delete all the entries which contains a NULL or any other non valid values because this would reduce the data set to almost zero entries. Therefore we went through the documentation of the dataset and tried to figure out which features of the stars can be excluded and which not. Unfortunately we can not filter out all unnecessary values at the beginning , we have to do a "pre-filtering" to remove all non integer values and afterwards almost every function has to do their own filtering to adapt the data to their specific task.\\
-To minimize the dataset we got the hint to have a look on "principal component analysis" which can help to reduce the dimensions. At the beginning we had the idea to implement a plugin\cite{pca} for D3 which processes the input data first and then work with it. But after implementing successfully we recognized that the produced result by the plugin was not that what we had in mind. It was built for datasets with less dimension than we have and therefore the performance was tremendously slow. So we focused on "DimStiller"\cite{dimstiller} and try to work with it. Basically it almost fulfilled our requirements but unfortunately it doesn't offer an API to connect it to our application. Due to time issues we weren't able to create pipeline where the input file is send to DimStiller which processes it and then send back to our application where the user can work with a trimmed file.
+To minimize the dataset we got the hint to have a look on "principal component analysis" which can help to reduce the dimensions. At the beginning we had the idea to implement a plugin\cite{pca} for D3 which processes the input data first and then work with it. But after implementing successfully we recognized that the produced result by the plugin was not that what we had in mind. It was built for datasets with less dimension than we have and therefore the performance was tremendously slow. So we focused on "DimStiller"\cite{dimstiller} and try to work with it. Basically it almost fulfilled our requirements but unfortunately it doesn't offer an API to connect it to our application. Due to time issues we weren't able to create pipeline where the input file is send to DimStiller which processes it and then send it back to our application where the user can work with a trimmed file. Although it is not realised yet we were curios how the result of DimStiller would look like and played around with it a little bit and decided to present the outcome here.\\
+DimStiller's principal component analysis consists of five so called steps which happens consecutively. These are "Cull:Variance", "Data:Normalize", "Collect:Pearson", "Reduce:PCA" and "View:SPLOM". The first interesting and a little bit disappointment result appeared at "Collect:Pearson" which shows the correlation between the dimensions. It reduced the dimension from 52 to 28 dimension When we look on figure 2 we see that most of the dimensions are uncorrelated where we expected more correlation since the amount of data is enormous. 
+\begin{figure}[h]
+\includegraphics[width=0.5\textwidth]{pearsoncoeff.PNG}
+\centering
+\caption{Pearson coefficient where blue means positive correlation, yellow no correlation and red negative correlation}
+\end{figure}
 \section{Results}
-We started with making a side bar, which shows a few details about the dataset and allows the user to make some specific settings.
+We startgit ed with making a side bar, which shows a few details about the dataset and allows the user to make some specific settings.
 On top, we can see the Dataset name, rows and columns of our dataset.
 Firstly, the user can choose which kind of plot he wants to produce in the Options window. 
 "Data Value" is a drop down, in which the user can choose exactly one column, which is what we need for the histogram.
@@ -153,6 +154,9 @@ If he chooses the Scatterplot, he needs to choose more columns in "Multiple Data
 After that, he clicks the "Plot" Button and the chosen diagram will be visible on the display. With the "Remove" Button, he can clear the page.
 \section{Discussion}
 \subsection{Lessons learned}
+\subsubsection{Nicole Cherches}
+There were a lot of things, I learned from the Gaia project. First of all, I would like to talk about the technical aspects: As this was my first visualization task, it was a whole new experience for me to work with d3 and Javascript. But the most important part is, that I learned how to work with a huge dataset and how to get the most out of it. We first tried to learn everything about it, also we realized that Astronomy is too complicated for us to understand. After our talk with Mr. Moeller, we then tried another approach: We did a data exploration task, which is all about exploring a huge dataset, we don't know much about.  
+Another important part, I learned from this project, was working in a group on a big project. I learned a lot about coordination, planning and distributing tasks. This is also a good lesson, because collaboration with others is a necessary skill in computer science.
 \subsubsection{Benjamin Neckam}
 There were two things I will take out of this project.\\
 First refers to the implementation and the chosen programming language. Basically I was not very used to JavaScript, to be more precisely I had no experience with it, but I was really impressed by "D3". The opportunities you have to visualize data is breathtaking and allows the programmer to choose over a wide variety of plot types. The only disadvantage that really falls into weight was the performance. If the dataset is bigger than, let's say, 100.000 entries it takes some time to calculate and plot the data and in our case the file contains more than ten times more entries. But all in all it was a very interesting and in my opinion very important for my future to work with JavaScript and "D3" and get deeper into this part of front end programming.\\
