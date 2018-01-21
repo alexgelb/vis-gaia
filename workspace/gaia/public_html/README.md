@@ -8,6 +8,15 @@ Team:	01368965 Axinya Tokareva
 Projekt:	Gaia
 
 
+### Run
+1. Run the command http-server
+2. Call http://localhost:8080 in Chrome (or your favorite browser)
+3. Choose values in the options menu
+4. Plot Scatterplot matrix
+
+For the command http-server you will need node.js.
+The programm is optimized for Chrome.
+
 ### Implementierung
 
 Libraries:
