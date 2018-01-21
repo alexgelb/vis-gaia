@@ -1,64 +1,63 @@
-//import * as d3 from 'd3'
-//import {Renderer, PCA} from '/src'
-//const pcaClass = require('./pca')
 /* global d3, d4 */
 
 var value = 0;
 var headerNames = [];
 var csv_data;
+var regressions = [];
 
 d3.csv("./data/GaiaSource_1.csv",
-    function (csv_data) {
-        var traits = d3.keys(csv_data[0]).filter(
-            function (d) {
-                return d !== "astrometric_primary_flag" &&
-                    d !== "duplicated_source" &&
-                    d !== "phot_variable_flag";
-            })
-        this.csv_data = csv_data;
+//d3.csv("./data/GaiaSource_1_big.csv",
+        function (csv_data) {
+            var traits = d3.keys(csv_data[0]).filter(
+                    function (d) {
+                        return d !== "astrometric_primary_flag" &&
+                                d !== "duplicated_source" &&
+                                d !== "phot_variable_flag";
+                    })
+            this.csv_data = csv_data;
 
-        var fileData = csv_data;
-        for (var i = 0; i < fileData.length; i++) {
-            delete fileData[i]["astrometric_primary_flag"];
-            delete fileData[i]["duplicated_source"];
-            delete fileData[i]["phot_variable_flag"];
-            for (var j = 0; j < traits.length; j++) {
-                var key = traits[j];
-                var tmp = parseFloat(fileData[i][key]);
+            var fileData = csv_data;
+            for (var i = 0; i < fileData.length; i++) {
+                delete fileData[i]["astrometric_primary_flag"];
+                delete fileData[i]["duplicated_source"];
+                delete fileData[i]["phot_variable_flag"];
+                for (var j = 0; j < traits.length; j++) {
+                    var key = traits[j];
+                    var tmp = parseFloat(fileData[i][key]);
 
-                if (tmp === undefined || isNaN(tmp) || tmp < -900) {
-                    //                    fileData[i][key] = 0;
-                } else {
-                    fileData[i][key] = tmp;
+                    if (tmp === undefined || isNaN(tmp) || tmp < -900) {
+                        //                    fileData[i][key] = 0;
+                    } else {
+                        fileData[i][key] = tmp;
+                    }
+
                 }
+            }
+
+            headerNames = traits;
+            value = csv_data.length;
+
+            var multipleValue = document.getElementById("MultipleData");
+
+            for (var i = 0; i < headerNames.length; i++) {
+
+                var multipleOption = document.createElement("option");
+
+                multipleOption.text = headerNames[i];
+                multipleOption.id = headerNames[i];
+
+
+                multipleValue.add(multipleOption);
 
             }
-        }
 
-        headerNames = traits;
-        value = csv_data.length;
-
-        var multipleValue = document.getElementById("MultipleData");
-
-        for (var i = 0; i < headerNames.length; i++) {
-
-            var multipleOption = document.createElement("option");
-
-            multipleOption.text = headerNames[i];
-            multipleOption.id = headerNames[i];
-
-
-            multipleValue.add(multipleOption);
-
-        }
-
-        var datasetname = document.getElementById("datasetname");
-        var rows = document.getElementById("rowCount");
-        var columns = document.getElementById("columnCount");
-        rows.innerText = value;
-        columns.innerText = headerNames.length;
-        datasetname.innerText = "Gaia Source";
-    });
+            var datasetname = document.getElementById("datasetname");
+            var rows = document.getElementById("rowCount");
+            var columns = document.getElementById("columnCount");
+            rows.innerText = value;
+            columns.innerText = headerNames.length;
+            datasetname.innerText = "Gaia Source";
+        });
 
 function submitForm() {
 
@@ -85,24 +84,24 @@ function drawScatterPlotMatrix(chosenValues) {
     var correlations = correlation(chosenValues);
 
     var size = 230,
-        padding = 50;
+            padding = 50;
 
     var x = d4.scaleLinear()
-        .range([padding / 2, size - padding / 2]);
+            .range([padding / 2, size - padding / 2]);
 
     var y = d4.scaleLinear()
-        .range([size - padding / 2, padding / 2]);
+            .range([size - padding / 2, padding / 2]);
 
     var xAxis = d4.axisBottom().ticks(4).tickFormat(d3.format(",.2f"))
-        .scale(x);
+            .scale(x);
     var yAxis = d4.axisLeft().ticks(5).tickFormat(d3.format(",.2f"))
-        .scale(y);
+            .scale(y);
 
     var color = d4.scaleOrdinal(d4.schemeCategory10);
 
     var domainByTrait = {},
-        traits = chosenValues,
-        n = traits.length;
+            traits = chosenValues,
+            n = traits.length;
 
     traits.forEach(function (trait) {
         domainByTrait[trait] = d4.extent(csv_data, function (d) {
@@ -110,88 +109,92 @@ function drawScatterPlotMatrix(chosenValues) {
             if (!isNaN(tmp) && tmp > -900) {
                 return tmp;
             }
-
+//            return +d[trait];
         });
     });
-
 
     xAxis.tickSize(size * n - 23);
 
     var brush = d4.brush()
-        .on("start", brushstart)
-        .on("brush", brushmove)
-        .on("end", brushend)
-        .extent([[0, 0], [size, size]]);
-
+            .on("start", brushstart)
+            .on("brush", brushmove)
+            .on("end", brushend)
+            .extent([[0, 0], [size, size]]);
 
     var svg = d4.select("#plot").append("svg")
-        .attr("width", size * n + (padding + 100))
-        .attr("height", size * n + (padding + 100))
-        .append("g")
-        .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
-
-    var dy_em = ".80em";
+            .attr("width", size * n + (padding + 100))
+            .attr("height", size * n + (padding + 100))
+            .append("g")
+            .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
     svg.selectAll(".x.axis")
-        .data(traits)
-        .enter()
-        .append("g")
+            .data(traits)
+            .enter()
+            .append("g")
 
-    .attr("class", "x axis")
-        .attr("transform", function (d, i) {
-            return "translate(" + (n - i - 1) * size + ",25)";
-        })
-        .each(function (d) {
-            x.domain(domainByTrait[d]);
-            d4.select(this).call(xAxis);
-        });
+            .attr("class", "x axis")
+            .attr("transform", function (d, i) {
+                return "translate(" + (n - i - 1) * size + ",25)";
+            })
+            .each(function (d) {
+                x.domain(domainByTrait[d]);
+                d4.select(this).call(xAxis);
+            });
     var g = 0;
     var k = chosenValues.length - 1;
 
     svg.selectAll(".y.axis")
-        .data(traits)
-        .enter()
-        .append("g")
-        .attr("class", "y axis")
+            .data(traits)
+            .enter()
+            .append("g")
+            .attr("class", "y axis")
 
-    .attr("transform", function (d, i) {
-        return "translate(5," + i * size + ")";
-    })
+            .attr("transform", function (d, i) {
+                return "translate(5," + i * size + ")";
+            })
 
-    .each(function (d) {
-        g++;
-        if (g != svg.selectAll(".y.axis")._groups[0].length) {
-            yAxis.tickSize(-(k) * 230 + 20 + 10);
-            k--;
-            y.domain(domainByTrait[d]);
+            .each(function (d) {
+                g++;
+                if (g != svg.selectAll(".y.axis")._groups[0].length) {
+                    yAxis.tickSize(-(k) * 230 + 20 + 10);
+                    k--;
+                    y.domain(domainByTrait[d]);
 
-            d4.select(this).call(yAxis);
-        }
-    });
+                    d4.select(this).call(yAxis);
+                }
+            });
 
-    var crossedData = cross(traits, traits);
+
+//    for (var i = 0; i < traits[i].length; i++) {
+//        for (var j = 0; j < traits[j].length; j++) {
+//            regressions.push({
+//                i: i,
+//                j: j,
+//                regression: leastSquaresequation(traits[i], traits[j])
+//            });
+//        }
+//    }
+
+    var crossedData = crossData(traits, traits);
 
     var cell = svg.selectAll(".cell")
-        .data(crossedData)
-        .enter().append("g")
-        .attr("class", "cell")
-        .attr("transform", function (d) {
-            return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
-        });
+            .data(crossedData)
+            .enter().append("g")
+            .attr("class", "cell")
+            .attr("transform", function (d) {
+                return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
+            });
 
 
     cell.filter(function (d) {
-
         return d.i !== d.j && d.i > d.j;
     }).each(plot);
 
     cell.filter(function (d) {
-
         return d.i === d.j || d.i < d.j;
     }).each(plot_histo);
 
     cell.filter(function (d) {
-
         return d.i < d.j;
     }).selectAll("rect").style("fill", "#ffffff");
 
@@ -199,57 +202,52 @@ function drawScatterPlotMatrix(chosenValues) {
     cell.filter(function (d) {
         return d.i === d.j;
     }).append("text")
-
-    .attr("x", padding - 10)
-        .attr("y", padding - 10)
-        .attr("dy", ".71em")
-        .text(function (d) {
-            return d.x;
-        });
-
+            .attr("x", padding - 10)
+            .attr("y", padding - 10)
+            .attr("dy", ".71em")
+            .text(function (d) {
+                return d.x;
+            });
 
     cell.filter(function (d) {
         return d.i < d.j;
-    })
+    }).append("text")
+            .attr("x", padding - 10)
+            .attr("y", padding - 10)
+            .attr("dy", "90px")
+            .attr("dx", "75px")
 
-    .append("text")
+            .style("opacity", "0.8")
+            .style("text-anchor", "middle")
+            .text(function (d, i) {
+                return correlations[i].toFixed(3);
 
-    .attr("x", padding - 10)
-        .attr("y", padding - 10)
-        .attr("dy", "90px")
-        .attr("dx", "75px")
+            })
 
-    .style("opacity", "0.8")
-        .style("text-anchor", "middle")
-        .text(function (d, i) {
-            return correlations[i].toFixed(3);
+            .style("font-size", function (d, i) {
+                return (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) + "px";
 
-        })
-
-    .style("font-size", function (d, i) {
-        return (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) + "px";
-
-    });
+            });
 
 
     var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-10, 0])
-        .html(function (d, i, j) {
-            if (isNaN(correlations[i])) {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
-            } else {
-                return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j] + "</strong>";
-            }
-            console.log(d.x);
-        });
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function (d, i, j) {
+                if (isNaN(correlations[i])) {
+                    return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
+                } else {
+                    return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j] + "</strong>";
+                }
+                console.log(d.x);
+            });
 
     svg.call(tip);
     d3.selectAll(".cell").filter(function (d) {
-            return d.i < d.j;
-        }).selectAll("text")
-        .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
+        return d.i < d.j;
+    }).selectAll("text")
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
 
 
     cell.filter(function (d) {
@@ -258,7 +256,7 @@ function drawScatterPlotMatrix(chosenValues) {
 
 
     var histodaten = [];
-    for (var j = 0; j < chosenValues.length; j++) { //j=0
+    for (var j = 0; j < chosenValues.length; j++) {
         var dataset = csv_data.map(function (d) {
             return d[chosenValues[j]];
         });
@@ -268,11 +266,11 @@ function drawScatterPlotMatrix(chosenValues) {
         });
 
         histodaten.push(f_dataset);
-    };
+    }
+    ;
 
 
     for (var i = 0; i < histodaten.length; i++) {
-
         plot_histo1(histodaten[i], chosenValues[i], d3.select(cell.filter(function (d) {
             return d.i == d.j;
         })._groups[0][i]));
@@ -280,26 +278,21 @@ function drawScatterPlotMatrix(chosenValues) {
 
 
     function plot_histo(p) {
-
-
         var cell = d4.select(this);
 
         x.domain(domainByTrait[p.x]);
         y.domain(domainByTrait[p.y]);
 
         cell.append("rect")
-            .attr("class", "frame")
-            .attr("x", padding / 2)
-            .attr("y", padding / 2)
-            .attr("width", size - padding)
-            .attr("height", size - padding)
-
-
+                .attr("class", "frame")
+                .attr("x", padding / 2)
+                .attr("y", padding / 2)
+                .attr("width", size - padding)
+                .attr("height", size - padding);
     }
 
 
     function plot_histo1(f_dataset, valuename, histocell) {
-
         var parameter = 6;
         var color = "grey";
         var dy_em = ".80em";
@@ -308,45 +301,45 @@ function drawScatterPlotMatrix(chosenValues) {
         height = size - padding - 70;
 
         var x = d3.scale.linear()
-            .domain([d3.min(f_dataset), d3.max(f_dataset)])
-            .range([0, width]);
+                .domain([d3.min(f_dataset), d3.max(f_dataset)])
+                .range([0, width]);
 
 
         var bin = Math.pow(f_dataset.length, 1 / 3);
 
         var dataset = d3.layout.histogram()
-            .bins(x.ticks(bin))
-            (f_dataset);
+                .bins(x.ticks(bin))
+                (f_dataset);
 
         var color2 = d3.scale.linear()
-            .domain([d3.min(dataset, function (d) {
-                return d.length
-            }), d3.max(dataset, function (d) {
-                return d.length
-            })])
-            .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
+                .domain([d3.min(dataset, function (d) {
+                        return d.length
+                    }), d3.max(dataset, function (d) {
+                        return d.length
+                    })])
+                .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
 
         var y = d3.scale.linear()
-            .domain([0, d3.max(dataset, function (d) {
-                return d.length
-            })])
-            .range([height, 0]);
+                .domain([0, d3.max(dataset, function (d) {
+                        return d.length
+                    })])
+                .range([height, 0]);
 
 
         var tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function (d, i) {
-                return "<strong>value : </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
-            });
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function (d, i) {
+                    return "<strong>value : </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
+                });
 
         var svgObject =
-            histocell.append("svg")
-            .attr("x", padding - 19.5 - 5)
-            .attr("y", padding + 30)
-            .style("vertical-align", "middle")
-            .style("height", "100%")
-            .append("g");
+                histocell.append("svg")
+                .attr("x", padding - 19.5 - 5)
+                .attr("y", padding + 30)
+                .style("vertical-align", "middle")
+                .style("height", "100%")
+                .append("g");
 
         svgObject.call(tip);
 
@@ -357,31 +350,31 @@ function drawScatterPlotMatrix(chosenValues) {
         }
 
         svgObject.selectAll(".bar")
-            .data(dataset)
-            .enter().append("g")
-            .attr("class", "bar")
-            .attr("transform", function (d) {
-                return "translate(" + x(d.x) + "," + y(d.y) + ")";
-            })
-            .on('mouseover', tip.show)
-            .on('mouseout', tip.hide).append("rect")
-            .attr("x", 1)
-            .attr("width", (x(dataset[0].dx) - x(0)) - 1)
-            .attr("height", function (d) {
-                return height - y(d.y);
-            })
-            .attr("fill", function (d) {
-                return color2(d.y)
-            })
-            .on("mouseover", function () {
-                d3.select(this)
-                    .attr("fill", "#2e2e30");
-            })
-            .on("mouseout", function () {
-                d3.select(this).attr("fill", function (d) {
-                    return color2(d.y);
+                .data(dataset)
+                .enter().append("g")
+                .attr("class", "bar")
+                .attr("transform", function (d) {
+                    return "translate(" + x(d.x) + "," + y(d.y) + ")";
                 })
-            });
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide).append("rect")
+                .attr("x", 1)
+                .attr("width", (x(dataset[0].dx) - x(0)) - 1)
+                .attr("height", function (d) {
+                    return height - y(d.y);
+                })
+                .attr("fill", function (d) {
+                    return color2(d.y)
+                })
+                .on("mouseover", function () {
+                    d3.select(this)
+                            .attr("fill", "#2e2e30");
+                })
+                .on("mouseout", function () {
+                    d3.select(this).attr("fill", function (d) {
+                        return color2(d.y);
+                    })
+                });
     }
 
     function plot(p) {
@@ -393,31 +386,65 @@ function drawScatterPlotMatrix(chosenValues) {
 
 
         cell.append("rect")
-            .attr("class", "frame")
-            .attr("x", padding / 2)
-            .attr("y", padding / 2)
-            .attr("width", size - padding)
-            .attr("height", size - padding);
+                .attr("class", "frame")
+                .attr("x", padding / 2)
+                .attr("y", padding / 2)
+                .attr("width", size - padding)
+                .attr("height", size - padding);
 
         cell.selectAll("circle")
-            .data(csv_data)
-            .enter()
-            .filter(function (d) {
-                var tmpX = parseFloat(d[p.x]);
-                var tmpY = parseFloat(d[p.y]);
-                return (tmpX !== undefined && tmpY !== undefined) && (!isNaN(tmpX) && !isNaN(tmpY)) && (tmpX > -900 && tmpY > -900);
-            })
-            .append("circle")
-            .attr("cx", function (d) {
-                return x(d[p.x]);
-            })
-            .attr("cy", function (d) {
-                return y(d[p.y]);
-            })
-            .attr("r", 4)
-            .attr("fill", function (d) {
-                return color("blue");
-            });
+                .data(csv_data)
+                .enter()
+                .filter(function (d) {
+                    var tmpX = parseFloat(d[p.x]);
+                    var tmpY = parseFloat(d[p.y]);
+                    return (tmpX !== undefined && tmpY !== undefined) && (!isNaN(tmpX) && !isNaN(tmpY)) && (tmpX > -900 && tmpY > -900);
+                })
+                .append("circle")
+                .attr("cx", function (d) {
+                    return x(d[p.x]);
+                })
+                .attr("cy", function (d) {
+                    return y(d[p.y]);
+                })
+                .attr("r", 2)
+                .attr("fill", function (d) {
+                    return color("blue");
+                });
+
+
+        var xAxisData = csv_data.map(function(d) { return d[p.x]; });
+        var yAxisData = csv_data.map(function(d) { return d[p.y]; });
+        var regression = leastSquaresequation(xAxisData,yAxisData);
+
+        var line = d3.svg.line()
+                .x(function (d) {
+                    return x(d[p.x]);
+                })
+                .y(function (d) {
+                    return y(regression(d[p.x]));
+                });
+
+
+        cell.append("path")
+                .datum(csv_data)
+                .attr("class", "line")
+                .attr("d", line)
+                .on("mousemove", function () {
+                    d3.select(".tooltip").style("left", function (d) {
+                        return (d3.event.pageX + 10) + "px"
+                    }).style("top", function (d) {
+                        return (d3.event.pageY - 50) + "px"
+                    });
+                    d3.select(".tooltip").style("visibility", "visible");
+                    reg = parseFloat(regression(x.invert(d3.event.pageX - cell.node().getBoundingClientRect().left - 20))).toFixed(3);
+                    d3.select(".tooltip").text("" + reg);
+
+                })
+                .on("mouseout", function () {
+                    d3.select(".tooltip").style("visibility", "hidden");
+
+                });
 
     }
 
@@ -447,13 +474,13 @@ function drawScatterPlotMatrix(chosenValues) {
             svg.selectAll(".hidden").classed("hidden", false);
     }
 
-    function cross(a, b) {
+    function crossData(a, b) {
         var c = [],
-            n = a.length,
-            m = b.length,
-            i, j;
-        for (i = -1; ++i < n;) {
-            for (j = -1; ++j < m;) {
+                n = a.length,
+                m = b.length;
+
+        for (var i = -1; ++i < n; ) {
+            for (var j = -1; ++j < m; ) {
                 var valueA = a[i];
                 var valueB = b[j];
 
@@ -467,6 +494,37 @@ function drawScatterPlotMatrix(chosenValues) {
         }
         return c;
     }
+}
+
+function leastSquaresequation(a, b) {
+    var ReduceAddition = function (prev, cur) {
+        return prev + cur;
+    };
+
+    // finding the mean of Xaxis and Yaxis data
+    var xBar = a.reduce(ReduceAddition) * 1.0 / a.length;
+    var yBar = b.reduce(ReduceAddition) * 1.0 / b.length;
+
+    var SquareXX = a.map(function (d) {
+        return Math.pow(d - xBar, 2);
+    }).reduce(ReduceAddition);
+
+    var ssYY = b.map(function (d) {
+        return Math.pow(d - yBar, 2);
+    }).reduce(ReduceAddition);
+
+    var MeanDiffXY = a.map(
+            function (d, i) {
+                return (d - xBar) * (b[i] - yBar);
+            }).reduce(ReduceAddition);
+
+    var slope = MeanDiffXY / SquareXX;
+    var intercept = yBar - (xBar * slope);
+
+// returning regression function
+    return function (x) {
+        return x * slope + intercept;
+    };
 }
 
 function getMultipleData() {
@@ -518,73 +576,19 @@ function correlation(MultipleData) {
             }), function (d) {
                 return d
             }) / Math.sqrt(
-                d3.sum(col1.map(function (d) {
-                    return Math.pow((d - avg_col1), 2)
-                }), function (d) {
-                    return d
-                }) * d3.sum(col2.map(function (d) {
-                    return Math.pow((d - avg_col2), 2)
-                }), function (d) {
-                    return d
-                })
-            );
+                    d3.sum(col1.map(function (d) {
+                        return Math.pow((d - avg_col1), 2)
+                    }), function (d) {
+                        return d
+                    }) * d3.sum(col2.map(function (d) {
+                return Math.pow((d - avg_col2), 2)
+            }), function (d) {
+                return d
+            })
+                    );
             var corrValue = coeff;
             correlations.push(corrValue);
         }
     }
     return correlations;
 }
-
-/*function drawPCA() {
-	d3.csv('GaiaSource_1.csv')
-	// d3.csv('data.csv')
-	.row((d) => {
-	   const obj = {
-	      name: d.source_id,
-	// name: d.name,
-			   values: {}
-	    }
-	    for (const key in d) {
-	      if (key !== 'solution_id' && key !== 'source_id' && key !== 'random_index' && key !== 'random_index' && key !== 'ref_epoch' && key !== 'astrometric_primary_flag' && key !== 'duplicated_source' && key !== 'phot_variable_flag') {
-	// if(key !== 'name' ) {
-	// obj.values[key] = +d[key]
-	    	var tmp = parseFloat(d[key]);
-	    	if (isNaN(tmp)) {
-	    		obj.values[key] = 0;
-	    	} else {
-	    		obj.values[key] = tmp;
-	    	}
-	    	
-	      }
-	    }
-	//   console.log(obj);
-	    return obj
-	  })
-	  .get((errors, data) => {
-	    const p = 0.999999999999
-	    const pca = new PCA(data)
-	    const lambda = pca.lambda()
-	    const sumLambda = lambda.reduce((a, x) => a + x)
-	    const renderer = new Renderer().size([400, 400])
-	    let i
-	    let acc = 0
-	    for (i = 0; i < lambda.length; ++i) {
-	      acc += lambda[i]
-	      if (acc > (sumLambda * p)) {
-	        break
-	      }
-	      
-	    }
-	    const n = i + 1;
-	    console.log("n: " + n)
-	    for (let i = 0; i < n; ++i) {
-	      for (let j = i + 1; j < n; ++j) {
-	        d3.select('body')
-	          .append('svg')
-	          .datum(pca.get(i, j))
-	          .call(renderer.render())
-//	    	  console.log(pca.get(i,j))
-	      }
-	    }
-	  })
-}*/
