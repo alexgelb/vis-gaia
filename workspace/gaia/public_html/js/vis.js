@@ -64,7 +64,7 @@ d3.csv("./data/GaiaSource_1_5k.csv",
         });
 
 function submitForm() {
-d3.selectAll("svg").remove();
+deleteAll();
    // console.time('drawScatterPlotMatrix');
     if (getMultipleData() != 0) {
         drawScatterPlotMatrix(getMultipleData());
@@ -75,16 +75,16 @@ d3.selectAll("svg").remove();
     //console.timeEnd('drawScatterPlotMatrix');
 }
 
-/*function deleteAll() {
-    if (d3.select("svg") == 0) {
+function deleteAll() {
+   /* if (d3.select("svg") == 0) {
         alert("Nothing to delete!");
-    }
+    }*/
     d3.selectAll("svg").remove();
-    headerNames.filter(function (d) {
+   /* headerNames.filter(function (d) {
         document.getElementById(d).selected = false;
-    })
+    })*/
 }
-*/
+
 function drawScatterPlotMatrix(chosenValues) {
 
     var correlations = correlation(chosenValues);
@@ -544,7 +544,7 @@ function leastSquaresequation(a, b) {
 
 function getMultipleData() {
     var MultipleData = headerNames.filter(function (d) {
-       /* if (document.getElementById(d).selected) {
+        if (document.getElementById(d).selected) {
             if (d != "solution_id" && d != "ref_epoch" && d != "source_id" && d != "random_index") {
                 return d;
             } else {
@@ -553,8 +553,7 @@ function getMultipleData() {
                 return 0;
             }
         }
-    });*/
-        return d;})
+    });
 
     return MultipleData;
 }
