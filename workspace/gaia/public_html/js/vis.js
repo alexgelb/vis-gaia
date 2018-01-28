@@ -6,7 +6,7 @@ var csv_data;
 var regressions = [];
 
 //d3.csv("./data/GaiaSource_1.csv",
-d3.csv("./data/GaiaSource_1_1k.csv",
+d3.csv("./data/GaiaSource_1_5k.csv",
         function (csv_data) {
             var traits = d3.keys(csv_data[0]).filter(
                     function (d) {
@@ -61,7 +61,7 @@ d3.csv("./data/GaiaSource_1_1k.csv",
 
 function submitForm() {
 
-
+    deleteAll();
     console.time('drawScatterPlotMatrix');
     if (getMultipleData() != 0) {
         drawScatterPlotMatrix(getMultipleData());
@@ -73,13 +73,13 @@ function submitForm() {
 }
 
 function deleteAll() {
-    if (d3.select("svg") == 0) {
-        alert("Nothing to delete!");
-    }
+//    if (d3.select("svg") == 0) {
+//        alert("Nothing to delete!");
+//    }
     d3.select("svg").remove();
-    headerNames.filter(function (d) {
-        document.getElementById(d).selected = false;
-    })
+//    headerNames.filter(function (d) {
+//        document.getElementById(d).selected = false;
+//    })
 }
 
 function drawScatterPlotMatrix(chosenValues) {
@@ -167,16 +167,6 @@ function drawScatterPlotMatrix(chosenValues) {
                 }
             });
 
-
-//    for (var i = 0; i < traits[i].length; i++) {
-//        for (var j = 0; j < traits[j].length; j++) {
-//            regressions.push({
-//                i: i,
-//                j: j,
-//                regression: leastSquaresequation(traits[i], traits[j])
-//            });
-//        }
-//    }
 
     var crossedData = crossData(traits, traits);
 
@@ -291,7 +281,6 @@ function drawScatterPlotMatrix(chosenValues) {
 
         histodaten.push(f_dataset);
     }
-    ;
 
 
     for (var i = 0; i < histodaten.length; i++) {
@@ -337,15 +326,15 @@ function drawScatterPlotMatrix(chosenValues) {
 
         var color2 = d3.scale.linear()
                 .domain([d3.min(dataset, function (d) {
-                        return d.length
+                        return d.length;
                     }), d3.max(dataset, function (d) {
-                        return d.length
+                        return d.length;
                     })])
                 .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
 
         var y = d3.scale.linear()
                 .domain([0, d3.max(dataset, function (d) {
-                        return d.length
+                        return d.length;
                     })])
                 .range([height, 0]);
 
@@ -432,9 +421,10 @@ a=x; b=y;
                     return y(d[p.y]);
                 })
                 .attr("r", 2)
-                .attr("fill", function (d) {
-                    return color("blue");
-                });
+                .style("fill-opacity", function(d) { return getOpacity(); });
+//                .attr("fill", function (d) {
+//                    return color("blue");
+//                });
 
   a.domain(domainByTrait[p.x]).nice(8);
         b.domain(domainByTrait[p.y]).nice(8);
@@ -471,7 +461,7 @@ a=x; b=y;
 
                 });
 
-        cell.append("div").attr("class", "tooltip");
+        cell.append("div").attr("class", "tip");
 
     }
 
@@ -570,6 +560,9 @@ function getMultipleData() {
     return MultipleData;
 }
 
+function getOpacity() {
+    return +document.getElementById("opacity").value;
+}
 
 function correlation(MultipleData) {
     var correlations = [];
