@@ -202,25 +202,16 @@ function drawScatterPlotMatrix(chosenValues) {
                 return d.x;
             });
 
-    cell.filter(function (d) {
+     cell.filter(function (d) {
         return d.i < d.j;
     }).append("text")
             .attr("x", padding - 10)
             .attr("y", padding - 10)
-            .attr("dy", function (d, i) {return 90 - (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) +"px";})
-            .attr("dx", "75px")
-
-            .style("opacity", "0.8")
-            .style("text-anchor", "middle")
-            .text(function (d, i) {
-                return "Correlation: ";
-
-            })
-
-            .style("font-size", function (d, i) {
-                return "10px";
-
+            .attr("dy", ".71em")
+            .text(function (d) {
+                return "Correlation coefficient";
             });
+
 
     cell.filter(function (d) {
         return d.i < d.j;
@@ -230,7 +221,7 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr("y", padding - 10)
             .attr("dy", "90px")
             .attr("dx", "75px")
-
+            .attr("class", "corrwert")
             .style("opacity", "0.8")
             .style("text-anchor", "middle")
             .text(function (d, i) {
@@ -240,26 +231,29 @@ function drawScatterPlotMatrix(chosenValues) {
 
             .style("font-size", function (d, i) {
                 return (((size - padding) / 7) * (Math.abs(correlations[i]) + 0.7)) + "px";
+           
+            })
+     .style("fill", "#08298A");
 
-            });
 
 
-    var tip = d3.tip()
+        var tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function (d, i, j) {
                 if (isNaN(correlations[i])) {
-                    return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
+                    return "<strong> r ( </strong>" + d.x + " , \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
                 } else {
-                    return "<strong> corr ( </strong>" + d.x + " | \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j] + "</strong>";
+                    return "<strong> r ( </strong>" + d.x + " , \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j] + "</strong>";
                 }
                 console.log(d.x);
             });
-
-    svg.call(tip);
+    
+    
+     svg.call(tip);
     d3.selectAll(".cell").filter(function (d) {
         return d.i < d.j;
-    }).selectAll("text")
+    }).selectAll(".corrwert")
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
 

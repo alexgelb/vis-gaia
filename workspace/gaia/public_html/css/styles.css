@@ -243,7 +243,7 @@ svg {
 
 circle {
     /*fill-opacity: .6;*/
-    fill: blue;
+    fill: #08298A;
 }
 
 circle.hidden {
