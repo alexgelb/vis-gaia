@@ -312,7 +312,7 @@ function drawScatterPlotMatrix(chosenValues) {
                 .range([0, width]);
 
 
-        var bin = Math.pow(f_dataset.length, 1 / 3);
+        var bin = 4; //Math.pow(f_dataset.length, 1 / 3);
 
         var dataset = d3.layout.histogram()
                 .bins(x.ticks(bin))
@@ -337,7 +337,7 @@ function drawScatterPlotMatrix(chosenValues) {
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function (d, i) {
-                    return "<strong>value : </strong> <span style='color:white'>" + d3.format(",.0f")(d.y) + "</span>";
+                    return "<strong>y-value : </strong> <span style='color:white'>" + d3.format(",..0f")((d.y)*100/csv_data.length) + "% </span>";
                 });
 
         var svgObject =
