@@ -64,28 +64,27 @@ d3.csv("./data/GaiaSource_1_5k.csv",
         });
 
 function submitForm() {
-
-    deleteAll();
-    console.time('drawScatterPlotMatrix');
+d3.selectAll("svg").remove();
+   // console.time('drawScatterPlotMatrix');
     if (getMultipleData() != 0) {
         drawScatterPlotMatrix(getMultipleData());
     } else {
-        alert("Select please any values!");
+        alert("Please select any data values!");
     }
 
-    console.timeEnd('drawScatterPlotMatrix');
+    //console.timeEnd('drawScatterPlotMatrix');
 }
 
-function deleteAll() {
-//    if (d3.select("svg") == 0) {
-//        alert("Nothing to delete!");
-//    }
-    d3.select("svg").remove();
-//    headerNames.filter(function (d) {
-//        document.getElementById(d).selected = false;
-//    })
+/*function deleteAll() {
+    if (d3.select("svg") == 0) {
+        alert("Nothing to delete!");
+    }
+    d3.selectAll("svg").remove();
+    headerNames.filter(function (d) {
+        document.getElementById(d).selected = false;
+    })
 }
-
+*/
 function drawScatterPlotMatrix(chosenValues) {
 
     var correlations = correlation(chosenValues);
@@ -101,7 +100,7 @@ function drawScatterPlotMatrix(chosenValues) {
 
     var xAxis = d4.axisBottom().ticks(4).tickFormat(d3.format(",.2f"))
             .scale(x);
-    var yAxis = d4.axisLeft().ticks(5).tickFormat(d3.format(",.2f"))
+    var yAxis = d4.axisLeft().ticks(4).tickFormat(d3.format(",.2f"))
             .scale(y);
 
     var color = d4.scaleOrdinal(d4.schemeCategory10);
@@ -545,7 +544,7 @@ function leastSquaresequation(a, b) {
 
 function getMultipleData() {
     var MultipleData = headerNames.filter(function (d) {
-        if (document.getElementById(d).selected) {
+       /* if (document.getElementById(d).selected) {
             if (d != "solution_id" && d != "ref_epoch" && d != "source_id" && d != "random_index") {
                 return d;
             } else {
@@ -554,7 +553,8 @@ function getMultipleData() {
                 return 0;
             }
         }
-    });
+    });*/
+        return d;
 
     return MultipleData;
 }
@@ -562,6 +562,8 @@ function getMultipleData() {
 function getOpacity() {
     return +document.getElementById("opacity").value;
 }
+
+
 
 function correlation(MultipleData) {
     var correlations = [];

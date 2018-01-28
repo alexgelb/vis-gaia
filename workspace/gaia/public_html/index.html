@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>Visualization and Visual Data - GAIA</title>
+    <title>Visualization - GAIA</title>
+     <link rel="icon" href="img/icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
@@ -47,8 +48,8 @@
         <form>
             <div class="options-menu border rounded">
                 <h6>Options</h6>
-                <hr>
-                <br>
+                <hr> <p></p>
+          
                 <div class="row">
                     <div class="col-4">
                         <label class="head-text">Data values: </label>
@@ -57,22 +58,32 @@
                         <select class="col-12" id="MultipleData" size=12 multiple></select>
                     </div>
                 </div>
+              <p></p>
                 <div class="row">
                     <div class="col-4">
-                        <label class="head-text">Circle Opacity: </label>
+                        <label class="head-text">Circle opacity: </label>
                     </div>
                     <div class="col-8">
                         <input type="number" step="0.1" class="col-12" id="opacity" value="0.8">
                     </div>
                 </div>
+                
                 <div class="button-align">
-                    <br>
+                    
                     <button type="button" class="Buttons" onclick="submitForm()" onselect>Plot</button>
                 </div>
-<!--                <div class="button-align">
-                    <p> </p>
-                    <button type="button" class="Buttons1" onclick="deleteAll()" onselect>Remove</button>
-                </div>-->
+               <!-- <div class="button-align">
+                  
+                    <button type="button" class="Buttons1" onclick="deleteAll()" onselect>Remove plots</button>
+                </div> -->
+                <div class="button-align">
+                  
+                    <button type="button" class="Buttons2" onclick="window.open('tutorial.html', '_blank')" onselect>Tutorial</button>
+                </div>
+                <div class="button-align">
+                  
+                    <button type="button" class="Buttons3" onclick="window.open('http://wwwlab.cs.univie.ac.at/~a1368965/vis17/index.html', '_blank')" onselect>Our website</button>
+                </div>
             </div>
         </form>
     </div>
