@@ -212,6 +212,7 @@ d3.tsv("./data/axes-labels.tsv", function(pars) {
             .attr("x", padding - 10)
             .attr("y", padding - 10)
             .attr("dy", ".71em")
+            .attr("class", "namesH")
             .text(function (d) {
     
             return d.x;
@@ -243,6 +244,44 @@ d3.tsv("./data/axes-labels.tsv", function(pars) {
             });
      });
 
+    
+    d3.tsv("./data/axes-names.tsv", function(pars) {   
+  
+              return pars;
+            }, function(data) {
+
+      var names = data.map(function(d) { return d["name"]; });
+        
+        
+        
+         var tip = d3.tip()
+            .attr('class', 'd3-tip1')
+            .offset([-10, 0])
+            .html(function (d) {
+                
+                  for (var j=0; j<getMultiple().length; j++) {
+                  
+                if(getMultiple()[j]==d.x) {
+                             
+                  return names[j];             
+                                           };
+             
+            }
+                
+            });
+    
+    
+     svg.call(tip);
+        
+    d3.selectAll(".cell").filter(function (d) {
+        return d.i === d.j;
+    }).selectAll(".namesH")
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
+
+        
+         });
+    
      cell.filter(function (d) {
         return d.i < d.j;
     }).append("text")

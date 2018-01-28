@@ -1,0 +1,51 @@
+name
+Right ascension
+Standard error of right ascension
+Declination
+Standard error of declination
+Parallax
+Standard error of parallax
+Proper motion in right ascension direction
+Standard error of proper motion in right ascension direction
+Proper motion in declination direction
+Standard error of proper motion in declination direction
+Correlation between right ascension and declination
+Correlation between right ascension and parallax
+Correlation between right ascension and proper motion in right ascension
+Correlation between right ascension and proper motion in declination
+Correlation between declination and parallax
+Correlation between declination and proper motion in right ascension
+Correlation between declination and proper motion in declination
+Correlation between parallax and proper motion in right ascension
+Correlation between parallax and proper motion in right declination
+Correlation between proper motion in right ascension and proper motion in declination
+Number of good observations AL
+Total number of observations AC
+Number of good observations AL
+Number of good observations AC
+Number of bad observations AL
+Number of bad observations AC
+Hipparcos/Gaia data discrepancy (Hipparcos subset of TGAS only)
+Excess noise of the source
+Significance of excess noise
+Relegation factor
+Mean astrometric weight of the source
+Mean astrometric weight of the source
+Type of prior used in the astrometric solution
+Amount of observations matched to this source
+Mean position angle of scan directions across the source
+Mean position angle of scan directions across the source
+Mean position angle of scan directions across the source
+Mean position angle of scan directions across the source
+Degree of concentration of scan directions across the source
+Degree of concentration of scan directions across the source
+Degree of concentration of scan directions across the source
+Degree of concentration of scan directions across the source
+Number of observations contributing to G photometry
+G-band mean flux
+Error on G-band mean flux
+G-band mean magnitude
+Galactic longitude
+Galactic latitude
+Ecliptic longitude
+Ecliptic latitude
