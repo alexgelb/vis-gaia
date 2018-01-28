@@ -193,8 +193,19 @@ function drawScatterPlotMatrix(chosenValues) {
     cell.filter(function (d) {
         return d.i < d.j;
     }).selectAll("rect").style("fill", "#ffffff");
+    
 
+d3.tsv("./data/axes-labels.tsv", function(pars) {   
+  
+              return pars;
+            }, function(data) {
 
+      var label = data.map(function(d) { return d["labels"]; });
+           /* var labelss= data.map(function(d) { return d.labels; });
+   var names= data.map(function(d) { return d.name; });*/
+    
+ 
+          //  console.log(label[0]);
     cell.filter(function (d) {
         return d.i === d.j;
     }).append("text")
@@ -202,8 +213,35 @@ function drawScatterPlotMatrix(chosenValues) {
             .attr("y", padding - 10)
             .attr("dy", ".71em")
             .text(function (d) {
-                return d.x;
+    
+            return d.x;
+        })
+         
+    
+
+  
+        cell.filter(function (d) {
+        return d.i === d.j;
+    }).append("text")
+            .attr("x", padding - 10)
+            .attr("y", padding +1)
+            .attr("dy", ".65em")
+            .text(function (d) {
+            for (var j=0; j<getMultiple().length; j++) {
+                  
+                if(getMultiple()[j]==d.x) {
+                               if (label[j]!=='none' && label[j]!==0) {
+                  return "Unit: [ "+label[j]+" ]";}
+            else {
+                return " ";
+            }                 
+                                           };
+             
+            }
+   
+       
             });
+     });
 
      cell.filter(function (d) {
         return d.i < d.j;
@@ -541,6 +579,21 @@ function leastSquaresequation(a, b) {
         return x * slope + intercept;
     };
 } */
+
+
+function getMultiple() {
+    var MultipleData = headerNames.filter(function (d) {
+        if (document.getElementById(d)) {
+            if (d != "solution_id" && d != "ref_epoch" && d != "source_id" && d != "random_index") {
+                return d;
+            } else {
+                return d;
+            }
+        }
+    });
+
+    return MultipleData;
+}
 
 function getMultipleData() {
     var MultipleData = headerNames.filter(function (d) {
