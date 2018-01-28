@@ -12,7 +12,11 @@ d3.csv("./data/GaiaSource_1_5k.csv",
                     function (d) {
                         return d !== "astrometric_primary_flag" &&
                                 d !== "duplicated_source" &&
-                                d !== "phot_variable_flag";
+                                d !== "phot_variable_flag" &&
+                            d !== "solution_id" &&
+                            d !== "source_id" &&
+                            d !== "ref_epoch" &&
+                            d !== "random_index" ;
                     })
             this.csv_data = csv_data;
 
@@ -238,13 +242,13 @@ function drawScatterPlotMatrix(chosenValues) {
 
 
         var tip = d3.tip()
-            .attr('class', 'd3-tip')
+            .attr('class', 'd3-tip1')
             .offset([-10, 0])
             .html(function (d, i, j) {
                 if (isNaN(correlations[i])) {
-                    return "<strong> r ( </strong>" + d.x + " , \n" + d.y + "<strong>)</strong> = <strong>" + " - " + "</strong>";
+                    return "<strong> r ( </strong>" + d.x + " , \n" + d.y + "<strong> )</strong> = <strong>" + " - " + "</strong>";
                 } else {
-                    return "<strong> r ( </strong>" + d.x + " , \n" + d.y + "<strong>)</strong> = <strong>" + correlations[j] + "</strong>";
+                    return "<strong> r ( </strong>" + d.x + " , \n" + d.y + "<strong> )</strong> = <strong>" + correlations[j].toFixed(10) + "</strong>";
                 }
                 console.log(d.x);
             });
@@ -375,7 +379,7 @@ function drawScatterPlotMatrix(chosenValues) {
                 })
                 .on("mouseover", function () {
                     d3.select(this)
-                            .attr("fill", "#2e2e30");
+                            .attr("fill", "#08298A");
                 })
                 .on("mouseout", function () {
                     d3.select(this).attr("fill", function (d) {
@@ -387,7 +391,7 @@ function drawScatterPlotMatrix(chosenValues) {
     function plot(p) {
 
         var cell = d4.select(this);
-a=x; b=y;
+//a=x; b=y;
         x.domain(domainByTrait[p.x]);
         y.domain(domainByTrait[p.y]);
 
@@ -419,9 +423,10 @@ a=x; b=y;
 //                .attr("fill", function (d) {
 //                    return color("blue");
 //                });
-
+/*
   a.domain(domainByTrait[p.x]).nice(8);
         b.domain(domainByTrait[p.y]).nice(8);
+       
         var xAxisData = csv_data.map(function(d) { return d[p.x]; });
         var yAxisData = csv_data.map(function(d) { return d[p.y]; });
         var regression = leastSquaresequation(xAxisData,yAxisData);
@@ -456,7 +461,7 @@ a=x; b=y;
                 });
 
         cell.append("div").attr("class", "tip");
-
+*/
     }
 
     var brushCell;
@@ -506,7 +511,7 @@ a=x; b=y;
         return c;
     }
 }
-
+/*
 function leastSquaresequation(a, b) {
     var ReduceAddition = function (prev, cur) {
         return prev + cur;
@@ -536,7 +541,7 @@ function leastSquaresequation(a, b) {
     return function (x) {
         return x * slope + intercept;
     };
-}
+} */
 
 function getMultipleData() {
     var MultipleData = headerNames.filter(function (d) {
