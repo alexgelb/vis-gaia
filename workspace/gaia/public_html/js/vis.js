@@ -554,7 +554,7 @@ function getMultipleData() {
             }
         }
     });*/
-        return d;
+        return d;})
 
     return MultipleData;
 }
