@@ -133,6 +133,21 @@ function drawScatterPlotMatrix(chosenValues) {
             .append("g")
             .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
 
+
+    svg.append("text")      // text label for the x axis
+        .attr("x", size * n + (padding + 100)-150 )
+        .attr("y",  size * n + (padding + 100)-138 )
+        .style("text-anchor", "middle")
+        .style("font-weight","bold")
+        .text("Value");
+    
+     svg.append("text")      // text label for the x axis
+        .attr("x", -9 )
+        .attr("y",  18 )
+        .style("text-anchor", "middle")
+     .style("font-weight","bold")
+        .text("Count");
+    
     svg.selectAll(".x.axis")
             .data(traits)
             .enter()
